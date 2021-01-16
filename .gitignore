@@ -1,0 +1,8 @@
+dist
+node_modules
+.env
+*.sh
+*.ps1
+*.bak
+*.sql
+*.ps1
