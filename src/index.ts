@@ -88,7 +88,6 @@ client.on("guildCreate", async guild =>
       {
         let role = new Role();
         role.category = uncat;
-        role.color = r.hexColor;
         role.name = r.name.replace("@", "");
         role.id = r.id;
         return role;
@@ -101,6 +100,73 @@ client.on("guildCreate", async guild =>
     await getRepository(Category).save(uncat);
     await getRepository(Role).save(roles);
   }
+})
+
+client.on("roleCreate", async (roleCreated) => {
+  let dbRole = new Role();
+  dbRole.id = roleCreated.id;
+  dbRole.name = roleCreated.name;
+
+  let uncat = await getRepository(Category)
+    .findOne({
+      name: "Uncategorized",
+      guild: {
+        id: roleCreated.guild.id,
+      }
+    });
+
+  dbRole.category = uncat;
+  uncat.roles = [...uncat.roles, dbRole];
+
+  await getRepository(Category).save(uncat);
+  await getRepository(Role).save(dbRole);
+})
+
+client.on("roleDelete", async (roleDeleted) => {
+  let dbRole = await getRepository(Role)
+    .findOne({
+      name: roleDeleted.name,
+      id: roleDeleted.id,
+      category: {
+        guild: {
+          id: roleDeleted.guild.id,
+          name: roleDeleted.guild.name,
+        },
+      },
+    });
+  
+  let uncat = await getRepository(Category)
+    .findOne({
+      name: "Uncategorized",
+      guild: {
+        id: roleDeleted.guild.id,
+      }
+    });
+
+  uncat.roles = uncat.roles.filter(r => r.id === roleDeleted.id);
+
+  await getRepository(Category).save(uncat);
+  await getRepository(Role).remove(dbRole);
+})
+
+client.on("roleUpdate", async (oldRole, newRole) =>
+{
+  let dbRole = await getRepository(Role)
+    .findOne({
+      name: oldRole.name,
+      id: oldRole.id,
+      category: {
+        guild: {
+          id: oldRole.guild.id,
+          name: oldRole.guild.name,
+        },
+      },
+    });
+  
+  dbRole.name = newRole.name;
+  dbRole.id = newRole.id;
+
+  await getRepository(Role).save(dbRole);
 })
 
 client.on("error", console.error);

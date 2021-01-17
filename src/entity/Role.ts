@@ -11,7 +11,4 @@ export class Role {
 
   @ManyToOne(() => Category, category => category.roles)
   category: Category;
-
-  @Column()
-  color: string; // Must be Discord.Role.ColorResolvable
 }

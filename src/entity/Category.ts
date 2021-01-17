@@ -19,7 +19,7 @@ export class Category {
   roles: Role[];
 
   @Column({
-    nullable: true,
+    default: "DEFAULT",
   })
   defaultRoleColor: string;
 
