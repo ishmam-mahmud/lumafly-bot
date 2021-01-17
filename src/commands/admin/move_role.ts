@@ -1,11 +1,11 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { getRepository } from "typeorm"
+import { Guild } from "../../entity/Guild"
 import { Category } from "../../entity/Category"
 import { Role } from "../../entity/Role"
 
 type MoveRoleCommandArgs = {
   name: string,
-  currCatName: string,
   newCatName: string,
 };
 
@@ -17,7 +17,7 @@ class MoveRoleCommand extends Command
       name: "move_role",
       group: "admin",
       memberName: "move_role",
-      description: "Move a role from one category to another",
+      description: "Move a role to a different category",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
       userPermissions: ["MANAGE_ROLES"],
@@ -32,11 +32,6 @@ class MoveRoleCommand extends Command
           }
         },
         {
-          key: "currCatName",
-          prompt: "What's the current role category?",
-          type: "string",
-        },
-        {
           key: "newCatName",
           prompt: "What category should the role be moved to?",
           type: "string",
@@ -47,19 +42,8 @@ class MoveRoleCommand extends Command
   
 
 
-  async run(msg: CommandoMessage, { name, currCatName, newCatName, }: MoveRoleCommandArgs)
+  async run(msg: CommandoMessage, { name, newCatName }: MoveRoleCommandArgs)
   {
-
-    console.log(name);
-
-    let currCat = await getRepository(Category)
-      .findOne({
-        name: currCatName,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-
     let newCat = await getRepository(Category)
       .findOne({
         name: newCatName,
@@ -67,24 +51,43 @@ class MoveRoleCommand extends Command
           id: msg.guild.id,
         }
       });
+    
+    if (!newCat)
+      return msg.say(`${newCatName} category does not exist`);
+
+    for (const role of newCat.roles)
+    {
+      if (name === role.name)
+        return await msg.say(`${newCat.name} already has a ${name} role`);
+    }
+
+    let guild = await getRepository(Guild).findOne(msg.guild.id);
+    let currCat: Category;
+
+    for (const cat of guild.categories) {
+      for (const role of cat.roles) {
+        if (role.name === name)
+        {
+          currCat = cat;
+          break;
+        }
+      }
+    }
+    
+    if (!currCat)
+      return msg.say(`${name} role was not found`);
+
+    if (currCat.id === newCat.id)
+      return msg.say(`${name} is already in ${newCat.name} category`);
 
     let dbRole = await getRepository(Role)
       .findOne({
         name,
         category: {
-          name: currCatName,
           id: currCat.id,
         },
       });
     
-    if (!dbRole)
-      return msg.say(`${name} role does not exist`);
-    
-    if (!currCat)
-      return msg.say(`${currCatName} category does not exist`);
-
-    if (!newCat)
-      return msg.say(`${newCatName} category does not exist`);
 
     dbRole.category = newCat;
     newCat.roles = [...newCat.roles, dbRole];
