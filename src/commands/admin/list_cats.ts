@@ -1,6 +1,7 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
-import { getRepository } from "typeorm"
+import { getRepository, PrimaryColumn } from "typeorm"
+import { Message } from "discord.js"
 
 class ListCatsCommand extends Command
 {
@@ -26,17 +27,38 @@ class ListCatsCommand extends Command
       }
     });
 
-    let response = '';
+    let embedSends:Promise<Message>[] = [];
 
-    results.forEach(cat =>
+    results.forEach(async cat =>
       {
-        response = `${response}**${cat.name}**\n`
+        let roleString = '';
         cat.roles.forEach(r =>
           {
-            response = `${response}- ${r.name}\n`
+            roleString = `${roleString}\`${r.name}\`, `
           });
+        roleString = roleString.slice(0, roleString.length - 2);
+        embedSends.push(msg.channel.send({
+          embed: {
+            title: cat.name,
+            color: cat.defaultRoleColor,
+            description: roleString,
+            fields: [{
+              name: "id",
+              value: `\`${cat.id}\``,
+              inline: true,
+            }, {
+              name: "defaultRoleColor",
+              value: `\`${cat.defaultRoleColor}\``,
+              inline: true,
+            }, {
+              name: "Self-Assignable",
+              value: cat.selfAssignable ? "Yes" : "No",
+              inline: true,
+            }],
+          }
+        }));
       });
-    return await msg.say(response);
+    return await Promise.all(embedSends);
   }
 }
 
