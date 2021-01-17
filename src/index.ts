@@ -115,30 +115,18 @@ client.on("roleCreate", async (roleCreated) => {
 })
 
 client.on("roleDelete", async (roleDeleted) => {
-  let dbRole = await getRepository(Role)
-    .findOne({
-      name: roleDeleted.name,
-      id: roleDeleted.id,
-      category: {
-        guild: {
-          id: roleDeleted.guild.id,
-          name: roleDeleted.guild.name,
-        },
-      },
-    });
-  
-  let uncat = await getRepository(Category)
-    .findOne({
-      name: "Uncategorized",
-      guild: {
-        id: roleDeleted.guild.id,
+  let dbGuild = await getRepository(Guild)
+    .findOne(roleDeleted.guild.id);
+
+  for (const cat of dbGuild.categories) {
+    for (const role of cat.roles) {
+      if (role.id === roleDeleted.id)
+      {
+        await getRepository(Role).remove(role);
+        return;
       }
-    });
-
-  uncat.roles = uncat.roles.filter(r => r.id === roleDeleted.id);
-
-  await getRepository(Category).save(uncat);
-  await getRepository(Role).remove(dbRole);
+    }
+  }
 })
 
 client.on("roleUpdate", async (oldRole, newRole) =>
