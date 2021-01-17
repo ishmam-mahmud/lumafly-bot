@@ -59,7 +59,8 @@ client.on("guildCreate", async guild =>
   let dbGuild = await getRepository(Guild)
     .findOne(guild.id)
   
-  if (!dbGuild) {
+  if (!dbGuild)
+  {
     dbGuild = new Guild();
     dbGuild.id = guild.id;
     dbGuild.name = guild.name;
@@ -89,11 +90,8 @@ client.on("guildCreate", async guild =>
   }
 })
 
-client.on("roleCreate", async (roleCreated) => {
-  let dbRole = new Role();
-  dbRole.id = roleCreated.id;
-  dbRole.name = roleCreated.name;
-
+client.on("roleCreate", async (roleCreated) =>
+{
   let uncat = await getRepository(Category)
     .findOne({
       name: "Uncategorized",
@@ -108,19 +106,35 @@ client.on("roleCreate", async (roleCreated) => {
     return;
   }
 
+  let checkRoles = uncat.roles.filter(role => role.name === roleCreated.name);
+  if (checkRoles.length > 0)
+  {
+    roleCreated = await roleCreated.delete("An uncategorized role with the same name already exists");
+    return;
+  }
+  
+  let dbRole = new Role();
+  dbRole.id = roleCreated.id;
+  dbRole.name = roleCreated.name;
+
   dbRole.category = uncat;
   uncat.roles = [...uncat.roles, dbRole];
 
   await getRepository(Role).save(dbRole);
   await getRepository(Category).save(uncat);
+
+
 })
 
-client.on("roleDelete", async (roleDeleted) => {
+client.on("roleDelete", async (roleDeleted) =>
+{
   let dbGuild = await getRepository(Guild)
     .findOne(roleDeleted.guild.id);
 
-  for (const cat of dbGuild.categories) {
-    for (const role of cat.roles) {
+  for (const cat of dbGuild.categories)
+  {
+    for (const role of cat.roles)
+    {
       if (role.id === roleDeleted.id)
       {
         await getRepository(Role).remove(role);
@@ -135,8 +149,10 @@ client.on("roleUpdate", async (oldRole, newRole) =>
   let dbGuild = await getRepository(Guild)
     .findOne(oldRole.guild.id);
 
-  for (const cat of dbGuild.categories) {
-    for (const role of cat.roles) {
+  for (const cat of dbGuild.categories)
+  {
+    for (const role of cat.roles)
+    {
       if (role.id === oldRole.id)
       {
         role.name = newRole.name;
