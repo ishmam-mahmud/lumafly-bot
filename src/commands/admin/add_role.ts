@@ -6,8 +6,7 @@ import { Role } from "../../entity/Role"
 type AddRoleCommandArgs = {
   name: string,
   categoryName: string,
-  defaultHexColor: string,
-  isSelfAssignable: boolean,
+  color: string,
 };
 
 class AddRoleCommand extends Command
@@ -36,30 +35,28 @@ class AddRoleCommand extends Command
           default: "Uncategorized"
         },
         {
-          key: "defaultHexColor",
+          key: "color",
           prompt: "What's the role color?",
           type: "string",
+          validate: (defaultRoleColor: string) =>
+          {
+            let re = /^#[A-F0-9]{6}$|^DEFAULT$/;
+            return re.exec(defaultRoleColor);
+          },
           default: "DEFAULT",
         },
-        {
-          key: "isSelfAssignable",
-          prompt: "Is the role self-assignable?",
-          type: "boolean",
-          default: false,
-        }
       ]
     })
   }
   
 
 
-  async run(msg: CommandoMessage, { name, categoryName, defaultHexColor, isSelfAssignable }: AddRoleCommandArgs)
+  async run(msg: CommandoMessage, { name, categoryName, color }: AddRoleCommandArgs)
   {
     let cat = await getRepository(Category)
-      .createQueryBuilder("cat")
-      .where("name = :name", { name: categoryName })
-      .leftJoinAndSelect("cat.roles, role")
-      .getOne();
+      .findOne({
+        name: categoryName,
+      });
 
     if (!cat)
       return await msg.say(`Category ${categoryName} does not exist`);
@@ -68,18 +65,20 @@ class AddRoleCommand extends Command
       {
         data: {
           name,
-          color: defaultHexColor,
+          color,
           mentionable: false,
         }
       });
     
     let dbRole = new Role();
-    dbRole.hexColor = defaultHexColor,
     dbRole.id = newRole.id;
     dbRole.name = newRole.name;
-    dbRole.selfAssignable = isSelfAssignable;
+    dbRole.category = cat;
+    dbRole.color = color,
 
-    if (!cat.roles) cat.roles =
+    await getRepository(Role).save(dbRole);
+
+    if (!cat.roles) cat.roles = [];
     cat.roles.push(dbRole);
     getRepository(Category).save(cat);
 

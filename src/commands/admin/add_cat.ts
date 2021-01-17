@@ -4,7 +4,8 @@ import { getRepository } from "typeorm"
 
 type AddCatCommandArgs = {
   name: string,
-  defaultHexColor: string,
+  defaultRoleColor: string,
+  isSelfAssignable: boolean,
 };
 
 class AddCatCommand extends Command
@@ -27,25 +28,33 @@ class AddCatCommand extends Command
           type: "string",
         },
         {
-          key: "defaultHexColor",
+          key: "defaultRoleColor",
           prompt: "What's the default role color of the category?",
           type: "string",
-          validate: (defaultHexColor: string) =>
+          validate: (defaultRoleColor: string) =>
           {
-            let re = /^#[A-F0-9]{6}$/;
-            return re.exec(defaultHexColor);
-          }
+            let re = /^#[A-F0-9]{6}$|^DEFAULT$/;
+            return re.exec(defaultRoleColor);
+          },
+          default: "DEFAULT"
+        },
+        {
+          key: "isSelfAssignable",
+          prompt: "Will the roles in this category be self-assignable?",
+          type: "boolean",
+          default: false,
         },
       ]
     })
   }
 
-  async run(msg: CommandoMessage, { name, defaultHexColor }: AddCatCommandArgs)
+  async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs)
   {
     let cat = new Category();
     cat.name = name;
-    cat.defaultRoleColor = defaultHexColor;
     cat.roles = [];
+    cat.defaultRoleColor = defaultRoleColor;
+    cat.selfAssignable = isSelfAssignable;
     let savedCat = await getRepository(Category).save(cat);
     return await msg.say(`${savedCat.name} has been added`);
   }

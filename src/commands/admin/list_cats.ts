@@ -20,14 +20,18 @@ class ListCatsCommand extends Command
 
   async run(msg: CommandoMessage)
   {
-    let results = await getRepository(Category)
-      .createQueryBuilder("cat")
-      .leftJoinAndSelect("cat.roles", "role")
-      .getMany();
+    let results = await getRepository(Category).find();
 
-    results.forEach(r =>
-      console.log(r.roles));
-    const response = results.map(c => c.name);
+    let response = '';
+
+    results.forEach(cat =>
+      {
+        response = `${response}**${cat.name}**\n`
+        cat.roles.forEach(r =>
+          {
+            response = `${response}- ${r.name}\n`
+          });
+      });
     return await msg.say(response);
   }
 }

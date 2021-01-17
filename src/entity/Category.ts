@@ -9,7 +9,9 @@ export class Category {
   @Column()
   name: string;
 
-  @OneToMany(() => Role, role => role.category)
+  @OneToMany(() => Role, role => role.category, {
+    eager: true,
+  })
   roles: Role[];
 
   @Column({
