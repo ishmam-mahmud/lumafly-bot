@@ -1,9 +1,10 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
+import { Role } from "../../entity/Role"
 import { getRepository } from "typeorm"
 
 type RmCatCommandArgs = {
-  name: string,
+  nameCatToRemove: string,
 };
 
 class RmCatCommand extends Command
@@ -21,32 +22,48 @@ class RmCatCommand extends Command
       ownerOnly: true,
       args: [
         {
-          key: "name",
-          prompt: "What's the name of the category?",
+          key: "nameCatToRemove",
+          prompt: "What's the name of the category to be removed?",
           type: "string",
+          validate: (nameCatToRemove: string) => {
+            return !/Uncategorized/.exec(nameCatToRemove);
+          }
         },
       ]
     })
   }
 
-  async run(msg: CommandoMessage, { name }: RmCatCommandArgs)
+  async run(msg: CommandoMessage, { nameCatToRemove }: RmCatCommandArgs)
   {
     let catToRemove = await getRepository(Category)
-      .createQueryBuilder()
-      .where("name = :name", { name })
-      .getOne();
+      .findOne({
+        name: nameCatToRemove,
+        guild: {
+          id: msg.guild.id,
+        },
+      });
 
     if (!catToRemove)
-      return await msg.say(`${name} category does not exist!`);
+      return await msg.say(`${nameCatToRemove} category does not exist!`);
 
     let uncat = await getRepository(Category)
-      .createQueryBuilder()
-      .where("name = :name", { name: "Uncategorized" })
-      .getOne();
+      .findOne({
+        name: "Uncategorized",
+        guild: {
+          id: msg.guild.id,
+        }
+      });
 
-    uncat.roles = [...uncat.roles, ...catToRemove.roles];
+    let roles = catToRemove.roles.map(r =>
+      {
+        r.category = uncat;
+        return r;
+      })
+
+    uncat.roles = [...uncat.roles, ...roles];
     catToRemove.roles = [];
 
+    await getRepository(Role).save(roles);
     await getRepository(Category).save(uncat);
     catToRemove = await getRepository(Category).remove(catToRemove);
     return await msg.say(`${catToRemove.name} has been deleted`);
