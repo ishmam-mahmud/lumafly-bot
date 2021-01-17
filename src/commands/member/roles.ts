@@ -1,6 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
-import { getRepository, PrimaryColumn } from "typeorm"
+import { getRepository } from "typeorm"
 import { Message } from "discord.js"
 
 class ListCatsCommand extends Command
@@ -9,7 +9,7 @@ class ListCatsCommand extends Command
   {
     super(client, {
       name: "roles",
-      group: "admin",
+      group: "member",
       memberName: "roles",
       description: "Show the current self-assignable roles.",
       guildOnly: true,
