@@ -34,7 +34,7 @@ class AddCatCommand extends Command
           type: "string",
           validate: (defaultRoleColor: string) =>
           {
-            let re = /^#[A-F0-9]{6}$|^DEFAULT$/;
+            let re = /^#[A-F0-9]{6}$|^DEFAULT$|^-$/;
             return re.exec(defaultRoleColor);
           },
           default: "DEFAULT"
@@ -51,20 +51,28 @@ class AddCatCommand extends Command
 
   async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs)
   {
-    let guild = await getRepository(Guild)
-      .findOne(msg.guild.id);
+    let cat = await getRepository(Category)
+      .findOne({
+        name,
+        guild: {
+          id: msg.guild.id,
+        },
+      });
 
-    for (const c of guild.categories)
-    {
-      if (c.name === name)
-        return await msg.say(`A category with that name already exists.`);
-    }
+    if (cat)
+      return await msg.say(`A category with that name already exists.`);
 
-    let cat = new Category();
+    let guild = await getRepository(Guild).findOne(msg.guild.id);
+
+    cat = new Category();
     cat.name = name;
     cat.guild = guild;
     cat.roles = [];
+
+    if (defaultRoleColor === '-')
+      defaultRoleColor = "DEFAULT";
     cat.defaultRoleColor = defaultRoleColor;
+    
     cat.selfAssignable = isSelfAssignable;
     let savedCat = await getRepository(Category).save(cat);
 
