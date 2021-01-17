@@ -51,20 +51,6 @@ client.once("ready", async () =>
       "subscribersDir": "dist/subscriber"
     },
   });
-
-  // let uncat = await getRepository(Category)
-  //   .findOne({
-  //     name: "Uncategorized",
-  //   });
-
-  // if (!uncat)
-  // {
-  //   uncat = new Category();
-  //   uncat.name = "Uncategorized";
-  //   uncat.roles = [];
-  //   uncat.selfAssignable = false;
-  //   getRepository(Category).save(uncat);
-  // }
 })
 
 client.on("guildCreate", async guild =>
@@ -115,11 +101,17 @@ client.on("roleCreate", async (roleCreated) => {
       }
     });
 
+  if (!uncat)
+  {
+    console.error(`${roleCreated.guild.name} has not been setup properly.`);
+    return;
+  }
+
   dbRole.category = uncat;
   uncat.roles = [...uncat.roles, dbRole];
 
-  await getRepository(Category).save(uncat);
   await getRepository(Role).save(dbRole);
+  await getRepository(Category).save(uncat);
 })
 
 client.on("roleDelete", async (roleDeleted) => {
