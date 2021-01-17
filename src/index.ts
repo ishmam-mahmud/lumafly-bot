@@ -131,22 +131,19 @@ client.on("roleDelete", async (roleDeleted) => {
 
 client.on("roleUpdate", async (oldRole, newRole) =>
 {
-  let dbRole = await getRepository(Role)
-    .findOne({
-      name: oldRole.name,
-      id: oldRole.id,
-      category: {
-        guild: {
-          id: oldRole.guild.id,
-          name: oldRole.guild.name,
-        },
-      },
-    });
-  
-  dbRole.name = newRole.name;
-  dbRole.id = newRole.id;
+  let dbGuild = await getRepository(Guild)
+    .findOne(oldRole.guild.id);
 
-  await getRepository(Role).save(dbRole);
+  for (const cat of dbGuild.categories) {
+    for (const role of cat.roles) {
+      if (role.id === oldRole.id)
+      {
+        role.name = newRole.name;
+        await getRepository(Role).save(role);
+        return;
+      }
+    }
+  }
 })
 
 client.on("error", console.error);
