@@ -34,7 +34,6 @@ class DeroleCommand extends Command
   async run(msg: CommandoMessage, { roleName }: DeroleCommandArgs)
   {
     let results = await getRepository(Category).find({
-      selfAssignable: true,
       guild: {
         id: msg.guild.id,
       }
@@ -42,14 +41,20 @@ class DeroleCommand extends Command
 
     for (const cat of results)
     {
-      for (const role of cat.roles) {
+      for (const role of cat.roles)
+      {
         if (role.name === roleName)
         {
-          await msg.member.roles.remove(role.id);
-          return msg.say(`access removed from role ${role.name}. congratulation ?`);
+          if (cat.selfAssignable)
+          {
+            await msg.member.roles.remove(role.id);
+            return await msg.say(`access removed from role ${role.name}. congratulation ?`);
+          }
+          return await msg.say(`:pensive:`);
         }
       }
     }
+    return await msg.say(`${roleName} not found !`);
   }
 }
 

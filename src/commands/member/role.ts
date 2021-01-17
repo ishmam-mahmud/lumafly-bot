@@ -34,7 +34,6 @@ class RoleCommand extends Command
   async run(msg: CommandoMessage, { roleName }: RoleCommandArgs)
   {
     let results = await getRepository(Category).find({
-      selfAssignable: true,
       guild: {
         id: msg.guild.id,
       }
@@ -42,14 +41,21 @@ class RoleCommand extends Command
 
     for (const cat of results)
     {
-      for (const role of cat.roles) {
+      for (const role of cat.roles)
+      {
         if (role.name === roleName)
         {
-          await msg.member.roles.add(role.id);
-          return msg.say(`access granted to role ${role.name}. congratulation !`);
+          if (cat.selfAssignable)
+          {
+            await msg.member.roles.add(role.id);
+            return await msg.say(`access granted to role ${role.name}. congratulation !`);
+          }
+          return await msg.say(`access denied to role ${role.name}.`);
         }
       }
     }
+
+    return await msg.say(`${roleName} not found !`);
   }
 }
 
