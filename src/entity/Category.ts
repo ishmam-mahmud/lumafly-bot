@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm"
+import { Guild } from "./Guild"
 import { Role } from "./Role";
 
 @Entity()
@@ -8,6 +9,9 @@ export class Category {
 
   @Column()
   name: string;
+
+  @ManyToOne(() => Guild, guild => guild.categories)
+  guild: Guild;
 
   @OneToMany(() => Role, role => role.category, {
     eager: true,

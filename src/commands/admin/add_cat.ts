@@ -1,5 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
+import { Guild } from "../../entity/Guild"
 import { getRepository } from "typeorm"
 
 type AddCatCommandArgs = {
@@ -50,12 +51,25 @@ class AddCatCommand extends Command
 
   async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs)
   {
+    let guild = await getRepository(Guild)
+      .findOne(msg.guild.id);
+
+    for (const c of guild.categories)
+    {
+      if (c.name === name)
+        return await msg.say(`A category with that name already exists.`);
+    }
+
     let cat = new Category();
     cat.name = name;
+    cat.guild = guild;
     cat.roles = [];
     cat.defaultRoleColor = defaultRoleColor;
     cat.selfAssignable = isSelfAssignable;
     let savedCat = await getRepository(Category).save(cat);
+
+    guild.categories = [...guild.categories, cat];
+    await getRepository(Guild).save(guild);
     return await msg.say(`${savedCat.name} has been added`);
   }
 }

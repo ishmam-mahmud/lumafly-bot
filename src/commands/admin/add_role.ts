@@ -1,6 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
+import { Category } from "../../entity/Category"
 import { Role } from "../../entity/Role"
 
 type AddRoleCommandArgs = {
@@ -53,13 +53,17 @@ class AddRoleCommand extends Command
 
   async run(msg: CommandoMessage, { name, categoryName, color }: AddRoleCommandArgs)
   {
+
     let cat = await getRepository(Category)
       .findOne({
         name: categoryName,
+        guild: {
+          id: msg.guild.id,
+        }
       });
 
     if (!cat)
-      return await msg.say(`Category ${categoryName} does not exist`);
+      return await msg.say(`Category ${categoryName} does not exist for this server`);
 
     let newRole = await msg.guild.roles.create(
       {
@@ -78,8 +82,7 @@ class AddRoleCommand extends Command
 
     await getRepository(Role).save(dbRole);
 
-    if (!cat.roles) cat.roles = [];
-    cat.roles.push(dbRole);
+    cat.roles = [...cat.roles, dbRole];
     getRepository(Category).save(cat);
 
     return await msg.say(`${newRole.name} has been added`);

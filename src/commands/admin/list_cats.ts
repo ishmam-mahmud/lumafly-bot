@@ -20,7 +20,11 @@ class ListCatsCommand extends Command
 
   async run(msg: CommandoMessage)
   {
-    let results = await getRepository(Category).find();
+    let results = await getRepository(Category).find({
+      guild: {
+        id: msg.guild.id,
+      }
+    });
 
     let response = '';
 
