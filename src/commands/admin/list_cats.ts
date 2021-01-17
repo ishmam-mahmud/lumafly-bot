@@ -34,7 +34,7 @@ class ListCatsCommand extends Command
         let roleString = '';
         cat.roles.forEach(r =>
           {
-            roleString = `${roleString}\`${r.name}\`, `
+            roleString = `${roleString}${r.name} --- ${r.id}\n`
           });
         roleString = roleString.slice(0, roleString.length - 2);
         embedSends.push(msg.channel.send({
