@@ -15,8 +15,7 @@ class SetUpCommand extends Command
       description: "Setup the db entries for the existing server",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
-      userPermissions: ["MANAGE_ROLES"],
-      ownerOnly: true,
+      userPermissions: ["MANAGE_GUILD"],
     })
   }
 

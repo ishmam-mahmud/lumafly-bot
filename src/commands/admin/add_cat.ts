@@ -21,7 +21,6 @@ class AddCatCommand extends Command
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
       userPermissions: ["MANAGE_ROLES"],
-      ownerOnly: true,
       args: [
         {
           key: "name",

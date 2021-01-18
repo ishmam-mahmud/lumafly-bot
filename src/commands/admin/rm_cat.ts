@@ -18,8 +18,7 @@ class RmCatCommand extends Command
       description: "Remove a role category, and add all roles to Uncategorized",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
-      userPermissions: ["MANAGE_ROLES"],
-      ownerOnly: true,
+      userPermissions: ["MANAGE_GUILD"],
       args: [
         {
           key: "nameCatToRemove",
