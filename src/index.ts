@@ -5,6 +5,7 @@ import { createConnection, getRepository } from "typeorm";
 import { Category } from "./entity/Category"
 import { Guild } from "./entity/Guild"
 import { Role } from "./entity/Role"
+import { Role as DiscordRole } from "discord.js";
 
 const client = new CommandoClient({
   commandPrefix: process.env.PREFIX,
@@ -30,7 +31,7 @@ client.registry
 client.once("ready", async () =>
 {
   console.log(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
-  await client.user?.setPresence({ activity: { name: "Hades" }, status: "dnd" });
+  await client.user?.setPresence({ activity: { name: "with your cats" }, status: "online" });
 
   await createConnection({
     type: "sqlite",
@@ -54,6 +55,22 @@ client.once("ready", async () =>
   });
 })
 
+const shouldBeSelfAssignable = (role: DiscordRole) =>
+{
+  if (role.permissions.has("MANAGE_ROLES"))
+    return false;
+  
+  if (role.managed)
+    return false;
+
+  let specialRoles = ["Muted", "OK Booster", "@everyone", "New-Best-Friend", "Den-Opt-In", "Partnership", "Engineer", "no-pictures", "Member", "botless"];
+
+  if (specialRoles.findIndex(s => s === role.name) !== -1)
+    return false;
+
+  return true;
+}
+
 client.on("guildCreate", async guild =>
 {
   let dbGuild = await getRepository(Guild)
@@ -66,27 +83,46 @@ client.on("guildCreate", async guild =>
     dbGuild.name = guild.name;
     dbGuild.categories = [];
 
-    let uncat = new Category();
-    uncat.name = "Uncategorized";
-    uncat.guild = dbGuild;
-    uncat.roles = [];
-    uncat.selfAssignable = false;
+    let uncat_nonSA = new Category();
+    uncat_nonSA.name = "Uncategorized";
+    uncat_nonSA.guild = dbGuild;
+    uncat_nonSA.roles = [];
+    uncat_nonSA.selfAssignable = false;
+    
+    let uncat_SA = new Category();
+    uncat_SA.name = "Uncategorized_Assignable";
+    uncat_SA.guild = dbGuild;
+    uncat_SA.roles = [];
+    uncat_SA.selfAssignable = true;
 
-    let roles = guild.roles.cache.map(r =>
-      {
-        let role = new Role();
-        role.category = uncat;
-        role.name = r.name.replace("@", "");
-        role.id = r.id;
-        return role;
-      });
+    let roles_SA = guild.roles.cache.filter(r => shouldBeSelfAssignable(r))
+      .map(r =>
+        {
+          let role = new Role();
+          role.name = r.name.replace("@", "");
+          role.id = r.id;
+          role.category = uncat_SA;
+          return role;
+        })
 
-    uncat.roles = roles;
-    dbGuild.categories = [uncat];
+    let roles_NonSA = guild.roles.cache.filter(r => !shouldBeSelfAssignable(r))
+      .map(r =>
+        {
+          let role = new Role();
+          role.name = r.name.replace("@", "");
+          role.id = r.id;
+          role.category = uncat_nonSA;
+          return role;
+        })
+
+    uncat_SA.roles = roles_SA;
+    uncat_nonSA.roles = roles_NonSA;
+    dbGuild.categories = [uncat_SA, uncat_nonSA];
       
     await getRepository(Guild).save(dbGuild);
-    await getRepository(Category).save(uncat);
-    await getRepository(Role).save(roles);
+    await getRepository(Category).save(uncat_SA);
+    await getRepository(Category).save(uncat_nonSA);
+    await getRepository(Role).save([...roles_NonSA, ...roles_SA]);
   }
 })
 
@@ -166,3 +202,7 @@ client.on("roleUpdate", async (oldRole, newRole) =>
 client.on("error", console.error);
 
 client.login(process.env.TOKEN);
+
+export {
+  shouldBeSelfAssignable
+}

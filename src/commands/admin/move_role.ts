@@ -52,7 +52,7 @@ class MoveRoleCommand extends Command
       });
     
     if (!newCat)
-      return msg.say(`${newCatName} category does not exist`);
+      return await msg.say(`${newCatName} category does not exist`);
 
     for (const role of newCat.roles)
     {
@@ -74,10 +74,16 @@ class MoveRoleCommand extends Command
     }
     
     if (!currCat)
-      return msg.say(`${name} role was not found`);
+      return await msg.say(`${name} role was not found`);
 
     if (currCat.id === newCat.id)
-      return msg.say(`${name} is already in ${newCat.name} category`);
+      return await msg.say(`${name} is already in ${newCat.name} category`);
+
+    if (!currCat.selfAssignable)
+    {
+      if (!msg.member.permissions.has("MANAGE_GUILD"))
+        return await msg.reply("You need to have the Manage Server permission to change the self-assignability of a role");
+    }
 
     let dbRole = await getRepository(Role)
       .findOne({
