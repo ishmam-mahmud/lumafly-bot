@@ -11,6 +11,8 @@ type EditCatCommandArgs = {
 
 class EditCatCommand extends Command
 {
+  truthy: Set<string>;
+  falsy: Set<string>;
   constructor(client: CommandoClient)
   {
     super(client, {
@@ -47,7 +49,7 @@ class EditCatCommand extends Command
           type: "string",
           validate: (newRoleColor: string) =>
           {
-            let re = /^#[A-F0-9]{6}$|^DEFAULT$|^-$/;
+            let re = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
             return re.exec(newRoleColor);
           },
           default: "-"
@@ -56,10 +58,12 @@ class EditCatCommand extends Command
           key: "isSelfAssignable",
           prompt: "Will the roles in this category be self-assignable? Use `y`/`n`",
           type: "string",
-          default: "-"
+          default: "*"
         },
       ]
     })
+    this.truthy = new Set(['true', 't', 'yes', 'y', 'on', 'enable', 'enabled', '1', '+']);
+    this.falsy = new Set(['false', 'f', 'no', 'n', 'off', 'disable', 'disabled', '0', '-']);
   }
 
   async run(msg: CommandoMessage, { name, newName, newRoleColor, isSelfAssignable }: EditCatCommandArgs)
@@ -76,17 +80,17 @@ class EditCatCommand extends Command
     if (!cat)
       return await msg.say(`${name} category does not exist`);
     
-    if (newName !== "-")
+    if (newName !== "*")
       cat.name = newName;
 
-    if(newRoleColor !== "-")
+    if(newRoleColor !== "*")
       cat.defaultRoleColor = newRoleColor;
 
-    if(isSelfAssignable !== "-")
+    if(isSelfAssignable !== "*")
     {
-      if (isSelfAssignable.toLowerCase() === "y")
+      if (this.truthy.has(isSelfAssignable))
         cat.selfAssignable = true;
-      if (isSelfAssignable.toLowerCase() === "n")
+      if (this.falsy.has(isSelfAssignable))
         cat.selfAssignable = false;
     }
     let savedCat = await getRepository(Category).save(cat);

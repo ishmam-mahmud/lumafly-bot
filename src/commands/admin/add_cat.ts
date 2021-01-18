@@ -33,7 +33,7 @@ class AddCatCommand extends Command
           type: "string",
           validate: (defaultRoleColor: string) =>
           {
-            let re = /^#[A-F0-9]{6}$|^DEFAULT$|^-$/;
+            let re = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
             return re.exec(defaultRoleColor);
           },
           default: "DEFAULT"
@@ -68,7 +68,7 @@ class AddCatCommand extends Command
     cat.guild = guild;
     cat.roles = [];
 
-    if (defaultRoleColor === '-')
+    if (defaultRoleColor === '*')
       defaultRoleColor = "DEFAULT";
     cat.defaultRoleColor = defaultRoleColor;
     
