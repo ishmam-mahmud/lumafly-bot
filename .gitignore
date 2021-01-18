@@ -6,3 +6,4 @@ node_modules
 *.bak
 *.sql
 *.ps1
+db
