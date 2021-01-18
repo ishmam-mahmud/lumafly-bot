@@ -49,7 +49,7 @@ class RolesCommand extends Command
       for (let i = 0; i < cat.roles.length; ++i)
       {
         const role = cat.roles[i];
-        roleString = `${roleString}${role.name} --- ${role.id}\n`
+        roleString = `${roleString}${role.name}\n`
         ++counter;
         if (counter === 50 || i === cat.roles.length - 1)
         {
@@ -59,16 +59,8 @@ class RolesCommand extends Command
               color: cat.defaultRoleColor,
               description: roleString,
               fields: [{
-                name: "id",
-                value: `\`${cat.id}\``,
-                inline: true,
-              }, {
                 name: "defaultRoleColor",
                 value: `\`${cat.defaultRoleColor}\``,
-                inline: true,
-              }, {
-                name: "Self-Assignable",
-                value: cat.selfAssignable ? "Yes" : "No",
                 inline: true,
               }],
             }
