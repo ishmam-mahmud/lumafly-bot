@@ -20,7 +20,7 @@ class EditCatCommand extends Command
       description: "Edit the properties of a role category",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
-      userPermissions: ["MANAGE_ROLES"],
+      userPermissions: ["MANAGE_GUILD"],
       args: [
         {
           key: "name",
