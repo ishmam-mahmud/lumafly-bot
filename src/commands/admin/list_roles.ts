@@ -3,21 +3,23 @@ import { Category } from "../../entity/Category"
 import { getRepository, PrimaryColumn } from "typeorm"
 import { Message } from "discord.js"
 
-type RolesArgs = {
+type ListRoleArgs = {
   catName: string;
 }
 
-class RolesCommand extends Command
+class ListRolesCommand extends Command
 {
   constructor(client: CommandoClient)
   {
     super(client, {
-      name: "roles",
-      group: "member",
-      memberName: "roles",
-      description: "List roles belonging to a given self-assignable cat.",
+      name: "ls_roles",
+      aliases: ["list_roles"],
+      group: "admin",
+      memberName: "ls_roles",
+      description: "List roles belonging to a given cat.",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
+      userPermissions: ["MANAGE_ROLES"],
       args:[{
         key: "catName",
         prompt: "Which cat's roles do you want to see?",
@@ -26,11 +28,10 @@ class RolesCommand extends Command
     })
   }
 
-  async run(msg: CommandoMessage, { catName }: RolesArgs)
+  async run(msg: CommandoMessage, { catName }: ListRoleArgs)
   {
     let results = await getRepository(Category).find({
       name: catName,
-      selfAssignable: true,
       guild: {
         id: msg.guild.id,
       }
@@ -82,4 +83,4 @@ class RolesCommand extends Command
   }
 }
 
-export default RolesCommand;
+export default ListRolesCommand;

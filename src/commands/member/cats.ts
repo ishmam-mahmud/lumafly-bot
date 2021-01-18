@@ -1,27 +1,26 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
-import { getRepository, PrimaryColumn } from "typeorm"
+import { getRepository } from "typeorm"
 import { Message } from "discord.js"
 
-class ListCatsCommand extends Command
+class CatsCommand extends Command
 {
   constructor(client: CommandoClient)
   {
     super(client, {
-      name: "list_cats",
-      aliases: ["ls_cats"],
-      group: "admin",
-      memberName: "list_cats",
-      description: "List current role categories.",
+      name: "cats",
+      group: "member",
+      memberName: "cats",
+      description: "Show the current self-assignable role categories.",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
-      userPermissions: ["MANAGE_ROLES"],
     })
   }
 
   async run(msg: CommandoMessage)
   {
     let results = await getRepository(Category).find({
+      selfAssignable: true,
       guild: {
         id: msg.guild.id,
       }
@@ -56,4 +55,4 @@ class ListCatsCommand extends Command
   }
 }
 
-export default ListCatsCommand;
+export default CatsCommand;

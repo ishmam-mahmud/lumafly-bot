@@ -33,26 +33,44 @@ client.once("ready", async () =>
   console.log(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
   await client.user?.setPresence({ activity: { name: "with your cats" }, status: "online" });
 
-  await createConnection({
-    type: "sqlite",
-    database: "./test.sql",
-    synchronize: true,
-    logging: true,
-    entities: [
-      "dist/entity/**/*.js"
-    ],
-    migrations: [
-      "dist/migration/**/*.js"
-    ],
-    subscribers: [
-      "dist/subscriber/**/*.js"
-    ],
-    cli: {
-      "entitiesDir": "dist/entity",
-      "migrationsDir": "dist/migration",
-      "subscribersDir": "dist/subscriber"
-    },
-  });
+  let retries = 5;
+  while (retries > 0)
+  {
+    try
+    {
+      // await createConnection();
+      await createConnection({
+        type: "better-sqlite3",
+        database: "./db/prod.sql",
+        synchronize: true,
+        logging: true,
+        entities: [
+          "dist/entity/**/*.js"
+        ],
+        migrations: [
+          "dist/migration/**/*.js"
+        ],
+        subscribers: [
+          "dist/subscriber/**/*.js"
+        ],
+        cli: {
+          "entitiesDir": "dist/entity",
+          "migrationsDir": "dist/migration",
+          "subscribersDir": "dist/subscriber"
+        },
+    });
+      break;
+    } catch (error)
+    {
+      console.error(error);
+      console.error(`Retries left = ${retries}`);
+      --retries;
+      await new Promise((res, rej) =>
+      {
+        setTimeout(res, 5000);
+      });
+    }
+  }
 })
 
 const shouldBeSelfAssignable = (role: DiscordRole) =>
