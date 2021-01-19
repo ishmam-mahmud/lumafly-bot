@@ -25,13 +25,18 @@ class RolesCommand extends Command
         validate: (catName: string) =>
         {
           return catName.length > 3;
-        }
+        },
+        default: "*"
       }]
     })
   }
 
-  async run(msg: CommandoMessage, { catName }: RolesArgs)
+  async run(msg: CommandoMessage, args)
   {
+    let catName = args.catName
+    if (catName === "*")
+      return await this.client.registry.commands.get("cats").run(msg, args, false);
+
     let results = await getRepository(Category).find({
       selfAssignable: true,
       guild: {
