@@ -73,22 +73,6 @@ client.once("ready", async () =>
   }
 })
 
-const shouldBeSelfAssignable = (role: DiscordRole) =>
-{
-  if (role.permissions.has("MANAGE_ROLES"))
-    return false;
-  
-  if (role.managed)
-    return false;
-
-  let specialRoles = ["Muted", "OK Booster", "@everyone", "New-Best-Friend", "Den-Opt-In", "Partnership", "Engineer", "no-pictures", "Member", "botless"];
-
-  if (specialRoles.findIndex(s => s === role.name) !== -1)
-    return false;
-
-  return true;
-}
-
 const setupCats = async (guild: DiscordGuild) =>
 {
   let dbGuild = await getRepository(Guild)
@@ -106,7 +90,7 @@ const setupCats = async (guild: DiscordGuild) =>
     let cats: Category[] = [];
 
     let non_sa = new Category();
-    non_sa.name = "Not-SelfAssignable";
+    non_sa.name = "Milky Way";
     non_sa.defaultRoleColor = "DEFAULT";
     non_sa.guild = dbGuild;
     non_sa.roles = [];
@@ -226,7 +210,7 @@ const setupCats = async (guild: DiscordGuild) =>
     cats.push(miscellaneous);
 
     let extraCats = new Category();
-    extraCats.name = "Extras";
+    extraCats.name = "Uncategorized";
     extraCats.defaultRoleColor = "DEFAULT";
     extraCats.guild = dbGuild;
     extraCats.roles = [];
@@ -624,8 +608,6 @@ client.on("roleCreate", async (roleCreated) =>
 
   await getRepository(Role).save(dbRole);
   await getRepository(Category).save(uncat);
-
-
 })
 
 client.on("roleDelete", async (roleDeleted) =>
@@ -648,6 +630,9 @@ client.on("roleDelete", async (roleDeleted) =>
 
 client.on("roleUpdate", async (oldRole, newRole) =>
 {
+  if (oldRole.id === newRole.id && oldRole.name === newRole.name)
+    return;
+
   let dbGuild = await getRepository(Guild)
     .findOne(oldRole.guild.id);
 
@@ -670,6 +655,5 @@ client.on("error", console.error);
 client.login(process.env.TOKEN);
 
 export {
-  shouldBeSelfAssignable,
   setupCats,
 }
