@@ -79,7 +79,7 @@ class MoveRoleCommand extends Command
     if (currCat.id === newCat.id)
       return await msg.say(`${name} is already in ${newCat.name} category`);
 
-    if (!currCat.selfAssignable)
+    if (!currCat.selfAssignable || currCat.selfAssignable !== newCat.selfAssignable)
     {
       if (!msg.member.permissions.has("MANAGE_GUILD"))
         return await msg.reply("You need to have the Manage Server permission to change the self-assignability of a role");
@@ -92,8 +92,13 @@ class MoveRoleCommand extends Command
           id: currCat.id,
         },
       });
-    
 
+    if (newCat.selfAssignable)
+    {
+      let discRole = await msg.guild.roles.fetch(dbRole.id);
+      discRole = await discRole.setColor(newCat.defaultRoleColor);
+    }
+    
     dbRole.category = newCat;
     newCat.roles = [...newCat.roles, dbRole];
     currCat.roles = currCat.roles.filter(r => r.name !== name);
