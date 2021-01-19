@@ -1,7 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
-import { Message } from "discord.js"
 
 class CatsCommand extends Command
 {
@@ -34,7 +33,11 @@ class CatsCommand extends Command
       embed: {
         title: "Role Categories",
         description: catString,
-      }
+        fields: [{
+          name: "Number of self-assignable cats",
+          value: `${results.length}`
+        }],
+      },
     });
   }
 }
