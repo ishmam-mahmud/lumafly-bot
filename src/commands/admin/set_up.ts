@@ -1,5 +1,5 @@
-import { setupCats } from "../../index";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
+import { logErrorFromCommand, setupCats } from "../../utils"
 class SetUpCommand extends Command
 {
   constructor(client: CommandoClient)
@@ -23,8 +23,7 @@ class SetUpCommand extends Command
       return await msg.say(res);
     } catch (error)
     {
-      console.error(error);
-      return await msg.say(error.message);
+      return await logErrorFromCommand(error, msg);
     }
   }
 }

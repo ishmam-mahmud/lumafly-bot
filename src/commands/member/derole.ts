@@ -2,7 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { Role } from "../../entity/Role"
 import { getRepository } from "typeorm"
-import { fakeFuzzySearch, logError } from "../../utils";
+import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
 
 type DeroleCommandArgs = {
   roleName: string;
@@ -83,7 +83,7 @@ class DeroleCommand extends Command
       return await msg.say(`access removed from role ${foundRole.name}. congratulation ?`);
     } catch (error)
     {
-      await logError(error, msg);
+      await logErrorFromCommand(error, msg);
       return await msg.say(`:pensive: I failed`);
     }
   }

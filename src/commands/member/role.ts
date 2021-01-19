@@ -2,7 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
 import { Role } from "../../entity/Role"
-import { fakeFuzzySearch, logError } from "../../utils";
+import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
 
 type RoleCommandArgs = {
   roleName: string;
@@ -74,7 +74,7 @@ class RoleCommand extends Command
       return await msg.say(`access granted to role ${foundRole.name}. congratulation !`);
     } catch (error)
     {
-      await logError(error, msg);
+      await logErrorFromCommand(error, msg);
       return await msg.say(`:pensive: I failed`);
     }
   }
