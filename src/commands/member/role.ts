@@ -2,6 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
 import { Role } from "../../entity/Role"
+import { fakeFuzzySearch, logError } from "../../utils";
 
 type RoleCommandArgs = {
   roleName: string;
@@ -25,8 +26,8 @@ class RoleCommand extends Command
           type: "string",
           validate: (roleName: string) =>
           {
-            return !/everyone/.exec(roleName);
-          }
+            return !/everyone/.exec(roleName) && roleName.length > 3;
+          },
         }
       ]
     })
@@ -51,44 +52,31 @@ class RoleCommand extends Command
       }
     });
 
-    let foundRoles: Map<number, Role> = new Map<number, Role>();
+    let rolesToSearchThrough: Role[] = [];
     for (const cat of results)
     {
-      for (const role of cat.roles)
-      {
-        let dbName = role.name.toLowerCase();
-        let input = roleName.toLowerCase().trim();
-
-        let foundIndex = dbName.indexOf(input);
-        if (foundIndex !== -1)
-        {
-          if (!foundRoles.has(foundIndex))
-            foundRoles.set(foundIndex, role);
-        }
-      }
+      rolesToSearchThrough = [...rolesToSearchThrough, ...cat.roles];
     }
 
-    if (foundRoles.size > 0)
+    let foundRole: Role;
+    try
     {
-      let i = 0;
-      while (!foundRoles.has(i))
-        ++i;
-      let roleToAssign = foundRoles.get(i); 
-      try
-      {
-        await msg.member.roles.add(roleToAssign.id);
-      } catch (error)
-      {
-        let e = `msg.url\n${error.message}`;
-        console.error(msg.url);
-        console.error(error);
-        await msg.author.send(e);
-        return await msg.say(`:pensive: I failed`);  
-      }
-      return await msg.say(`access granted to role ${roleToAssign.name}. congratulation !`);
+      foundRole = fakeFuzzySearch(roleName, rolesToSearchThrough) as Role;
+    } catch (error)
+    {
+      console.error(error);
+      return await msg.say(`${roleName} role not found`);  
     }
 
-    return await msg.say(`${roleName} not found !`);
+    try
+    {
+      await msg.member.roles.add(foundRole.id);
+      return await msg.say(`access granted to role ${foundRole.name}. congratulation !`);
+    } catch (error)
+    {
+      await logError(error, msg);
+      return await msg.say(`:pensive: I failed`);
+    }
   }
 }
 
