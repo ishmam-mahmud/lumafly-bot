@@ -24,9 +24,7 @@ class RmCatCommand extends Command
           key: "nameCatToRemove",
           prompt: "What's the name of the category to be removed?",
           type: "string",
-          validate: (nameCatToRemove: string) => {
-            return !/Uncategorized/.exec(nameCatToRemove);
-          }
+          default: "*"
         },
       ]
     })
@@ -34,6 +32,12 @@ class RmCatCommand extends Command
 
   async run(msg: CommandoMessage, { nameCatToRemove }: RmCatCommandArgs)
   {
+    if (/Uncategorized/.exec(nameCatToRemove))
+      return await msg.say("No removing the Uncategorized category");
+    
+    if (nameCatToRemove.length < 3)
+      return await msg.say("too few characters in the given cat's name");
+
     let catToRemove = await getRepository(Category)
       .findOne({
         name: nameCatToRemove,
