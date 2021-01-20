@@ -26,14 +26,13 @@ class MoveRoleCommand extends Command
           key: "name",
           prompt: "What's the name of the role?",
           type: "string",
-          validate: (name: string) => {
-            return !/everyone/.exec(name);
-          }
+          default: "*",
         },
         {
           key: "newCatName",
           prompt: "What category should the role be moved to?",
           type: "string",
+          default: "*",
         },
       ]
     })
@@ -43,6 +42,15 @@ class MoveRoleCommand extends Command
 
   async run(msg: CommandoMessage, { name, newCatName }: MoveRoleCommandArgs)
   {
+    if (/everyone/.exec(name))
+      return await msg.say("No moving everyone around");
+
+    if (name.length < 3)
+      return await msg.say("too few characters in the role name");
+
+    if (newCatName.length < 3)
+      return await msg.say("too few characters in the destination cat name");
+
     let newCat = await getRepository(Category)
       .findOne({
         name: newCatName,
