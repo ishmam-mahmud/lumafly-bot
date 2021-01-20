@@ -24,17 +24,20 @@ class DeroleCommand extends Command
           key: "roleName",
           prompt: "What role do you want to remove?",
           type: "string",
-          validate: (roleName: string) =>
-          {
-            return !/everyone/.exec(roleName) && roleName.length > 3;
-          }
+          default: "*",
         }
-      ]
+      ],
     })
   }
 
   async run(msg: CommandoMessage, { roleName }: DeroleCommandArgs)
   {
+    if (/everyone/.exec(roleName))
+      return await msg.say("no");
+  
+    if (roleName.length < 3)
+      return await msg.say("too few characters from the role name");
+
     let found = false;
     for (const role of msg.member.roles.cache.values())
     {
@@ -74,7 +77,7 @@ class DeroleCommand extends Command
     } catch (error)
     {
       console.error(error);
-      return await msg.say(`${roleName} role not found`);  
+      return await msg.say(`${roleName} role not found among self-assignable roles`);  
     }
 
     try
