@@ -79,7 +79,7 @@ const setupCats = async (guild: DiscordGuild) =>
     let cats: Category[] = [];
 
     let non_sa = new Category();
-    non_sa.name = "Milky Way";
+    non_sa.name = "Milky-Way";
     non_sa.defaultRoleColor = "DEFAULT";
     non_sa.guild = dbGuild;
     non_sa.roles = [];
@@ -87,7 +87,7 @@ const setupCats = async (guild: DiscordGuild) =>
     cats.push(non_sa);
     
     let colorRoles = new Category();
-    colorRoles.name = "Color Roles";
+    colorRoles.name = "Color-Roles";
     colorRoles.defaultRoleColor = "DEFAULT";
     colorRoles.guild = dbGuild;
     colorRoles.roles = [];
@@ -111,7 +111,7 @@ const setupCats = async (guild: DiscordGuild) =>
     cats.push(genders);
     
     let rom = new Category();
-    rom.name = "Romantic Attraction";
+    rom.name = "Romantic-Attraction";
     rom.defaultRoleColor = "#F1C40F";
     rom.guild = dbGuild;
     rom.roles = [];
@@ -183,7 +183,7 @@ const setupCats = async (guild: DiscordGuild) =>
     // cats.push(dms);
 
     let terCat = new Category();
-    terCat.name = "Tertiary Attractions";
+    terCat.name = "Tertiary-Attractions";
     terCat.defaultRoleColor = "DEFAULT";
     terCat.guild = dbGuild;
     terCat.roles = [];
@@ -191,7 +191,7 @@ const setupCats = async (guild: DiscordGuild) =>
     cats.push(terCat);
     
     let tabletop = new Category();
-    tabletop.name = "Tabletop RPGs";
+    tabletop.name = "Tabletop-RPGs";
     tabletop.defaultRoleColor = "DEFAULT";
     tabletop.guild = dbGuild;
     tabletop.roles = [];
