@@ -72,7 +72,9 @@ class RolesCommand extends Command
     let roleString = '';
 
     for (const r of catAskedFor.roles)
-      roleString = `${roleString}${r.name}, `;
+    {
+      roleString = `${roleString}<@&${r.id}>, `;
+    }
 
     return await msg.say({
       embed: {
