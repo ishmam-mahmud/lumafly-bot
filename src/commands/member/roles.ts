@@ -47,7 +47,7 @@ class RolesCommand extends Command
     {
       let catString = '';
       for (const cat of results)
-        catString = `${catString}${cat.name} - ${cat.roles.length} roles\n`
+        catString = `${catString}${cat.name} : ${cat.roles.length} roles\n`
       
       catString = `${catString}\nUse \`${this.client.commandPrefix}roles <categoryName>\` to see the roles in a category.`;
   
