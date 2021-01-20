@@ -22,6 +22,12 @@ const fakeFuzzySearch = (searchInput: string, list: EntityName[]) =>
     {
       if (!foundTargets.has(foundIndex))
         foundTargets.set(foundIndex, it);
+      else
+      {
+        let prevFind = foundTargets.get(foundIndex);
+        if (prevFind.name.length > it.name.length)
+          foundTargets.set(foundIndex, it);
+      }
     }
   }
 
@@ -213,8 +219,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let roles = guild.roles.cache.map(r =>
       {
         let role = new Role();
-        console.log("Role id", r.id);
-        console.log("Role name", r.name);
         role.id = r.id;
         role.name = r.name;
 
