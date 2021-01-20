@@ -26,6 +26,7 @@ class AddCatCommand extends Command
           key: "name",
           prompt: "What's the name of the category?",
           type: "string",
+          default: "*",
         },
         {
           key: "defaultRoleColor",
@@ -45,6 +46,9 @@ class AddCatCommand extends Command
 
   async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs)
   {
+    if (name.length < 3)
+      return await msg.say(`too few characters in the name`);
+
     defaultRoleColor = defaultRoleColor.toUpperCase();
     let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
     if (!colorRe.exec(defaultRoleColor))
