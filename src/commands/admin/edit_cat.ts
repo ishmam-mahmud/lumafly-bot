@@ -28,31 +28,19 @@ class EditCatCommand extends Command
           key: "name",
           prompt: "What's the name of the category?",
           type: "string",
-          validate: (name: string) =>
-          {
-            return !/Uncategorized/.exec(name);
-          },
+          default: "*",
         },
         {
           key: "newName",
           prompt: "What's the new name of the category?",
           type: "string",
-          validate: (newName: string) =>
-          {
-            return !/Uncategorized/.exec(newName);
-          },
-          default: "-",
+          default: "*",
         },
         {
           key: "newRoleColor",
           prompt: "What's the new default role color of the category?",
           type: "string",
-          validate: (newRoleColor: string) =>
-          {
-            let re = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
-            return re.exec(newRoleColor);
-          },
-          default: "-"
+          default: "*"
         },
         {
           key: "isSelfAssignable",
@@ -68,7 +56,24 @@ class EditCatCommand extends Command
 
   async run(msg: CommandoMessage, { name, newName, newRoleColor, isSelfAssignable }: EditCatCommandArgs)
   {
+
+    if (/Uncategorized/.exec(name))
+      return await msg.say("No editing the uncategorized category");
     
+    if (name.length < 3)
+      return await msg.say("too few characters in the name");
+
+    if (/Uncategorized/.exec(newName))
+      return await msg.say("No usurping the uncategorized category");
+
+    if (newName.length < 3)
+      newName = "*";
+
+    newRoleColor = newRoleColor.toUpperCase();
+    let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
+    if (!colorRe.exec(newRoleColor))
+      return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
+
     let cat = await getRepository(Category)
       .findOne({
         name,
@@ -76,6 +81,17 @@ class EditCatCommand extends Command
           id: msg.guild.id,
         }
       });
+
+    let checkCat = await getRepository(Category)
+      .findOne({
+        name: newName,
+        guild: {
+          id: msg.guild.id,
+        }
+      });
+    
+    if (checkCat)
+      return await msg.say(`There's already a category with the name ${newName}`);
     
     if (!cat)
       return await msg.say(`${name} category does not exist`);
