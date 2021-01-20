@@ -71,10 +71,15 @@ class RolesCommand extends Command
     
     let roleString = '';
 
-    for (const r of catAskedFor.roles)
-    {
+    let rolesArr = catAskedFor.roles.sort((r1, r2) =>
+      {
+        if (r1.name < r2.name) return -1;
+        if (r1.name > r2.name) return -1;
+        return 0;
+      });
+
+    for (const r of rolesArr)
       roleString = `${roleString}<@&${r.id}>, `;
-    }
 
     return await msg.say({
       embed: {
