@@ -27,32 +27,22 @@ class ListCatsCommand extends Command
       }
     });
 
-    let embedSends:Promise<Message>[] = [];
+    if (results.length === 0)
+      return await msg.say(`There are no role categories yet.`);
 
+    let catString = '';
     for (const cat of results)
-    {
-      embedSends.push(msg.channel.send({
-        embed: {
-          title: cat.name,
-          color: cat.defaultRoleColor,
-          description: `${cat.roles.length} roles`,
-          fields: [{
-            name: "id",
-            value: `\`${cat.id}\``,
-            inline: true,
-          }, {
-            name: "defaultRoleColor",
-            value: `\`${cat.defaultRoleColor}\``,
-            inline: true,
-          }, {
-            name: "Self-Assignable",
-            value: cat.selfAssignable ? "Yes" : "No",
-            inline: true,
-          }],
-        }
-      }));
-    }
-    return await Promise.all(embedSends);
+      catString = `${catString}ID-${cat.id} : ${cat.name} : ${cat.roles.length} roles : ${cat.defaultRoleColor} color\n`
+    
+    catString = `${catString}\nUse \`${this.client.commandPrefix}ls_roles <categoryName>\` to see the roles in a category.`;
+
+    return await msg.channel.send({
+      embed: {
+        title: "Role Categories",
+        description: catString,
+      },
+    });
+
   }
 }
 
