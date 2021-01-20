@@ -31,12 +31,7 @@ class AddCatCommand extends Command
           key: "defaultRoleColor",
           prompt: "What's the default role color of the category?",
           type: "string",
-          validate: (defaultRoleColor: string) =>
-          {
-            let re = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
-            return re.exec(defaultRoleColor);
-          },
-          default: "DEFAULT"
+          default: "*",
         },
         {
           key: "isSelfAssignable",
@@ -50,6 +45,11 @@ class AddCatCommand extends Command
 
   async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs)
   {
+    defaultRoleColor = defaultRoleColor.toUpperCase();
+    let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
+    if (!colorRe.exec(defaultRoleColor))
+      return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
+
     let cat = await getRepository(Category)
       .findOne({
         name,
