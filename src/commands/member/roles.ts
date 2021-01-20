@@ -15,6 +15,7 @@ class RolesCommand extends Command
       name: "roles",
       group: "member",
       memberName: "roles",
+      aliases: ["cats"],
       description: "List roles belonging to a given self-assignable cat.",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
@@ -22,20 +23,15 @@ class RolesCommand extends Command
         key: "catName",
         prompt: "Which cat's roles do you want to see?",
         type: "string",
-        validate: (catName: string) =>
-        {
-          return catName.length > 3;
-        },
         default: "*"
       }]
     })
   }
 
-  async run(msg: CommandoMessage, args)
+  async run(msg: CommandoMessage, { catName }: RolesArgs)
   {
-    let catName = args.catName
-    if (catName === "*")
-      return await this.client.registry.commands.get("cats").run(msg, args, false);
+    if (catName.length < 3)
+      catName = "*"
 
     let results = await getRepository(Category).find({
       selfAssignable: true,
@@ -45,7 +41,23 @@ class RolesCommand extends Command
     });
 
     if (results.length === 0)
-      return await msg.say(`${catName} category not found`);
+      return await msg.say(`There are no self-assignable role categories yet.`);
+
+    if (catName === "*")
+    {
+      let catString = '';
+      for (const cat of results)
+        catString = `${catString}${cat.name} - ${cat.roles.length} roles\n`
+      
+      catString = `${catString}\nUse \`${this.client.commandPrefix}roles <categoryName>\` to see the roles in a category.`;
+  
+      return await msg.channel.send({
+        embed: {
+          title: "Role Categories",
+          description: catString,
+        },
+      });
+    }
 
     let catAskedFor: Category;
     try
@@ -67,10 +79,6 @@ class RolesCommand extends Command
         title: catAskedFor.name,
         color: catAskedFor.defaultRoleColor,
         description: roleString.slice(0, roleString.length - 2),
-        fields: [{
-          name: "Number of Roles",
-          value: `${catAskedFor.roles.length}`,
-        }],
       },
     });
   }
