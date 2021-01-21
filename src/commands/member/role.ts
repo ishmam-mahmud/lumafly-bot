@@ -16,6 +16,7 @@ class RoleCommand extends Command
       name: "role",
       group: "member",
       memberName: "role",
+      aliases: ["petcat", "patcat", "cat"],
       description: "Assign a role to yourself, if a self-assignable cat owns it",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
@@ -32,54 +33,54 @@ class RoleCommand extends Command
 
   async run(msg: CommandoMessage, { roleName }: RoleCommandArgs)
   {
-    if (/everyone/.exec(roleName))
-      return await msg.say("no");
-    
-    if (roleName.length < 3)
-      return await msg.say("too few characters from the role name");
-
-    for (const role of msg.member.roles.cache.values())
+    try
     {
-      let dsRoleName = role.name.toLowerCase().trim();
-      let input = roleName.toLowerCase().trim();
-      if (dsRoleName.includes(input))
+      if (/everyone/.exec(roleName))
+        return await msg.say("no");
+      
+      if (roleName.length < 3)
+        return await msg.say("too few characters from the role name");
+  
+      for (const role of msg.member.roles.cache.values())
       {
-        return await msg.say(`You already have the ${role.name} role`);
-      }  
-    }
-
-    let results = await getRepository(Category).find({
-      selfAssignable: true,
-      guild: {
-        id: msg.guild.id,
+        let dsRoleName = role.name.toLowerCase().trim();
+        let input = roleName.toLowerCase().trim();
+        if (dsRoleName.includes(input))
+        {
+          return await msg.say(`You already have the ${role.name} role`);
+        }  
       }
-    });
-
-    let rolesToSearchThrough: Role[] = [];
-    for (const cat of results)
-    {
-      rolesToSearchThrough = [...rolesToSearchThrough, ...cat.roles];
-    }
-
-    let foundRole: Role;
-    try
-    {
-      foundRole = fakeFuzzySearch(roleName, rolesToSearchThrough) as Role;
-    } catch (error)
-    {
-      console.error(error);
-      return await msg.say(`${roleName} role not found among self-assignable roles`);  
-    }
-
-    try
-    {
+  
+      let results = await getRepository(Category).find({
+        selfAssignable: true,
+        guild: {
+          id: msg.guild.id,
+        }
+      });
+  
+      let rolesToSearchThrough: Role[] = [];
+      for (const cat of results)
+      {
+        rolesToSearchThrough = [...rolesToSearchThrough, ...cat.roles];
+      }
+  
+      let foundRole: Role;
+      try
+      {
+        foundRole = fakeFuzzySearch(roleName, rolesToSearchThrough) as Role;
+      } catch (error)
+      {
+        console.error(error);
+        return await msg.say(`${roleName} role not found among self-assignable roles`);  
+      }
       await msg.member.roles.add(foundRole.id);
       return await msg.say(`access granted to role ${foundRole.name}. congratulations !`);
     } catch (error)
     {
-      await logErrorFromCommand(error, msg);
-      return await msg.say(`:pensive: I failed`);
+      return await logErrorFromCommand(error, msg);    
     }
+
+
   }
 }
 
