@@ -2,6 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { Guild } from "../../entity/Guild"
 import { getRepository } from "typeorm"
+import { logErrorFromCommand } from "../../utils"
 
 type AddCatCommandArgs = {
   name: string,
@@ -46,42 +47,48 @@ class AddCatCommand extends Command
 
   async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs)
   {
-    if (name.length < 3)
-      return await msg.say(`too few characters in the name`);
-
-    defaultRoleColor = defaultRoleColor.toUpperCase();
-    let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
-    if (!colorRe.exec(defaultRoleColor))
-      return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
-
-    let cat = await getRepository(Category)
-      .findOne({
-        name,
-        guild: {
-          id: msg.guild.id,
-        },
-      });
-
-    if (cat)
-      return await msg.say(`A category with that name already exists.`);
-
-    let guild = await getRepository(Guild).findOne(msg.guild.id);
-
-    cat = new Category();
-    cat.name = name;
-    cat.guild = guild;
-    cat.roles = [];
-
-    if (defaultRoleColor === '*')
-      defaultRoleColor = "DEFAULT";
-    cat.defaultRoleColor = defaultRoleColor;
-    
-    cat.selfAssignable = isSelfAssignable;
-    let savedCat = await getRepository(Category).save(cat);
-
-    guild.categories = [...guild.categories, cat];
-    await getRepository(Guild).save(guild);
-    return await msg.say(`${savedCat.name} has been added`);
+    try
+    {
+      if (name.length < 3)
+        return await msg.say(`too few characters in the name`);
+  
+      defaultRoleColor = defaultRoleColor.toUpperCase();
+      let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
+      if (!colorRe.exec(defaultRoleColor))
+        return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
+  
+      let cat = await getRepository(Category)
+        .findOne({
+          name,
+          guild: {
+            id: msg.guild.id,
+          },
+        });
+  
+      if (cat)
+        return await msg.say(`A category with that name already exists.`);
+  
+      let guild = await getRepository(Guild).findOne(msg.guild.id);
+  
+      cat = new Category();
+      cat.name = name;
+      cat.guild = guild;
+      cat.roles = [];
+  
+      if (defaultRoleColor === '*')
+        defaultRoleColor = "DEFAULT";
+      cat.defaultRoleColor = defaultRoleColor;
+      
+      cat.selfAssignable = isSelfAssignable;
+      let savedCat = await getRepository(Category).save(cat);
+  
+      guild.categories = [...guild.categories, cat];
+      await getRepository(Guild).save(guild);
+      return await msg.say(`${savedCat.name} has been added`);
+    } catch (error)
+    {
+      return await logErrorFromCommand(error, msg);
+    }
   }
 }
 
