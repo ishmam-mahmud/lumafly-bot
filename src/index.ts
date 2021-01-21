@@ -162,7 +162,10 @@ client.on("roleUpdate", async (oldRole, newRole) =>
   }
 })
 
-client.on("error", console.error);
+client.on("error", async err =>
+{
+  await logError(err, client);
+});
 
 client.login(process.env.TOKEN);
 
