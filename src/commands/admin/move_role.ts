@@ -3,6 +3,7 @@ import { getRepository } from "typeorm"
 import { Guild } from "../../entity/Guild"
 import { Category } from "../../entity/Category"
 import { Role } from "../../entity/Role"
+import { logErrorFromCommand } from "../../utils";
 
 type MoveRoleCommandArgs = {
   name: string,
@@ -42,80 +43,86 @@ class MoveRoleCommand extends Command
 
   async run(msg: CommandoMessage, { name, newCatName }: MoveRoleCommandArgs)
   {
-    if (/everyone/.exec(name))
-      return await msg.say("No moving everyone around");
-
-    if (name.length < 3)
-      return await msg.say("too few characters in the role name");
-
-    if (newCatName.length < 3)
-      return await msg.say("too few characters in the destination cat name");
-
-    let newCat = await getRepository(Category)
-      .findOne({
-        name: newCatName,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-    
-    if (!newCat)
-      return await msg.say(`${newCatName} category does not exist`);
-
-    for (const role of newCat.roles)
+    try
     {
-      if (name === role.name)
-        return await msg.say(`${newCat.name} already has a ${name} role`);
-    }
-
-    let guild = await getRepository(Guild).findOne(msg.guild.id);
-    let currCat: Category;
-
-    for (const cat of guild.categories) {
-      for (const role of cat.roles) {
-        if (role.name === name)
-        {
-          currCat = cat;
-          break;
+      if (/everyone/.exec(name))
+        return await msg.say("No moving everyone around");
+  
+      if (name.length < 3)
+        return await msg.say("too few characters in the role name");
+  
+      if (newCatName.length < 3)
+        return await msg.say("too few characters in the destination cat name");
+  
+      let newCat = await getRepository(Category)
+        .findOne({
+          name: newCatName,
+          guild: {
+            id: msg.guild.id,
+          }
+        });
+      
+      if (!newCat)
+        return await msg.say(`${newCatName} category does not exist`);
+  
+      for (const role of newCat.roles)
+      {
+        if (name === role.name)
+          return await msg.say(`${newCat.name} already has a ${name} role`);
+      }
+  
+      let guild = await getRepository(Guild).findOne(msg.guild.id);
+      let currCat: Category;
+  
+      for (const cat of guild.categories) {
+        for (const role of cat.roles) {
+          if (role.name === name)
+          {
+            currCat = cat;
+            break;
+          }
         }
       }
-    }
-    
-    if (!currCat)
-      return await msg.say(`${name} role was not found`);
-
-    if (currCat.id === newCat.id)
-      return await msg.say(`${name} is already in ${newCat.name} category`);
-
-    if (!currCat.selfAssignable || currCat.selfAssignable !== newCat.selfAssignable)
+      
+      if (!currCat)
+        return await msg.say(`${name} role was not found`);
+  
+      if (currCat.id === newCat.id)
+        return await msg.say(`${name} is already in ${newCat.name} category`);
+  
+      if (!currCat.selfAssignable || currCat.selfAssignable !== newCat.selfAssignable)
+      {
+        if (!msg.member.permissions.has("MANAGE_GUILD"))
+          return await msg.reply("You need to have the Manage Server permission to change the self-assignability of a role");
+      }
+  
+      let dbRole = await getRepository(Role)
+        .findOne({
+          name,
+          category: {
+            id: currCat.id,
+          },
+        });
+  
+      if (newCat.selfAssignable)
+      {
+        let discRole = await msg.guild.roles.fetch(dbRole.id);
+        discRole = await discRole.setColor(newCat.defaultRoleColor);
+      }
+      
+      dbRole.category = newCat;
+      newCat.roles = [...newCat.roles, dbRole];
+      currCat.roles = currCat.roles.filter(r => r.name !== name);
+  
+      dbRole = await getRepository(Role).save(dbRole);
+      newCat = await getRepository(Category).save(newCat);
+      currCat = await getRepository(Category).save(currCat);
+  
+      return await msg.say(`${dbRole.name} has been moved from ${currCat.name} to ${newCat.name}`);
+    } catch (error)
     {
-      if (!msg.member.permissions.has("MANAGE_GUILD"))
-        return await msg.reply("You need to have the Manage Server permission to change the self-assignability of a role");
+      return await logErrorFromCommand(error, msg);
     }
-
-    let dbRole = await getRepository(Role)
-      .findOne({
-        name,
-        category: {
-          id: currCat.id,
-        },
-      });
-
-    if (newCat.selfAssignable)
-    {
-      let discRole = await msg.guild.roles.fetch(dbRole.id);
-      discRole = await discRole.setColor(newCat.defaultRoleColor);
-    }
-    
-    dbRole.category = newCat;
-    newCat.roles = [...newCat.roles, dbRole];
-    currCat.roles = currCat.roles.filter(r => r.name !== name);
-
-    dbRole = await getRepository(Role).save(dbRole);
-    newCat = await getRepository(Category).save(newCat);
-    currCat = await getRepository(Category).save(currCat);
-
-    return await msg.say(`${dbRole.name} has been moved from ${currCat.name} to ${newCat.name}`);
   }
 }
 
