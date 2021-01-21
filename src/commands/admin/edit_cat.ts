@@ -1,6 +1,7 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
+import { logErrorFromCommand } from "../../utils";
 
 type EditCatCommandArgs = {
   name: string,
@@ -56,61 +57,66 @@ class EditCatCommand extends Command
 
   async run(msg: CommandoMessage, { name, newName, newRoleColor, isSelfAssignable }: EditCatCommandArgs)
   {
-
-    if (/Uncategorized/.exec(name))
-      return await msg.say("No editing the uncategorized category");
-    
-    if (name.length < 3)
-      return await msg.say("too few characters in the name");
-
-    if (/Uncategorized/.exec(newName))
-      return await msg.say("No usurping the uncategorized category");
-
-    if (newName.length < 3)
-      newName = "*";
-
-    newRoleColor = newRoleColor.toUpperCase();
-    let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
-    if (!colorRe.exec(newRoleColor))
-      return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
-
-    let cat = await getRepository(Category)
-      .findOne({
-        name,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-
-    let checkCat = await getRepository(Category)
-      .findOne({
-        name: newName,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-    
-    if (checkCat)
-      return await msg.say(`There's already a category with the name ${newName}`);
-    
-    if (!cat)
-      return await msg.say(`${name} category does not exist`);
-    
-    if (newName !== "*")
-      cat.name = newName;
-
-    if(newRoleColor !== "*")
-      cat.defaultRoleColor = newRoleColor;
-
-    if(isSelfAssignable !== "*")
+    try
     {
-      if (this.truthy.has(isSelfAssignable))
-        cat.selfAssignable = true;
-      if (this.falsy.has(isSelfAssignable))
-        cat.selfAssignable = false;
+      if (/Uncategorized/.exec(name))
+        return await msg.say("No editing the uncategorized category");
+      
+      if (name.length < 3)
+        return await msg.say("too few characters in the name");
+  
+      if (/Uncategorized/.exec(newName))
+        return await msg.say("No usurping the uncategorized category");
+  
+      if (newName.length < 3)
+        newName = "*";
+  
+      newRoleColor = newRoleColor.toUpperCase();
+      let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
+      if (!colorRe.exec(newRoleColor))
+        return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
+  
+      let cat = await getRepository(Category)
+        .findOne({
+          name,
+          guild: {
+            id: msg.guild.id,
+          }
+        });
+  
+      let checkCat = await getRepository(Category)
+        .findOne({
+          name: newName,
+          guild: {
+            id: msg.guild.id,
+          }
+        });
+      
+      if (checkCat)
+        return await msg.say(`There's already a category with the name ${newName}`);
+      
+      if (!cat)
+        return await msg.say(`${name} category does not exist`);
+      
+      if (newName !== "*")
+        cat.name = newName;
+  
+      if(newRoleColor !== "*")
+        cat.defaultRoleColor = newRoleColor;
+  
+      if(isSelfAssignable !== "*")
+      {
+        if (this.truthy.has(isSelfAssignable))
+          cat.selfAssignable = true;
+        if (this.falsy.has(isSelfAssignable))
+          cat.selfAssignable = false;
+      }
+      let savedCat = await getRepository(Category).save(cat);
+      return await msg.say(`${savedCat.name} has been edited`);
+    } catch (error)
+    {
+      return await logErrorFromCommand(error, msg);
     }
-    let savedCat = await getRepository(Category).save(cat);
-    return await msg.say(`${savedCat.name} has been edited`);
   }
 }
 
