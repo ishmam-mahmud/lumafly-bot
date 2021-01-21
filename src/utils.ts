@@ -45,17 +45,20 @@ const fakeFuzzySearch = (searchInput: string, list: EntityName[]) =>
 const logErrorFromCommand = async (error: Error, msg: CommandoMessage) =>
 {
   let e = `${error.message}\n${msg.url}`;
-  console.error(e);
+  console.error(error.message);
+  console.error(msg);
+  console.error(new Date());
   const app = await msg.client.fetchApplication()
   const owner = app.owner as User;
-  let r = await owner.send(e);
-  return r;
+  await owner.send(e);
+  return await msg.say("Error reported. I failed :pensive: I'm so sorry");
 }
 
 const logError = async (error: Error, client: CommandoClient) =>
 {
   let e = `${error.message}`;
-  console.error(e);
+  console.error(error);
+  console.error(new Date());
   const app = await client.fetchApplication()
   const owner = app.owner as User;
   let r = await owner.send(e);
@@ -73,6 +76,10 @@ const setupCats = async (guild: DiscordGuild) =>
     dbGuild.id = guild.id;
     dbGuild.name = guild.name;
     dbGuild.categories = [];
+    dbGuild.channels = {
+      memberChannelID: '',
+      modChannelID: '',
+    };
 
     await getRepository(Guild).save(dbGuild);
 
