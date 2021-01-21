@@ -3,7 +3,7 @@ import { Role } from "../../entity/Role"
 import { Category } from "../../entity/Category"
 import { Guild } from "../../entity/Guild"
 import { getRepository } from "typeorm"
-import { logErrorFromCommand, setupCats } from "../../utils"
+import { logErrorFromCommand } from "../../utils"
 class DumpCommand extends Command
 {
   constructor(client: CommandoClient)
