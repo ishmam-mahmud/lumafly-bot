@@ -76,10 +76,6 @@ const setupCats = async (guild: DiscordGuild) =>
     dbGuild.id = guild.id;
     dbGuild.name = guild.name;
     dbGuild.categories = [];
-    dbGuild.channels = {
-      memberChannelID: '',
-      modChannelID: '',
-    };
 
     await getRepository(Guild).save(dbGuild);
 
