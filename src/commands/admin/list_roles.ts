@@ -1,7 +1,6 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
-import { getRepository, PrimaryColumn } from "typeorm"
-import { Message } from "discord.js"
+import { getRepository } from "typeorm"
 import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
 
 type ListRoleArgs = {
@@ -32,72 +31,71 @@ class ListRolesCommand extends Command
 
   async run(msg: CommandoMessage, { catName }: ListRoleArgs)
   {
-    if (catName.length < 3)
-      catName = "*"
-
-    let results = await getRepository(Category).find({
-      guild: {
-        id: msg.guild.id,
-      }
-    });
-
-    if (results.length === 0)
-      return await msg.say(`There are no role categories yet.`);
-
-    let catAskedFor: Category;
     try
     {
-      catAskedFor = fakeFuzzySearch(catName, results) as Category;
-    } catch (error)
-    {
-      console.error(error);
-      return await msg.say(`${catName} category not found`);
-    }
-    
-    let roleString = '';
-
-    let rolesArr = catAskedFor.roles.sort((r1, r2) =>
-      {
-        if (r1.name < r2.name) return -1;
-        if (r1.name > r2.name) return -1;
-        return 0;
+      if (catName.length < 3)
+        catName = "*"
+  
+      let results = await getRepository(Category).find({
+        guild: {
+          id: msg.guild.id,
+        }
       });
-
-    let i = 0;
-    let embedSends: Promise<CommandoMessage>[] = [];
-    for (const r of rolesArr)
-    {
-      roleString = `${roleString}<@&${r.id}> : ${r.id}\n`;
-      ++i;
-      if (i % 20 === 0 || i === rolesArr.length)
+  
+      if (results.length === 0)
+        return await msg.say(`There are no role categories yet.`);
+  
+      let catAskedFor: Category;
+      try
       {
-        embedSends.push(msg.say({
-          embed: {
-            title: `${catAskedFor.name} : ID${catAskedFor.id}`,
-            color: catAskedFor.defaultRoleColor,
-            description: roleString,
-            fields: [
-              {
-                name: "Default Color",
-                value: catAskedFor.defaultRoleColor,
-              },
-              {
-                name: "Self-Assignable",
-                value: catAskedFor.selfAssignable,
-              },
-            ]
-          }
-        }));
-        roleString = ``;
+        catAskedFor = fakeFuzzySearch(catName, results) as Category;
+      } catch (error)
+      {
+        console.error(error);
+        return await msg.say(`${catName} category not found`);
       }
-    }
-
-    try
-    {
+      
+      let roleString = '';
+  
+      let rolesArr = catAskedFor.roles.sort((r1, r2) =>
+        {
+          if (r1.name < r2.name) return -1;
+          if (r1.name > r2.name) return -1;
+          return 0;
+        });
+  
+      let i = 0;
+      let embedSends: Promise<CommandoMessage>[] = [];
+      for (const r of rolesArr)
+      {
+        roleString = `${roleString}<@&${r.id}> : ${r.id}\n`;
+        ++i;
+        if (i % 20 === 0 || i === rolesArr.length)
+        {
+          embedSends.push(msg.say({
+            embed: {
+              title: `${catAskedFor.name} : ID${catAskedFor.id}`,
+              color: catAskedFor.defaultRoleColor,
+              description: roleString,
+              fields: [
+                {
+                  name: "Default Color",
+                  value: catAskedFor.defaultRoleColor,
+                },
+                {
+                  name: "Self-Assignable",
+                  value: catAskedFor.selfAssignable,
+                },
+              ]
+            }
+          }));
+          roleString = ``;
+        }
+      }
       return await Promise.all(embedSends);
     } catch (error)
     {
-      return await logErrorFromCommand(error, msg);  
+      return await logErrorFromCommand(error, msg);
     }
   }
 }
