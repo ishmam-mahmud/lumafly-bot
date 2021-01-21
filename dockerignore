@@ -1,0 +1,10 @@
+node_modules
+.gitignore
+**/*.sql
+**/*.sql*
+*.sql
+*.ps1
+**/*.ps1
+**/*.env
+*.env
+dist
