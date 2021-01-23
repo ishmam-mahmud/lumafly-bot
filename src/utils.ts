@@ -85,7 +85,7 @@ const setupCats = async (guild: DiscordGuild) =>
     dbGuild.name = guild.name;
     dbGuild.categories = [];
     dbGuild.config = {
-      suggestionsChannelID: "800381534296211457",
+      suggestionsChannelID: "",
     };
 
     await getRepository(Guild).save(dbGuild);
