@@ -16,11 +16,11 @@ class SetCommand extends Command
       name: "set",
       group: "admin",
       memberName: "set",
-      description: "Set a specific bot setting for this guild",
+      description: "Set a specific bot setting for this server",
       guildOnly: true,
       clientPermissions: ["SEND_MESSAGES"],
       userPermissions: ["MANAGE_GUILD"],
-      details: `Set specific server settings.\nSet suggestions channel id for automatic reactions with ${client.commandPrefix}set sug <channelID>.`,
+      details: `Set specific server settings.\nSet suggestions channel id for automatic reactions with \`${client.commandPrefix}set sug <channelID>\`.`,
       args: [
         {
           key: "setting",
