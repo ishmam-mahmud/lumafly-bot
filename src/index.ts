@@ -148,15 +148,18 @@ client.on("roleUpdate", async (oldRole, newRole) =>
   let dbGuild = await getRepository(Guild)
     .findOne(oldRole.guild.id);
 
-  for (const cat of dbGuild.categories)
+  if (dbGuild)
   {
-    for (const role of cat.roles)
+    for (const cat of dbGuild.categories)
     {
-      if (role.id === oldRole.id)
+      for (const role of cat.roles)
       {
-        role.name = newRole.name;
-        await getRepository(Role).save(role);
-        return;
+        if (role.id === oldRole.id)
+        {
+          role.name = newRole.name;
+          await getRepository(Role).save(role);
+          return;
+        }
       }
     }
   }
@@ -168,7 +171,3 @@ client.on("error", async err =>
 });
 
 client.login(process.env.TOKEN);
-
-export {
-  setupCats,
-}
