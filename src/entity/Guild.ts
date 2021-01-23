@@ -13,4 +13,11 @@ export class Guild {
     eager: true,
   })
   categories: Category[];
+
+  @Column("simple-json")
+  config: GuildConfig;
+}
+
+type GuildConfig = {
+  suggestionsChannelID: string;
 }

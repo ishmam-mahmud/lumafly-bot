@@ -5,7 +5,7 @@ import { createConnection, getRepository } from "typeorm";
 import { Category } from "./entity/Category"
 import { Guild } from "./entity/Guild"
 import { Role } from "./entity/Role"
-import { setupCats, logError } from "./utils";
+import { setupCats, logError, logErrorFromMsg } from "./utils";
 
 const client = new CommandoClient({
   commandPrefix: process.env.PREFIX,
@@ -180,6 +180,26 @@ client.on("roleUpdate", async (oldRole, newRole) =>
   } catch (error)
   {
     await logError(error, client);
+  }
+})
+
+client.on("message", async msg =>
+{
+  try
+  {
+    let dbGuild = await getRepository(Guild).findOne(msg.guild?.id);
+    if (dbGuild)
+    {
+      let channelSuggestionsID = dbGuild.config.suggestionsChannelID;
+      if (msg.channel.id === channelSuggestionsID)
+      {
+        let reactions = [msg.react("👍"), msg.react("👎")];
+        await Promise.all(reactions);
+      }
+    }
+  } catch (error)
+  {
+    await logErrorFromMsg(error, msg);
   }
 })
 
