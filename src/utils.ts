@@ -1,5 +1,5 @@
 import { CommandoClient, CommandoMessage } from "discord.js-commando"
-import { User, Guild as DiscordGuild } from "discord.js";
+import { Guild as DiscordGuild, Message } from "discord.js";
 import { getRepository } from "typeorm";
 import { Guild } from "./entity/Guild";
 import { Category } from "./entity/Category";
@@ -45,13 +45,22 @@ const fakeFuzzySearch = (searchInput: string, list: EntityName[]) =>
 const logErrorFromCommand = async (error: Error, msg: CommandoMessage) =>
 {
   let e = `${error.message}\n${msg.url}`;
-  console.error(error.message);
+  console.error(error);
   console.error(msg);
   console.error(new Date());
-  const app = await msg.client.fetchApplication()
-  const owner = app.owner as User;
+  const owner = msg.client.users.cache.get(process.env.OWNER);
   await owner.send(e);
   return await msg.say("Error reported. I failed :pensive: I'm so sorry");
+}
+
+const logErrorFromMsg = async (error: Error, msg: Message) =>
+{
+  let e = `${error.message}\n${msg.url}`;
+  console.error(error);
+  console.error(msg);
+  console.error(new Date());
+  const owner = msg.client.users.cache.get(process.env.OWNER);
+  return await owner.send(e);
 }
 
 const logError = async (error: Error, client: CommandoClient) =>
@@ -59,8 +68,7 @@ const logError = async (error: Error, client: CommandoClient) =>
   let e = `${error.message}`;
   console.error(error);
   console.error(new Date());
-  const app = await client.fetchApplication()
-  const owner = app.owner as User;
+  const owner = client.users.cache.get(process.env.OWNER);
   let r = await owner.send(e);
   return r;
 }
@@ -76,6 +84,9 @@ const setupCats = async (guild: DiscordGuild) =>
     dbGuild.id = guild.id;
     dbGuild.name = guild.name;
     dbGuild.categories = [];
+    dbGuild.config = {
+      suggestionsChannelID: "",
+    };
 
     await getRepository(Guild).save(dbGuild);
 
@@ -619,5 +630,6 @@ export {
   fakeFuzzySearch,
   logErrorFromCommand,
   setupCats,
-  logError
+  logError,
+  logErrorFromMsg
 }
