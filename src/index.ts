@@ -19,6 +19,7 @@ client.registry
   .registerDefaultTypes()
   .registerGroups([
     ["admin", "Admin Commands"],
+    ["ban", "Ban Commands"],
     ["member", "Member Commands"]
   ])
   .registerDefaultGroups()
