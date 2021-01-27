@@ -4,7 +4,7 @@ import { getRepository } from "typeorm";
 import { Guild } from "./entity/Guild";
 import { Category } from "./entity/Category";
 import { Role } from "./entity/Role";
-
+import logger from "./log";
 interface EntityName {
   name: string;
 }
@@ -45,9 +45,8 @@ const fakeFuzzySearch = (searchInput: string, list: EntityName[]) =>
 const logErrorFromCommand = async (error: Error, msg: CommandoMessage) =>
 {
   let e = `${error.message}\n${msg.url}`;
-  console.error(error);
-  console.error(msg);
-  console.error(new Date());
+  logger.error(error);
+  logger.error(`Message Link: ${msg.url}`);
   const owner = msg.client.users.cache.get(process.env.OWNER);
   await owner.send(e);
   return await msg.say("Error reported. I failed :pensive: I'm so sorry");
@@ -56,9 +55,8 @@ const logErrorFromCommand = async (error: Error, msg: CommandoMessage) =>
 const logErrorFromMsg = async (error: Error, msg: Message) =>
 {
   let e = `${error.message}\n${msg.url}`;
-  console.error(error);
-  console.error(msg);
-  console.error(new Date());
+  logger.error(error);
+  logger.error(`Message Link: ${msg.url}`);
   const owner = msg.client.users.cache.get(process.env.OWNER);
   return await owner.send(e);
 }
@@ -66,8 +64,7 @@ const logErrorFromMsg = async (error: Error, msg: Message) =>
 const logError = async (error: Error, client: CommandoClient) =>
 {
   let e = `${error.message}`;
-  console.error(error);
-  console.error(new Date());
+  logger.error(error);
   const owner = client.users.cache.get(process.env.OWNER);
   let r = await owner.send(e);
   return r;
