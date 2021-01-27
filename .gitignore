@@ -8,3 +8,4 @@ node_modules
 *.sql
 *.ps1
 db
+*.log
