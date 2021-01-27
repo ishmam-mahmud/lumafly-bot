@@ -6,6 +6,7 @@ import { Category } from "./entity/Category"
 import { Guild } from "./entity/Guild"
 import { Role } from "./entity/Role"
 import { setupCats, logError, logErrorFromMsg } from "./utils";
+import logger from "./log";
 
 const client = new CommandoClient({
   commandPrefix: process.env.PREFIX,
@@ -32,7 +33,8 @@ client.registry
 
 client.once("ready", async () =>
 {
-  console.log(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
+  logger.info(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
+  // console.log(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
   await client.user?.setPresence({ activity: { name: "Hades" }, status: "online" });
 
   let retries = 5;
@@ -46,6 +48,7 @@ client.once("ready", async () =>
         database: "./db/prod.sql",
         synchronize: true,
         logging: true,
+        logger: "file",
         entities: [
           "dist/entity/**/*.js"
         ],
@@ -60,7 +63,7 @@ client.once("ready", async () =>
           "migrationsDir": "dist/migration",
           "subscribersDir": "dist/subscriber"
         },
-    });
+      });
       break;
     } catch (error)
     {
@@ -102,7 +105,7 @@ client.on("roleCreate", async (roleCreated) =>
   
     if (!uncat)
     {
-      console.error(`${roleCreated.guild.name} has not been setup properly.`);
+      logger.error(`${roleCreated.guild.name} has not been setup properly.`);
       return;
     }
   
