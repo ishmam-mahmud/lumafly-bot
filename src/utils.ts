@@ -496,6 +496,7 @@ const setupCats = async (guild: DiscordGuild) =>
           "Demialterous",
           "Bialterous",
           "Androalterous",
+          "Aplatonic Spectrum",
         ]
         if (ter_labels.findIndex(pred => pred === r.name) !== -1)
         {
@@ -605,6 +606,7 @@ const setupCats = async (guild: DiscordGuild) =>
           "DMs-Open",
           "DMs-Closed",
           "DMs-Ask-First",
+          "Updates",
         ];
         if (miscellaneous_labels.findIndex(pred => pred === r.name) !== -1)
         {
