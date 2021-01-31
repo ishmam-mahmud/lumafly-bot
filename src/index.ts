@@ -47,7 +47,7 @@ client.once("ready", async () =>
         type: "better-sqlite3",
         database: "./db/prod.sql",
         synchronize: true,
-        logging: true,
+        logging: ["error", "warn"],
         logger: "file",
         entities: [
           "dist/entity/**/*.js"
