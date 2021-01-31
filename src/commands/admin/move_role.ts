@@ -35,7 +35,7 @@ class MoveRoleCommand extends Command
           type: "string",
           default: "*",
         },
-      ]
+      ],
     })
   }
   
@@ -104,7 +104,7 @@ class MoveRoleCommand extends Command
           },
         });
   
-      if (newCat.selfAssignable)
+      if (newCat.selfAssignable && newCat.defaultRoleColor !== "DEFAULT")
       {
         let discRole = await msg.guild.roles.fetch(dbRole.id);
         discRole = await discRole.setColor(newCat.defaultRoleColor);
