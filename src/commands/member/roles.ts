@@ -1,7 +1,8 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
-import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
+import { fakeFuzzySearch, logErrorFromCommand, createEmbeds } from "../../utils";
+import { MessageEmbed } from "discord.js"
 
 type RolesArgs = {
   catName: string;
@@ -82,14 +83,18 @@ class RolesCommand extends Command
   
       for (const r of rolesArr)
         roleString = `${roleString}<@&${r.id}>, `;
-  
-      return await msg.say({
+
+      let bigEmbed = new MessageEmbed().setTitle(catAskedFor.name).setColor(catAskedFor.defaultRoleColor).setDescription(roleString.slice(0, roleString.length - 2));
+      let embeds = createEmbeds(bigEmbed, ", ");
+
+      return await Promise.all(embeds.map(e => msg.say({
         embed: {
-          title: catAskedFor.name,
-          color: catAskedFor.defaultRoleColor,
-          description: roleString.slice(0, roleString.length - 2),
+          title: e.title,
+          color: e.color,
+          description: e.description,
         },
-      });
+      })));
+  
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);
