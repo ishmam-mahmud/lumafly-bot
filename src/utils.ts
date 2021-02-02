@@ -1,5 +1,5 @@
 import { CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Guild as DiscordGuild, Message } from "discord.js";
+import { Guild as DiscordGuild, Message, MessageEmbed } from "discord.js";
 import { getRepository } from "typeorm";
 import { Guild } from "./entity/Guild";
 import { Category } from "./entity/Category";
@@ -625,10 +625,27 @@ const setupCats = async (guild: DiscordGuild) =>
   return `${guild.name} has already been setup`;
 }
 
+const createEmbeds = (embed: MessageEmbed, descriptionSeparator: string) : MessageEmbed[] =>
+{
+  if (embed.description.length > 2048)
+  {
+    let descriptions = embed.description.split(descriptionSeparator);
+    let des1 = descriptions.slice(0, descriptions.length / 2).join(descriptionSeparator)
+    let temp1 = new MessageEmbed().setTitle(embed.title).setColor(embed.color).setDescription(des1);
+    let embed1 = createEmbeds(temp1, descriptionSeparator);
+    let des2 = descriptions.slice(descriptions.length / 2, descriptions.length).join(descriptionSeparator);
+    let temp2 = new MessageEmbed().setTitle(embed.title).setColor(embed.color).setDescription(des2);
+    let embed2 = createEmbeds(temp2, descriptionSeparator);
+    return [...embed1, ...embed2];
+  }
+  return [embed];
+}
+
 export {
   fakeFuzzySearch,
   logErrorFromCommand,
   setupCats,
   logError,
-  logErrorFromMsg
+  logErrorFromMsg,
+  createEmbeds,
 }
