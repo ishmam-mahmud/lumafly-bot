@@ -1,9 +1,8 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Role as DiscordRole } from "discord.js";
 import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
 import { Role } from "../../entity/Role"
-import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
+import { logErrorFromCommand } from "../../utils";
 
 type SearchCommandArgs = {
   roleName: string;
@@ -17,7 +16,7 @@ class SearchCommand extends Command
       name: "search",
       group: "member",
       memberName: "search",
-      aliases: ["find", "lookup"],
+      aliases: ["find", "lookup", "findcat"],
       description: "Search for roles with a search query",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
