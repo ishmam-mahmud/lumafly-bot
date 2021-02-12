@@ -14,7 +14,7 @@ class SetCommand extends Command
   {
     super(client, {
       name: "set",
-      group: "admin",
+      group: "setting",
       memberName: "set",
       description: "Set a specific bot setting for this server",
       guildOnly: true,

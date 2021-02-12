@@ -20,7 +20,10 @@ client.registry
   .registerDefaultTypes()
   .registerGroups([
     ["admin", "Admin Commands"],
-    ["member", "Member Commands"]
+    ["category", "Role Category Commands"],
+    ["member", "Member Commands"],
+    ["owner", "Owner Commands"],
+    ["setting", "Settings Commands"],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({

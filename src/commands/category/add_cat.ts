@@ -16,7 +16,7 @@ class AddCatCommand extends Command
   {
     super(client, {
       name: "add_cat",
-      group: "admin",
+      group: "category",
       memberName: "add_cat",
       description: "Add a role category, with an optional default color for new roles",
       guildOnly: true,

@@ -14,7 +14,7 @@ class ListRolesCommand extends Command
     super(client, {
       name: "ls_roles",
       aliases: ["list_roles"],
-      group: "admin",
+      group: "category",
       memberName: "ls_roles",
       description: "List roles belonging to a given cat.",
       guildOnly: true,

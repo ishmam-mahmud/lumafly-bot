@@ -16,7 +16,7 @@ class MoveRoleCommand extends Command
   {
     super(client, {
       name: "move_role",
-      group: "admin",
+      group: "category",
       memberName: "move_role",
       description: "Move a role to a different category",
       guildOnly: true,

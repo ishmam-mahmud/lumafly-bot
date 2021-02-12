@@ -10,7 +10,7 @@ class ListCatsCommand extends Command
     super(client, {
       name: "list_cats",
       aliases: ["ls_cats"],
-      group: "admin",
+      group: "category",
       memberName: "list_cats",
       description: "List current role categories.",
       guildOnly: true,
