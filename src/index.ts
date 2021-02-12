@@ -14,6 +14,7 @@ const client = new CommandoClient({
   presence: {
     status: "dnd",
   },
+  invite: "https://discord.gg/6Ekf6BCbcs",
 });
 
 client.registry
@@ -80,8 +81,6 @@ client.once("ready", async () =>
     }
   }
 })
-
-
 
 client.on("guildCreate", async guild =>
 {
