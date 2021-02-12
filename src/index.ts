@@ -12,7 +12,7 @@ const client = new CommandoClient({
   commandPrefix: process.env.PREFIX,
   owner: process.env.OWNER,
   presence: {
-    status: "dnd",
+    status: "online",
   },
   invite: "https://discord.gg/6Ekf6BCbcs",
 });
@@ -32,14 +32,9 @@ client.registry
   })
   .registerCommandsIn(path.join(__dirname, "commands"))
 
-// if (client.registry.unknownCommand)
-//   client.registry.unregisterCommand(client.registry.unknownCommand);
-
 client.once("ready", async () =>
 {
   logger.info(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
-  // console.log(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
-  await client.user?.setPresence({ activity: { name: "Hades" }, status: "online" });
 
   let retries = 5;
   while (retries > 0)
