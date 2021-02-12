@@ -55,18 +55,13 @@ class DeroleCommand extends Command
       if (!found)
         return await msg.say(`You don't have that role, whatever it is.`);
 
-      let results = await getRepository(Category).find({
-        selfAssignable: true,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-
-      let rolesToSearchThrough: Role[] = [];
-      for (const cat of results)
-      {
-        rolesToSearchThrough = [...rolesToSearchThrough, ...cat.roles];
-      }
+      let rolesToSearchThrough = await getRepository(Role)
+        .createQueryBuilder("role")
+        .innerJoinAndSelect("role.category", "cat")
+        .innerJoinAndSelect("cat.guild", "guild")
+        .where("cat.selfAssignable = :s", { s: true })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getMany();
 
       rolesToSearchThrough = rolesToSearchThrough.filter(r =>
         {

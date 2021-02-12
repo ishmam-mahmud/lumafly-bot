@@ -51,18 +51,13 @@ class RoleCommand extends Command
         }  
       }
   
-      let results = await getRepository(Category).find({
-        selfAssignable: true,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-  
-      let rolesToSearchThrough: Role[] = [];
-      for (const cat of results)
-      {
-        rolesToSearchThrough = [...rolesToSearchThrough, ...cat.roles];
-      }
+      let rolesToSearchThrough = await getRepository(Role)
+        .createQueryBuilder("role")
+        .innerJoinAndSelect("role.category", "cat")
+        .innerJoinAndSelect("cat.guild", "guild")
+        .where("cat.selfAssignable = :s", { s: true })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getMany();
   
       let foundRole: Role;
       try
@@ -79,8 +74,6 @@ class RoleCommand extends Command
     {
       return await logErrorFromCommand(error, msg);    
     }
-
-
   }
 }
 

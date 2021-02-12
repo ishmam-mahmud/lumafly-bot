@@ -35,14 +35,15 @@ class RolesCommand extends Command
     {
       if (catName.length < 3)
         catName = "*"
-  
-      let results = await getRepository(Category).find({
-        selfAssignable: true,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-  
+
+      let results = await getRepository(Category)
+        .createQueryBuilder("cat")
+        .innerJoinAndSelect("cat.guild", "guild")
+        .innerJoinAndSelect("cat.roles", "role")
+        .where("cat.selfAssignable = :s", { s: true })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getMany();
+
       if (results.length === 0)
         return await msg.say(`There are no self-assignable role categories yet.`);
   
@@ -51,7 +52,6 @@ class RolesCommand extends Command
         let catString = '';
         for (const cat of results)
           catString = `${catString}${cat.name} : ${cat.roles.length} roles\n`
-        
         catString = `${catString}\nUse \`${this.client.commandPrefix}roles <categoryName>\` to see the roles in a category.`;
     
         return await msg.channel.send({
@@ -84,7 +84,11 @@ class RolesCommand extends Command
       for (const r of rolesArr)
         roleString = `${roleString}<@&${r.id}>, `;
 
-      let bigEmbed = new MessageEmbed().setTitle(catAskedFor.name).setColor(catAskedFor.defaultRoleColor).setDescription(roleString.slice(0, roleString.length - 2));
+      let bigEmbed = new MessageEmbed().
+        setTitle(catAskedFor.name).
+        setColor(catAskedFor.defaultRoleColor).
+        setDescription(roleString.slice(0, roleString.length - 2));
+      
       let embeds = createEmbeds(bigEmbed, ", ");
 
       return await Promise.all(embeds.map(e => msg.say({

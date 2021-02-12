@@ -57,28 +57,30 @@ class SearchCommand extends Command
         }
       });
   
-      let rolesToSearchThrough: Role[] = [];
+      let dbRoles = await getRepository(Role)
+        .createQueryBuilder("role")
+        .innerJoinAndSelect("role.category", "cat")
+        .innerJoinAndSelect("cat.guild", "guild")
+        .where("cat.selfAssignable = :s", { s: true })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getMany();
 
-      for (const cat of results)
-      {
-        for (const role of cat.roles)
+      let rolesFound = dbRoles.filter(r =>
         {
-          if (foundRoles.includes(role.name))
-            rolesToSearchThrough.push(role)
-        }
-      }
-  
-      let roleString = '';
-  
-      let rolesArr = rolesToSearchThrough.sort((r1, r2) =>
+          return foundRoles.includes(r.name);
+        }).sort((r1, r2) =>
         {
           if (r1.name < r2.name) return -1;
           if (r1.name > r2.name) return -1;
           return 0;
-        });
+        })
+  
+      let roleString = '';
 
-      for (const r of rolesArr)
-        roleString = `${roleString}<@&${r.id}>, `;
+      rolesFound.forEach(r =>
+        {
+          roleString = `${roleString}<@&${r.id}>, `;
+        });
 
       let description = roleString.length > 0 ? roleString.slice(0, roleString.length - 2) : "No results found";
 
