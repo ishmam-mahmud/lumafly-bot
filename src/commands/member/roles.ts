@@ -35,13 +35,13 @@ class RolesCommand extends Command
     {
       if (catName.length < 3)
         catName = "*"
-  
-      let results = await getRepository(Category).find({
-        selfAssignable: true,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
+
+      let results = await getRepository(Category)
+        .createQueryBuilder("cat")
+        .leftJoinAndSelect("cat.guild", "guild")
+        .where("cat.selfAssignable = :s", { s: true })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getMany();
   
       if (results.length === 0)
         return await msg.say(`There are no self-assignable role categories yet.`);
