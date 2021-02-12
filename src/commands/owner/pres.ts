@@ -20,7 +20,7 @@ class Presence extends Command
           key: "name",
           prompt: "What should the custom name be?",
           type: "string",
-          default: "*",
+          default: "Hades",
         },
       ],
       ownerOnly: true,
@@ -29,11 +29,8 @@ class Presence extends Command
 
   async run(msg: CommandoMessage, { name }: PresenceArgs)
   {
-    if (name !== "*")
-      await this.client.user.setPresence({ activity: { name } });
-    else return await msg.say("Invalid custom status");
-    
-    return await msg.say(`Set status to Playing ${name}`);
+    await this.client.user.setPresence({ activity: { name } });
+    return await msg.say(`Set status to \`Playing ${name}\``);
   }
 }
 
