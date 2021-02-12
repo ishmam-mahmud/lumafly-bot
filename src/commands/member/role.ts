@@ -65,7 +65,7 @@ class RoleCommand extends Command
         foundRole = fakeFuzzySearch(roleName, rolesToSearchThrough) as Role;
       } catch (error)
       {
-        logErrorFromCommand(error, msg);
+        console.error(error);
         return await msg.say(`${roleName} role not found among self-assignable roles`);  
       }
       await msg.member.roles.add(foundRole.id);
