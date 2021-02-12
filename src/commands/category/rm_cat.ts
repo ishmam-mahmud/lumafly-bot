@@ -14,7 +14,7 @@ class RmCatCommand extends Command
   {
     super(client, {
       name: "rm_cat",
-      group: "admin",
+      group: "category",
       memberName: "rm_cat",
       description: "Remove a role category, and add all roles to Uncategorized",
       guildOnly: true,

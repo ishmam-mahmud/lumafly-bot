@@ -136,62 +136,6 @@ const setupCats = async (guild: DiscordGuild) =>
     sexuality.roles = [];
     sexuality.selfAssignable = true;
     cats.push(sexuality);
-    
-    // let romance_level = new Category();
-    // romance_level.name = "Romance-Related";
-    // romance_level.defaultRoleColor = "#992D22";
-    // romance_level.guild = dbGuild;
-    // romance_level.roles = [];
-    // romance_level.selfAssignable = true;
-    // cats.push(romance_level);
-    
-    // let sex_level = new Category();
-    // sex_level.name = "Sex-Related";
-    // sex_level.defaultRoleColor = "#3498DB";
-    // sex_level.guild = dbGuild;
-    // sex_level.roles = [];
-    // sex_level.selfAssignable = true;
-    // cats.push(sex_level);
-    
-    // let touch_level = new Category();
-    // touch_level.name = "Touch-Related";
-    // touch_level.defaultRoleColor = "#E91E63";
-    // touch_level.guild = dbGuild;
-    // touch_level.roles = [];
-    // touch_level.selfAssignable = true;
-    // cats.push(touch_level);
-    
-    // let qpr = new Category();
-    // qpr.name = "QPR";
-    // qpr.defaultRoleColor = "#9BFFB4";
-    // qpr.guild = dbGuild;
-    // qpr.roles = [];
-    // qpr.selfAssignable = true;
-    // cats.push(qpr);
-    
-    // let sensual = new Category();
-    // sensual.name = "Sensual Attraction";
-    // sensual.defaultRoleColor = "#E67E22";
-    // sensual.guild = dbGuild;
-    // sensual.roles = [];
-    // sensual.selfAssignable = true;
-    // cats.push(sensual);
-    
-    // let alterous = new Category();
-    // alterous.name = "Alterous Attraction";
-    // alterous.defaultRoleColor = "#992D22";
-    // alterous.guild = dbGuild;
-    // alterous.roles = [];
-    // alterous.selfAssignable = true;
-    // cats.push(alterous);
-    
-    // let dms = new Category();
-    // dms.name = "Direct Messages";
-    // dms.defaultRoleColor = "#996633";
-    // dms.guild = dbGuild;
-    // dms.roles = [];
-    // dms.selfAssignable = true;
-    // cats.push(dms);
 
     let terCat = new Category();
     terCat.name = "Tertiary-Attractions";
@@ -442,32 +386,6 @@ const setupCats = async (guild: DiscordGuild) =>
           return role;
         }
 
-        // let romanceRelated = [
-        //   "Romance-Repulsed",
-        //   "Romance-Indifferent",
-        //   "Romance-Favorable",
-        //   "Romance-Averse",
-        // ]
-
-        // if (romanceRelated.findIndex(pred => pred === r.name) !== -1)
-        // {
-        //   role.category = romance_level;
-        //   return role;
-        // }
-
-        // let sexRelated = [
-        //   "Sex-Repulsed",
-        //   "Sex-Indifferent",
-        //   "Sex-Favorable",
-        //   "Sex-Averse",
-        // ];
-
-        // if (sexRelated.findIndex(pred => pred === r.name) !== -1)
-        // {
-        //   role.category = sex_level;
-        //   return role;
-        // }
-
         let ter_labels = [
           "Touch-Selective",
           "Touch-Positive",
@@ -503,75 +421,6 @@ const setupCats = async (guild: DiscordGuild) =>
           role.category = terCat;
           return role;
         }
-
-        // let touch_labels = [
-        //   "Touch-Selective",
-        //   "Touch-Positive",
-        //   "Touch-Neutral",
-        //   "Touch-Averse",
-        //   "No-Touch",
-        // ];
-
-        // if (touch_labels.findIndex(pred => pred === r.name) !== -1)
-        // {
-        //   role.category = touch_level;
-        //   return role;
-        // }
-        
-        // let qprLabel = "Queer-Platonic-Favorable";
-        // if (r.name === qprLabel)
-        // {
-        //   role.category = qpr
-        //   return role;
-        // }
-
-        // let sensual_labels = [
-        //   "Questioning-Sensual-Attraction",
-        //   "Polysensual",
-        //   "Pansensual",
-        //   "Homosensual",
-        //   "Heterosensual",
-        //   "Gynosensual",
-        //   "Fictosensual",
-        //   "Demisensual",
-        //   "Bisensual",
-        //   "Asensual",
-        //   "Apothisensual",
-        //   "Androsensual",
-        // ];
-        // if (sensual_labels.findIndex(pred => pred === r.name) !== -1)
-        // {
-        //   role.category = sensual;
-        //   return role;
-        // }
-
-        // let alt_labels = [
-        //   "Questioning-Alterous-Orientation",
-        //   "Polyalterous",
-        //   "Panalterous",
-        //   "Homoalterous",
-        //   "Heteroalterous",
-        //   "Gyno-alterous",
-        //   "Demialterous",
-        //   "Bialterous",
-        //   "Androalterous",
-        // ]
-        // if (alt_labels.findIndex(pred => pred === r.name) !== -1)
-        // {
-        //   role.category = alterous;
-        //   return role;
-        // }
-
-        // let dms_labels = [
-        //   "DMs-Open",
-        //   "DMs-Closed",
-        //   "DMs-Ask-First",
-        // ];
-        // if (dms_labels.findIndex(pred => pred === r.name) !== -1)
-        // {
-        //   role.category = dms;
-        //   return role;
-        // }
 
         let tabletop_labels = [
           "Lights Out",

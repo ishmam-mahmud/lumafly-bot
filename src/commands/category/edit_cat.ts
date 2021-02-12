@@ -18,7 +18,7 @@ class EditCatCommand extends Command
   {
     super(client, {
       name: "edit_cat",
-      group: "admin",
+      group: "category",
       memberName: "edit_cat",
       description: "Edit the properties of a role category",
       guildOnly: true,
