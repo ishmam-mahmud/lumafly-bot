@@ -57,8 +57,8 @@ class DeroleCommand extends Command
 
       let rolesToSearchThrough = await getRepository(Role)
         .createQueryBuilder("role")
-        .innerJoinAndSelect("role.category", "cat")
-        .innerJoinAndSelect("cat.guild", "guild")
+        .innerJoin("role.category", "cat")
+        .innerJoin("cat.guild", "guild")
         .where("cat.selfAssignable = :s", { s: true })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getMany();
