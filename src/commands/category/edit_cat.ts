@@ -66,7 +66,7 @@ class EditCatCommand extends Command
         return await msg.say("too few characters in the name");
   
       if (/Uncategorized/.exec(newName))
-        return await msg.say("No usurping the uncategorized category");
+        return await msg.say("No usurping the Uncategorized category");
   
       if (newName.length < 3)
         newName = "*";
@@ -75,28 +75,26 @@ class EditCatCommand extends Command
       let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
       if (!colorRe.exec(newRoleColor))
         return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
-  
+
       let cat = await getRepository(Category)
-        .findOne({
-          name,
-          guild: {
-            id: msg.guild.id,
-          }
-        });
+        .createQueryBuilder("cat")
+        .innerJoinAndSelect("cat.guild", "guild")
+        .where("cat.name = :name", { name })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getOne();
+
+      if (!cat)
+        return await msg.say(`No category with the name ${name} exists for this server.`);
   
       let checkCat = await getRepository(Category)
-        .findOne({
-          name: newName,
-          guild: {
-            id: msg.guild.id,
-          }
-        });
+        .createQueryBuilder("cat")
+        .innerJoinAndSelect("cat.guild", "guild")
+        .where("cat.name = :name", { name: newName })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getOne();
       
       if (checkCat)
         return await msg.say(`There's already a category with the name ${newName}`);
-      
-      if (!cat)
-        return await msg.say(`${name} category does not exist`);
       
       if (newName !== "*")
         cat.name = newName;
@@ -111,8 +109,15 @@ class EditCatCommand extends Command
         if (this.falsy.has(isSelfAssignable))
           cat.selfAssignable = false;
       }
-      let savedCat = await getRepository(Category).save(cat);
-      return await msg.say(`${savedCat.name} has been edited`);
+
+      await getRepository(Category)
+        .createQueryBuilder("cat")
+        .update()
+        .set(cat)
+        .where("id = :id", { id: cat.id })
+        .execute();
+
+      return await msg.say(`${cat.name} has been edited`);
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);
