@@ -32,9 +32,16 @@ class ListCatsCommand extends Command
   
       if (categories.length === 0)
         return await msg.say(`There are no role categories yet.`);
+
+      let catsArr = categories.sort((c1, c2) =>
+        {
+          if (c1.name < c2.name) return -1;
+          if (c1.name > c2.name) return 1;
+          return 0;
+        });
   
       let catString = '';
-      for (const cat of categories)
+      for (const cat of catsArr)
         catString = `${catString}ID-${cat.id} : ${cat.name} : ${cat.roles.length} roles : ${cat.defaultRoleColor} color\n`
       
       catString = `${catString}\nUse \`${this.client.commandPrefix}ls_roles <categoryName>\` to see the roles in a category.`;
