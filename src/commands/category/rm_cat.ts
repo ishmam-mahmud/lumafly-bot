@@ -42,36 +42,49 @@ class RmCatCommand extends Command
         return await msg.say("too few characters in the given cat's name");
   
       let catToRemove = await getRepository(Category)
-        .findOne({
-          name: nameCatToRemove,
-          guild: {
-            id: msg.guild.id,
-          },
-        });
-  
+        .createQueryBuilder("cat")
+        .innerJoin("cat.guild", "guild")
+        .innerJoinAndSelect("cat.roles", "role")
+        .where("cat.name = :n", { n: nameCatToRemove })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getOne();
+
       if (!catToRemove)
         return await msg.say(`${nameCatToRemove} category does not exist!`);
   
       let uncat = await getRepository(Category)
-        .findOne({
-          name: "Uncategorized",
-          guild: {
-            id: msg.guild.id,
-          }
-        });
-  
-      let roles = catToRemove.roles.map(r =>
+        .createQueryBuilder("cat")
+        .innerJoin("cat.guild", "guild")
+        .where("cat.name = :n", { n: "Uncategorized" })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getOne();
+
+      let roleRemoves = catToRemove.roles.map(r =>
         {
-          r.category = uncat;
-          return r;
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(catToRemove.id)
+            .remove(r.id);
         })
-  
-      uncat.roles = [...uncat.roles, ...roles];
-      catToRemove.roles = [];
-  
-      await getRepository(Role).save(roles);
-      await getRepository(Category).save(uncat);
-      catToRemove = await getRepository(Category).remove(catToRemove);
+      await Promise.all(roleRemoves);
+
+      let roleAdds = catToRemove.roles.map(r =>
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(uncat.id)
+            .add(r.id)
+        })
+      await Promise.all(roleAdds);
+
+      await getRepository(Category)
+        .createQueryBuilder("cat")
+        .delete()
+        .where("id = :id", { id: catToRemove.id })
+        .execute();
+
       return await msg.say(`${catToRemove.name} has been deleted`);
     } catch (error)
     {

@@ -53,14 +53,24 @@ class MoveRoleCommand extends Command
   
       if (newCatName.length < 3)
         return await msg.say("too few characters in the destination cat name");
+
+      let guild = await getRepository(Guild)
+        .createQueryBuilder("guild")
+        .innerJoinAndSelect("guild.categories", "cat")
+        .innerJoinAndSelect("cat.roles", "role")
+        .where("guild.id = :id", { id: msg.guild.id })
+        .getOne();
+
+      if (!guild)
+        return await msg.say(`Server DB has not been setup yet. Run ${this.client.commandPrefix}setup again`);
   
       let newCat = await getRepository(Category)
-        .findOne({
-          name: newCatName,
-          guild: {
-            id: msg.guild.id,
-          }
-        });
+        .createQueryBuilder("cat")
+        .innerJoin("cat.guild", "guild")
+        .leftJoinAndSelect("cat.roles", "roles")
+        .where("cat.name = :name", { name: newCatName })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getOne();
       
       if (!newCat)
         return await msg.say(`${newCatName} category does not exist`);
@@ -70,14 +80,15 @@ class MoveRoleCommand extends Command
         if (name === role.name)
           return await msg.say(`${newCat.name} already has a ${name} role`);
       }
-  
-      let guild = await getRepository(Guild).findOne(msg.guild.id);
+
       let currCat: Category;
+      let targetRole: Role;
   
       for (const cat of guild.categories) {
         for (const role of cat.roles) {
           if (role.name === name)
           {
+            targetRole = role;
             currCat = cat;
             break;
           }
@@ -96,29 +107,25 @@ class MoveRoleCommand extends Command
           return await msg.reply("You need to have the Manage Server permission to change the self-assignability of a role");
       }
   
-      let dbRole = await getRepository(Role)
-        .findOne({
-          name,
-          category: {
-            id: currCat.id,
-          },
-        });
-  
       if (newCat.selfAssignable && newCat.defaultRoleColor !== "DEFAULT")
       {
-        let discRole = await msg.guild.roles.fetch(dbRole.id);
+        let discRole = await msg.guild.roles.fetch(targetRole.id);
         discRole = await discRole.setColor(newCat.defaultRoleColor);
       }
-      
-      dbRole.category = newCat;
-      newCat.roles = [...newCat.roles, dbRole];
-      currCat.roles = currCat.roles.filter(r => r.name !== name);
-  
-      dbRole = await getRepository(Role).save(dbRole);
-      newCat = await getRepository(Category).save(newCat);
-      currCat = await getRepository(Category).save(currCat);
-  
-      return await msg.say(`${dbRole.name} has been moved from ${currCat.name} to ${newCat.name}`);
+
+      await getRepository(Category)
+        .createQueryBuilder("cat")
+        .relation("roles")
+        .of(currCat.id)
+        .remove(targetRole.id);
+
+      await getRepository(Category)
+        .createQueryBuilder("cat")
+        .relation("roles")
+        .of(newCat.id)
+        .add(targetRole.id);
+
+      return await msg.say(`${targetRole.name} has been moved from ${currCat.name} to ${newCat.name}`);
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);

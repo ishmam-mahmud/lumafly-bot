@@ -8,10 +8,10 @@ class ListCatsCommand extends Command
   constructor(client: CommandoClient)
   {
     super(client, {
-      name: "list_cats",
-      aliases: ["ls_cats"],
+      name: "ls_cats",
+      aliases: ["list_cats"],
       group: "category",
-      memberName: "list_cats",
+      memberName: "ls_cats",
       description: "List current role categories.",
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
@@ -23,17 +23,25 @@ class ListCatsCommand extends Command
   {
     try
     {
-      let results = await getRepository(Category).find({
-        guild: {
-          id: msg.guild.id,
-        }
-      });
+      let categories = await getRepository(Category)
+        .createQueryBuilder("cat")
+        .innerJoin("cat.guild", "guild")
+        .leftJoinAndSelect("cat.roles", "roles")
+        .where("guild.id = :id", { id: msg.guild.id })
+        .getMany();
   
-      if (results.length === 0)
+      if (categories.length === 0)
         return await msg.say(`There are no role categories yet.`);
+
+      let catsArr = categories.sort((c1, c2) =>
+        {
+          if (c1.name < c2.name) return -1;
+          if (c1.name > c2.name) return 1;
+          return 0;
+        });
   
       let catString = '';
-      for (const cat of results)
+      for (const cat of catsArr)
         catString = `${catString}ID-${cat.id} : ${cat.name} : ${cat.roles.length} roles : ${cat.defaultRoleColor} color\n`
       
       catString = `${catString}\nUse \`${this.client.commandPrefix}ls_roles <categoryName>\` to see the roles in a category.`;
@@ -48,7 +56,6 @@ class ListCatsCommand extends Command
     {
       return await logErrorFromCommand(error, msg);
     }
-
   }
 }
 
