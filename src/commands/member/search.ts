@@ -49,18 +49,11 @@ class SearchCommand extends Command
         if (dsRoleName.includes(input))
           foundRoles.push(role.name);
       }
-
-      let results = await getRepository(Category).find({
-        selfAssignable: true,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
   
       let dbRoles = await getRepository(Role)
         .createQueryBuilder("role")
-        .innerJoinAndSelect("role.category", "cat")
-        .innerJoinAndSelect("cat.guild", "guild")
+        .innerJoin("role.category", "cat")
+        .innerJoin("cat.guild", "guild")
         .where("cat.selfAssignable = :s", { s: true })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getMany();
