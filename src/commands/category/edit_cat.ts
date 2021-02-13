@@ -78,7 +78,7 @@ class EditCatCommand extends Command
 
       let cat = await getRepository(Category)
         .createQueryBuilder("cat")
-        .innerJoinAndSelect("cat.guild", "guild")
+        .innerJoin("cat.guild", "guild")
         .where("cat.name = :name", { name })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getOne();
@@ -88,7 +88,7 @@ class EditCatCommand extends Command
   
       let checkCat = await getRepository(Category)
         .createQueryBuilder("cat")
-        .innerJoinAndSelect("cat.guild", "guild")
+        .innerJoin("cat.guild", "guild")
         .where("cat.name = :name", { name: newName })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getOne();
