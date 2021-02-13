@@ -58,7 +58,7 @@ class SetCommand extends Command
             .getOne();
 
           if (!dbGuild)
-            return await msg.say(`Guild has not been setup yet. Run ${this.client.commandPrefix}setup again`);
+            return await msg.say(`Server DB has not been setup yet. Run ${this.client.commandPrefix}setup again`);
 
           await getRepository(Guild)
             .createQueryBuilder("guild")
