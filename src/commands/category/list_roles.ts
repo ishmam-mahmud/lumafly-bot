@@ -34,13 +34,14 @@ class ListRolesCommand extends Command
     try
     {
       if (catName.length < 3)
-        catName = "*"
-  
-      let results = await getRepository(Category).find({
-        guild: {
-          id: msg.guild.id,
-        }
-      });
+        return await msg.say("too few letters provided in category name")
+
+      let results = await getRepository(Category)
+        .createQueryBuilder("cat")
+        .innerJoin("cat.guild", "guild")
+        .innerJoinAndSelect("cat.roles", "role")
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getMany();
   
       if (results.length === 0)
         return await msg.say(`There are no role categories yet.`);
