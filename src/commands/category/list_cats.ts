@@ -26,7 +26,7 @@ class ListCatsCommand extends Command
       let categories = await getRepository(Category)
         .createQueryBuilder("cat")
         .innerJoin("cat.guild", "guild")
-        .innerJoinAndSelect("cat.roles", "roles")
+        .leftJoinAndSelect("cat.roles", "roles")
         .where("guild.id = :id", { id: msg.guild.id })
         .getMany();
   
