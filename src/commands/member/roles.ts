@@ -38,7 +38,7 @@ class RolesCommand extends Command
 
       let results = await getRepository(Category)
         .createQueryBuilder("cat")
-        .innerJoinAndSelect("cat.guild", "guild")
+        .innerJoin("cat.guild", "guild")
         .innerJoinAndSelect("cat.roles", "role")
         .where("cat.selfAssignable = :s", { s: true })
         .andWhere("guild.id = :id", { id: msg.guild.id })
