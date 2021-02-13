@@ -56,35 +56,46 @@ class AddCatCommand extends Command
       let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
       if (!colorRe.exec(defaultRoleColor))
         return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
-  
+
+      let guild = await getRepository(Guild)
+        .createQueryBuilder("guild")
+        .where("id = :id", { id: msg.guild.id })
+        .getOne();
+
+      if (!guild)
+        return await msg.say(`Server has not been registered yet. Run \`${this.client.commandPrefix}setup\``);
+
       let cat = await getRepository(Category)
-        .findOne({
-          name,
-          guild: {
-            id: msg.guild.id,
-          },
-        });
+        .createQueryBuilder("cat")
+        .innerJoinAndSelect("cat.guild", "guild")
+        .where("cat.name = :name", { name })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getOne();
   
       if (cat)
         return await msg.say(`A category with that name already exists.`);
-  
-      let guild = await getRepository(Guild).findOne(msg.guild.id);
-  
-      cat = new Category();
-      cat.name = name;
-      cat.guild = guild;
-      cat.roles = [];
-  
+
       if (defaultRoleColor === '*')
         defaultRoleColor = "DEFAULT";
+
+      cat = new Category();
+      cat.name = name;
+      cat.roles = [];
       cat.defaultRoleColor = defaultRoleColor;
-      
       cat.selfAssignable = isSelfAssignable;
-      let savedCat = await getRepository(Category).save(cat);
-  
-      guild.categories = [...guild.categories, cat];
-      await getRepository(Guild).save(guild);
-      return await msg.say(`${savedCat.name} has been added`);
+
+      await getRepository(Category)
+        .createQueryBuilder("cat")
+        .insert()
+        .values(cat).execute();
+
+      await getRepository(Guild)
+        .createQueryBuilder("guild")
+        .relation("categories")
+        .of(msg.guild.id)
+        .add(cat.id);
+
+      return await msg.say(`${cat.name} has been added`);
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);
