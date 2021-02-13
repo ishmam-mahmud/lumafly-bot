@@ -93,12 +93,12 @@ client.on("roleCreate", async (roleCreated) =>
   try
   {
     let uncat = await getRepository(Category)
-      .findOne({
-        name: "Uncategorized",
-        guild: {
-          id: roleCreated.guild.id,
-        }
-      });
+      .createQueryBuilder("cat")
+      .innerJoin("cat.guild", "guild")
+      .innerJoinAndSelect("cat.roles", "role")
+      .where("cat.name = :name", { name: "Uncategorized" })
+      .andWhere("guild.id = :id", { id: roleCreated.guild.id })
+      .getOne();
   
     if (!uncat)
     {
@@ -117,11 +117,17 @@ client.on("roleCreate", async (roleCreated) =>
     dbRole.id = roleCreated.id;
     dbRole.name = roleCreated.name;
   
-    dbRole.category = uncat;
-    uncat.roles = [...uncat.roles, dbRole];
-  
-    await getRepository(Role).save(dbRole);
-    await getRepository(Category).save(uncat);
+    await getRepository(Role)
+      .createQueryBuilder("role")
+      .insert()
+      .values([dbRole])
+      .execute();
+
+    await getRepository(Category)
+      .createQueryBuilder("cat")
+      .relation("roles")
+      .of(uncat.id)
+      .add(dbRole.id);
   } catch (error)
   {
     await logError(error, client);
@@ -132,20 +138,19 @@ client.on("roleDelete", async (roleDeleted) =>
 {
   try
   {
-    let dbGuild = await getRepository(Guild)
-      .findOne(roleDeleted.guild.id);
-  
-    for (const cat of dbGuild.categories)
-    {
-      for (const role of cat.roles)
-      {
-        if (role.id === roleDeleted.id)
-        {
-          await getRepository(Role).remove(role);
-          return;
-        }
-      }
-    }
+    let role = await getRepository(Role)
+      .createQueryBuilder("role")
+      .innerJoin("role.category", "cat")
+      .innerJoin("cat.guild", "guild")
+      .where("role.id = :roleId", { roleId: roleDeleted.id })
+      .andWhere("guild.id = :id", { id: roleDeleted.guild.id })
+      .getOne();
+
+    await getRepository(Role)
+      .createQueryBuilder("role")
+      .delete()
+      .where("role.id = :id", { id: role.id })
+      .execute();
   } catch (error)
   {
     await logError(error, client);  
@@ -158,25 +163,13 @@ client.on("roleUpdate", async (oldRole, newRole) =>
   {
     if (oldRole.id === newRole.id && oldRole.name === newRole.name)
       return;
-  
-    let dbGuild = await getRepository(Guild)
-      .findOne(oldRole.guild.id);
-  
-    if (dbGuild)
-    {
-      for (const cat of dbGuild.categories)
-      {
-        for (const role of cat.roles)
-        {
-          if (role.id === oldRole.id)
-          {
-            role.name = newRole.name;
-            await getRepository(Role).save(role);
-            return;
-          }
-        }
-      }
-    }
+
+    await getRepository(Role)
+      .createQueryBuilder("role")
+      .update()
+      .set({ name: newRole.name })
+      .where("id = :id", { id: newRole.id })
+      .execute();
   } catch (error)
   {
     await logError(error, client);
@@ -187,7 +180,11 @@ client.on("message", async msg =>
 {
   try
   {
-    let dbGuild = await getRepository(Guild).findOne(msg.guild?.id);
+    let dbGuild = await getRepository(Guild)
+      .createQueryBuilder("guild")
+      .where("guild.id = :id", { id: msg.guild.id})
+      .getOne();
+
     if (dbGuild)
     {
       let channelSuggestionsID = dbGuild.config.suggestionsChannelID;
