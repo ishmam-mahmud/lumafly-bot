@@ -64,7 +64,7 @@ class SearchCommand extends Command
         }).sort((r1, r2) =>
         {
           if (r1.name < r2.name) return -1;
-          if (r1.name > r2.name) return -1;
+          if (r1.name > r2.name) return 1;
           return 0;
         })
   
