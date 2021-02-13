@@ -46,11 +46,18 @@ class RolesCommand extends Command
 
       if (results.length === 0)
         return await msg.say(`There are no self-assignable role categories yet.`);
+
+      let catsArr = results.sort((c1, c2) =>
+        {
+          if (c1.name < c2.name) return -1;
+          if (c1.name > c2.name) return 1;
+          return 0;
+        });
   
       if (catName === "*")
       {
         let catString = '';
-        for (const cat of results)
+        for (const cat of catsArr)
           catString = `${catString}${cat.name} : ${cat.roles.length} roles\n`
         catString = `${catString}\nUse \`${this.client.commandPrefix}roles <categoryName>\` to see the roles in a category.`;
     
@@ -77,7 +84,7 @@ class RolesCommand extends Command
       let rolesArr = catAskedFor.roles.sort((r1, r2) =>
         {
           if (r1.name < r2.name) return -1;
-          if (r1.name > r2.name) return -1;
+          if (r1.name > r2.name) return 1;
           return 0;
         });
   
