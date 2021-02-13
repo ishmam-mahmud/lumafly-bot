@@ -73,7 +73,9 @@ const logError = async (error: Error, client: CommandoClient) =>
 const setupCats = async (guild: DiscordGuild) =>
 {
   let dbGuild = await getRepository(Guild)
-    .findOne(guild.id);
+    .createQueryBuilder("guild")
+    .where("guild.id = :id", { id: guild.id })
+    .getOne();
 
   if (!dbGuild)
   {
@@ -85,14 +87,17 @@ const setupCats = async (guild: DiscordGuild) =>
       suggestionsChannelID: "",
     };
 
-    await getRepository(Guild).save(dbGuild);
+    await getRepository(Guild)
+      .createQueryBuilder("guild")
+      .insert()
+      .values([dbGuild])
+      .execute();
 
     let cats: Category[] = [];
 
     let non_sa = new Category();
     non_sa.name = "Milky-Way";
     non_sa.defaultRoleColor = "DEFAULT";
-    non_sa.guild = dbGuild;
     non_sa.roles = [];
     non_sa.selfAssignable = false;
     cats.push(non_sa);
@@ -100,7 +105,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let colorRoles = new Category();
     colorRoles.name = "Color-Roles";
     colorRoles.defaultRoleColor = "DEFAULT";
-    colorRoles.guild = dbGuild;
     colorRoles.roles = [];
     colorRoles.selfAssignable = true;
     cats.push(colorRoles);
@@ -108,7 +112,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let pronouns = new Category();
     pronouns.name = "Pronouns";
     pronouns.defaultRoleColor = "#1ABC9C";
-    pronouns.guild = dbGuild;
     pronouns.roles = [];
     pronouns.selfAssignable = true;
     cats.push(pronouns);
@@ -116,7 +119,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let genders = new Category();
     genders.name = "Genders";
     genders.defaultRoleColor = "#2ECC71";
-    genders.guild = dbGuild;
     genders.roles = [];
     genders.selfAssignable = true;
     cats.push(genders);
@@ -124,7 +126,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let rom = new Category();
     rom.name = "Romantic-Attraction";
     rom.defaultRoleColor = "#F1C40F";
-    rom.guild = dbGuild;
     rom.roles = [];
     rom.selfAssignable = true;
     cats.push(rom);
@@ -132,7 +133,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let sexuality = new Category();
     sexuality.name = "Sexuality";
     sexuality.defaultRoleColor = "#9B59B6";
-    sexuality.guild = dbGuild;
     sexuality.roles = [];
     sexuality.selfAssignable = true;
     cats.push(sexuality);
@@ -140,7 +140,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let terCat = new Category();
     terCat.name = "Tertiary-Attractions";
     terCat.defaultRoleColor = "DEFAULT";
-    terCat.guild = dbGuild;
     terCat.roles = [];
     terCat.selfAssignable = true;
     cats.push(terCat);
@@ -148,7 +147,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let tabletop = new Category();
     tabletop.name = "Tabletop-RPGs";
     tabletop.defaultRoleColor = "DEFAULT";
-    tabletop.guild = dbGuild;
     tabletop.roles = [];
     tabletop.selfAssignable = false;
     cats.push(tabletop);
@@ -156,7 +154,6 @@ const setupCats = async (guild: DiscordGuild) =>
     let miscellaneous = new Category();
     miscellaneous.name = "Miscellaneous";
     miscellaneous.defaultRoleColor = "DEFAULT";
-    miscellaneous.guild = dbGuild;
     miscellaneous.roles = [];
     miscellaneous.selfAssignable = true;
     cats.push(miscellaneous);
@@ -164,310 +161,376 @@ const setupCats = async (guild: DiscordGuild) =>
     let extraCats = new Category();
     extraCats.name = "Uncategorized";
     extraCats.defaultRoleColor = "DEFAULT";
-    extraCats.guild = dbGuild;
     extraCats.roles = [];
     extraCats.selfAssignable = false;
     cats.push(extraCats);
 
-    await getRepository(Category).save(cats);
+    await getRepository(Category)
+      .createQueryBuilder("cat")
+      .insert()
+      .values(cats)
+      .execute();
+
+    let guildAddCats = cats.map(c =>
+      {
+        return getRepository(Guild)
+          .createQueryBuilder("guild")
+          .relation("categories")
+          .of(dbGuild.id)
+          .add(c.id);
+      });
+    
+    await Promise.all(guildAddCats);
+
+    let non_sa_labels = [
+      "Paul-Name-Color",
+      "Radmilk",
+      "Best Mod",
+      "Milkerators",
+      "Muted",
+      "OK Booster",
+      "Bots",
+      "New-Best-Friend",
+      "Partnership",
+      "Den-Opt-In",
+      "Engineer",
+      "botless",
+      "Member",
+      "no-pictures",
+      "@everyone",
+    ];
+
+    let color_labels = "Color-";
+
+    let pronoun_labels = [
+      "Spide-Spider-Spideself",
+      "She-Her-Hers",
+      "He-Him-His",
+      "Voi-Vois-Void",
+      "Ze-Zem-Zir",
+      "Xe-Xer-Xers",
+      "Xe-Xem-Xir",
+      "Star-Stars-Stars'",
+      "Fae-Faer-Faers",
+      "Ey-Em-Eirs",
+      "Ae-Aer-Aers",
+      "They-Them-Theirs",
+      "It-Its",
+      "Ask-Pronouns",
+      "Any-Pronouns",
+      "Prefer-Not-To-Say"
+    ];
+
+    let gender_labels = [
+      "Voidpunk",
+      "Transmasculine",
+      "Transsexual",
+      "Transneutral",
+      "Transfeminine",
+      "Transgender",
+      "Quoigender",
+      "Questioning-Gender",
+      "Proxvir",
+      "Polygender",
+      "Paragender",
+      "Nonbinary",
+      "Neutrois",
+      "Neurogender",
+      "Maverique",
+      "Masculine",
+      "Male",
+      "Libragender",
+      "Juxera",
+      "Intersex",
+      "Graygender",
+      "Girlflux",
+      "Genderqueer",
+      "Gender-Non-Conforming",
+      "Gender-Nihilist",
+      "Gender-Neutral",
+      "Genderless",
+      "Genderflux",
+      "Genderfluid",
+      "Genderflor",
+      "Genderfaun",
+      "Genderfae",
+      "Gender-Egoist",
+      "Femme",
+      "Feminine",
+      "Female",
+      "Enby",
+      "Demineutral",
+      "Demigirl",
+      "Demigender",
+      "Demigenderfluid",
+      "Demienby",
+      "Demiboy",
+      "Demiagender",
+      "Boyflux",
+      "Bigender",
+      "Autigender",
+      "Aporagender",
+      "Androgynous",
+      "Androgyne",
+      "Agenderflux",
+      "Agender",
+    ];
+
+    let aro_labels = [
+      "Romance-Fluid",
+      "Questioning-Romantic-Orientation",
+      "Quoiromantic",
+      "Queer",
+      "Pomoromantic",
+      "Polyromantic",
+      "Polyamorous",
+      "Platoniromantic",
+      "Panromantic",
+      "Omniromantic",
+      "Lithromantic",
+      "Homoromantic",
+      "Heteroromantic",
+      "Gynoromantic",
+      "Gray-Romantic",
+      "Frayromantic",
+      "Fictoromantic",
+      "Demiromantic",
+      "Cupioromantic",
+      "Biromantic",
+      "Apresromantic",
+      "Autochorisromantic",
+      "Arospike",
+      "Aromantic-Spectrum",
+      "Aromantic",
+      "Aroflux",
+      "Apothiromantic",
+      "Androromantic",
+      "Alloromantic",
+      "Aegoromantic",
+      "Abroromantic",
+      "Nonamorous",
+      "Romance-Repulsed",
+      "Romance-Indifferent",
+      "Romance-Favorable",
+      "Romance-Averse",
+    ];
+
+    let ace_labels = [
+      "Uranic",
+      "Trixic",
+      "Toric",
+      "Sex-Fluid",
+      "Sapphic",
+      "Quoisexual",
+      "Questioning-Sexual-Orientation",
+      "Pomosexual",
+      "Polysexual",
+      "Pansexual",
+      "Omnisexual",
+      "Neptunic",
+      "Lithsexual",
+      "Lesbian",
+      "Homosexual",
+      "Heterosexual",
+      "Fraysexual",
+      "Fictosexual",
+      "Gynosexual",
+      "Gray-Asexual",
+      "Gay",
+      "Demisexual",
+      "Cupiosexual",
+      "Bisexual",
+      "Autochorissexual",
+      "Asexual-Spectrum",
+      "Asexual",
+      "Apothisexual",
+      "Allosexual",
+      "Acespike",
+      "Aegosexual",
+      "Achillean",
+      "Aceflux",
+      "Abrosexual",
+      "Sex-Repulsed",
+      "Sex-Indifferent",
+      "Sex-Favorable",
+      "Sex-Averse",
+    ];
+
+    let ter_labels = [
+      "Touch-Selective",
+      "Touch-Positive",
+      "Touch-Neutral",
+      "Touch-Averse",
+      "No-Touch",
+      "Queer-Platonic-Favorable",
+      "Questioning-Sensual-Attraction",
+      "Polysensual",
+      "Pansensual",
+      "Homosensual",
+      "Heterosensual",
+      "Gynosensual",
+      "Fictosensual",
+      "Demisensual",
+      "Bisensual",
+      "Asensual",
+      "Apothisensual",
+      "Androsensual",
+      "Questioning-Alterous-Orientation",
+      "Polyalterous",
+      "Panalterous",
+      "Homoalterous",
+      "Heteroalterous",
+      "Gyno-alterous",
+      "Demialterous",
+      "Bialterous",
+      "Androalterous",
+      "Aplatonic Spectrum",
+    ];
+
+    let tabletop_labels = [
+      "Lights Out",
+      "Star Trek Wayfinder",
+      "Aces Who Play D&D",
+    ];
+
+    let miscellaneous_labels = [
+      "Minecrafter",
+      "Neurodivergent",
+      "Writing Club",
+      "N&P Opt-In",
+      "VC Peepo",
+      "Art Peebs",
+      "Random Events",
+      "Quarantined-Movie-Night",
+      "Acetastic-Anime-Goers",
+      "Questioning-All",
+      "Plural",
+      "Nyanbinary",
+      "Non-SAM",
+      "Non-Native-English-Speaker",
+      "Friendly-Voice",
+      "Free-Hugs",
+      "AMAB",
+      "AFAB",
+      "DMs-Open",
+      "DMs-Closed",
+      "DMs-Ask-First",
+      "Updates",
+    ];
 
     let roles = guild.roles.cache.map(r =>
       {
         let role = new Role();
         role.id = r.id;
         role.name = r.name;
-
-        let non_sa_labels = [
-          "Paul-Name-Color",
-          "Radmilk",
-          "Best Mod",
-          "Milkerators",
-          "Muted",
-          "OK Booster",
-          "Bots",
-          "New-Best-Friend",
-          "Partnership",
-          "Den-Opt-In",
-          "Engineer",
-          "botless",
-          "Member",
-          "no-pictures",
-          "@everyone",
-        ];
-
-        if (non_sa_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = non_sa;
-          return role;
-        }
-
-        let color_labels = "Color-";
-        if (r.name.startsWith(color_labels))
-        {
-          role.category = colorRoles;
-          return role;
-        }
-
-        let pronoun_labels = [
-          "Spide-Spider-Spideself",
-          "She-Her-Hers",
-          "He-Him-His",
-          "Voi-Vois-Void",
-          "Ze-Zem-Zir",
-          "Xe-Xer-Xers",
-          "Xe-Xem-Xir",
-          "Star-Stars-Stars'",
-          "Fae-Faer-Faers",
-          "Ey-Em-Eirs",
-          "Ae-Aer-Aers",
-          "They-Them-Theirs",
-          "It-Its",
-          "Ask-Pronouns",
-          "Any-Pronouns",
-          "Prefer-Not-To-Say"
-        ];
-
-        if (pronoun_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = pronouns;
-          return role;
-        }
-
-        let gender_labels = [
-          "Voidpunk",
-          "Transmasculine",
-          "Transsexual",
-          "Transneutral",
-          "Transfeminine",
-          "Transgender",
-          "Quoigender",
-          "Questioning-Gender",
-          "Proxvir",
-          "Polygender",
-          "Paragender",
-          "Nonbinary",
-          "Neutrois",
-          "Neurogender",
-          "Maverique",
-          "Masculine",
-          "Male",
-          "Libragender",
-          "Juxera",
-          "Intersex",
-          "Graygender",
-          "Girlflux",
-          "Genderqueer",
-          "Gender-Non-Conforming",
-          "Gender-Nihilist",
-          "Gender-Neutral",
-          "Genderless",
-          "Genderflux",
-          "Genderfluid",
-          "Genderflor",
-          "Genderfaun",
-          "Genderfae",
-          "Gender-Egoist",
-          "Femme",
-          "Feminine",
-          "Female",
-          "Enby",
-          "Demineutral",
-          "Demigirl",
-          "Demigender",
-          "Demigenderfluid",
-          "Demienby",
-          "Demiboy",
-          "Demiagender",
-          "Boyflux",
-          "Bigender",
-          "Autigender",
-          "Aporagender",
-          "Androgynous",
-          "Androgyne",
-          "Agenderflux",
-          "Agender",
-        ];
-
-        if (gender_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = genders;
-          return role;
-        }
-        
-        let aro_labels = [
-          "Romance-Fluid",
-          "Questioning-Romantic-Orientation",
-          "Quoiromantic",
-          "Queer",
-          "Pomoromantic",
-          "Polyromantic",
-          "Polyamorous",
-          "Platoniromantic",
-          "Panromantic",
-          "Omniromantic",
-          "Lithromantic",
-          "Homoromantic",
-          "Heteroromantic",
-          "Gynoromantic",
-          "Gray-Romantic",
-          "Frayromantic",
-          "Fictoromantic",
-          "Demiromantic",
-          "Cupioromantic",
-          "Biromantic",
-          "Apresromantic",
-          "Autochorisromantic",
-          "Arospike",
-          "Aromantic-Spectrum",
-          "Aromantic",
-          "Aroflux",
-          "Apothiromantic",
-          "Androromantic",
-          "Alloromantic",
-          "Aegoromantic",
-          "Abroromantic",
-          "Nonamorous",
-          "Romance-Repulsed",
-          "Romance-Indifferent",
-          "Romance-Favorable",
-          "Romance-Averse",
-        ]
-
-        if (aro_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = rom;
-          return role;
-        }
-
-        let ace_labels = [
-          "Uranic",
-          "Trixic",
-          "Toric",
-          "Sex-Fluid",
-          "Sapphic",
-          "Quoisexual",
-          "Questioning-Sexual-Orientation",
-          "Pomosexual",
-          "Polysexual",
-          "Pansexual",
-          "Omnisexual",
-          "Neptunic",
-          "Lithsexual",
-          "Lesbian",
-          "Homosexual",
-          "Heterosexual",
-          "Fraysexual",
-          "Fictosexual",
-          "Gynosexual",
-          "Gray-Asexual",
-          "Gay",
-          "Demisexual",
-          "Cupiosexual",
-          "Bisexual",
-          "Autochorissexual",
-          "Asexual-Spectrum",
-          "Asexual",
-          "Apothisexual",
-          "Allosexual",
-          "Acespike",
-          "Aegosexual",
-          "Achillean",
-          "Aceflux",
-          "Abrosexual",
-          "Sex-Repulsed",
-          "Sex-Indifferent",
-          "Sex-Favorable",
-          "Sex-Averse",
-        ]
-
-        if (ace_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = sexuality;
-          return role;
-        }
-
-        let ter_labels = [
-          "Touch-Selective",
-          "Touch-Positive",
-          "Touch-Neutral",
-          "Touch-Averse",
-          "No-Touch",
-          "Queer-Platonic-Favorable",
-          "Questioning-Sensual-Attraction",
-          "Polysensual",
-          "Pansensual",
-          "Homosensual",
-          "Heterosensual",
-          "Gynosensual",
-          "Fictosensual",
-          "Demisensual",
-          "Bisensual",
-          "Asensual",
-          "Apothisensual",
-          "Androsensual",
-          "Questioning-Alterous-Orientation",
-          "Polyalterous",
-          "Panalterous",
-          "Homoalterous",
-          "Heteroalterous",
-          "Gyno-alterous",
-          "Demialterous",
-          "Bialterous",
-          "Androalterous",
-          "Aplatonic Spectrum",
-        ]
-        if (ter_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = terCat;
-          return role;
-        }
-
-        let tabletop_labels = [
-          "Lights Out",
-          "Star Trek Wayfinder",
-          "Aces Who Play D&D",
-        ];
-        if (tabletop_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = tabletop;
-          return role;
-        }
-
-        let miscellaneous_labels = [
-          "Minecrafter",
-          "Neurodivergent",
-          "Writing Club",
-          "N&P Opt-In",
-          "VC Peepo",
-          "Art Peebs",
-          "Random Events",
-          "Quarantined-Movie-Night",
-          "Acetastic-Anime-Goers",
-          "Questioning-All",
-          "Plural",
-          "Nyanbinary",
-          "Non-SAM",
-          "Non-Native-English-Speaker",
-          "Friendly-Voice",
-          "Free-Hugs",
-          "AMAB",
-          "AFAB",
-          "DMs-Open",
-          "DMs-Closed",
-          "DMs-Ask-First",
-          "Updates",
-        ];
-        if (miscellaneous_labels.findIndex(pred => pred === r.name) !== -1)
-        {
-          role.category = miscellaneous;
-          return role;
-        }
-
-        role.category = extraCats;
         return role;
       })
 
-    await getRepository(Role).save(roles);
+    await getRepository(Role)
+      .createQueryBuilder("role")
+      .insert()
+      .values(roles)
+      .execute();
+
+    let catAddRoles = roles.map(r =>
+      {
+        if (non_sa_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(non_sa.id)
+            .add(r.id);
+        }
+
+        if (r.name.startsWith(color_labels))
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(colorRoles.id)
+            .add(r.id);
+        }
+
+
+        if (pronoun_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(pronouns.id)
+            .add(r.id);
+        }
+
+        if (gender_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(genders.id)
+            .add(r.id);
+        }
+        
+        
+
+        if (aro_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(rom.id)
+            .add(r.id);
+        }
+
+        
+
+        if (ace_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(sexuality.id)
+            .add(r.id);
+        }
+
+        
+        if (ter_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(terCat.id)
+            .add(r.id);
+        }
+
+        
+        if (tabletop_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(tabletop.id)
+            .add(r.id);
+        }
+
+        
+        if (miscellaneous_labels.findIndex(pred => pred === r.name) !== -1)
+        {
+          return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(miscellaneous.id)
+            .add(r.id);
+        }
+
+        return getRepository(Category)
+            .createQueryBuilder("cat")
+            .relation("roles")
+            .of(extraCats.id)
+            .add(r.id);
+      })
+
+    await Promise.all(catAddRoles);
 
     return `${guild.name} has been initialized`; 
   }
