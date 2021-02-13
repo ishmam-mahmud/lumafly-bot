@@ -52,11 +52,20 @@ class SetCommand extends Command
           if (!channel)
             return await msg.say("Could not find any channels with that id");
 
-          let dbGuild = await getRepository(Guild).findOne(msg.guild.id);
+          let dbGuild = await getRepository(Guild)
+            .createQueryBuilder("guild")
+            .where("guild.id = :id", { id: msg.guild.id })
+            .getOne();
+
           if (!dbGuild)
             return await msg.say(`Guild has not been setup yet. Run ${this.client.commandPrefix}setup again`);
-          dbGuild.config.suggestionsChannelID = channel.id;
-          await getRepository(Guild).save(dbGuild);
+
+          await getRepository(Guild)
+            .createQueryBuilder("guild")
+            .update()
+            .set({config: { suggestionsChannelID: channel.id }})
+            .where("guild.id = :id", { id: msg.guild.id })
+            .execute();
 
           return await msg.say(`${channel} set as the suggestions channel for this server`);
         default:
