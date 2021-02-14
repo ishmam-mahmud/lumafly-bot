@@ -180,6 +180,9 @@ client.on("message", async msg =>
 {
   try
   {
+    // Do nothing if bot's own message.
+    if (msg.author.id === client.user.id)
+      return;
     // Handle guild and dms differently
     if (msg.guild)
     {
