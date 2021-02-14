@@ -180,18 +180,25 @@ client.on("message", async msg =>
 {
   try
   {
-    let dbGuild = await getRepository(Guild)
-      .createQueryBuilder("guild")
-      .where("guild.id = :id", { id: msg.guild.id})
-      .getOne();
-
-    if (dbGuild)
+    // Do nothing if bot's own message.
+    if (msg.author.id === client.user.id)
+      return;
+    // Handle guild and dms differently
+    if (msg.guild)
     {
-      let channelSuggestionsID = dbGuild.config.suggestionsChannelID;
-      if (msg.channel.id === channelSuggestionsID)
+      let dbGuild = await getRepository(Guild)
+        .createQueryBuilder("guild")
+        .where("guild.id = :id", { id: msg.guild?.id})
+        .getOne();
+  
+      if (dbGuild)
       {
-        let reactions = [msg.react("👍"), msg.react("👎")];
-        await Promise.all(reactions);
+        let channelSuggestionsID = dbGuild.config.suggestionsChannelID;
+        if (msg.channel.id === channelSuggestionsID)
+        {
+          let reactions = [msg.react("👍"), msg.react("👎")];
+          await Promise.all(reactions);
+        }
       }
     }
   } catch (error)
