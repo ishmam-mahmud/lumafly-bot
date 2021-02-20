@@ -45,7 +45,7 @@ class RoleCommand extends Command
       {
         let dsRoleName = role.name.toLowerCase().trim();
         let input = roleName.toLowerCase().trim();
-        if (dsRoleName.includes(input))
+        if (dsRoleName === input)
         {
           return await msg.say(`You already have the ${role.name} role`);
         }  
