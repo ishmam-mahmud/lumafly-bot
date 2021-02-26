@@ -1,6 +1,6 @@
 dist
 node_modules
-.env
+*.env
 *.sh
 !install.sh
 *.ps1
