@@ -44,7 +44,7 @@ class RmCatCommand extends Command
       let catToRemove = await getRepository(Category)
         .createQueryBuilder("cat")
         .innerJoin("cat.guild", "guild")
-        .innerJoinAndSelect("cat.roles", "role")
+        .leftJoinAndSelect("cat.roles", "role")
         .where("cat.name = :n", { n: nameCatToRemove })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getOne();
