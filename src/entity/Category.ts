@@ -13,9 +13,7 @@ export class Category {
   @ManyToOne(() => Guild, guild => guild.categories)
   guild: Guild;
 
-  @OneToMany(() => Role, role => role.category, {
-    eager: true,
-  })
+  @OneToMany(() => Role, role => role.category)
   roles: Role[];
 
   @Column({

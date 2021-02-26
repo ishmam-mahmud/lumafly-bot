@@ -7,6 +7,10 @@ import { Guild } from "./entity/Guild"
 import { Role } from "./entity/Role"
 import { setupCats, logError, logErrorFromMsg } from "./utils";
 import logger from "./log";
+import * as entities from './entity';
+import dotenv from "dotenv"
+
+dotenv.config();
 
 const client = new CommandoClient({
   commandPrefix: process.env.PREFIX,
@@ -14,7 +18,6 @@ const client = new CommandoClient({
   presence: {
     status: "online",
   },
-  invite: "https://discord.gg/6Ekf6BCbcs",
 });
 
 client.registry
@@ -34,7 +37,7 @@ client.registry
 
 client.once("ready", async () =>
 {
-  logger.info(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
+  console.log(`Logged in as ${client.user?.tag}. (${client.user?.id})`);
 
   let retries = 5;
   while (retries > 0)
@@ -46,23 +49,12 @@ client.once("ready", async () =>
         type: "better-sqlite3",
         database: "./db/prod.sql",
         synchronize: true,
-        logging: ["error", "warn"],
+        logging: "all",
         logger: "file",
-        entities: [
-          "dist/entity/**/*.js"
-        ],
-        migrations: [
-          "dist/migration/**/*.js"
-        ],
-        subscribers: [
-          "dist/subscriber/**/*.js"
-        ],
-        cli: {
-          "entitiesDir": "dist/entity",
-          "migrationsDir": "dist/migration",
-          "subscribersDir": "dist/subscriber"
-        },
+        entities: Object.keys(entities).map((name: string) => entities[name]),
+        subscribers: [],
       });
+      console.log("Connected to database");
       break;
     } catch (error)
     {
@@ -74,6 +66,11 @@ client.once("ready", async () =>
         setTimeout(res, 5000);
       });
     }
+  }
+  if (retries === 0)
+  {
+    await logError(Error("Failed to connect to db"), client);
+    process.exit();
   }
 })
 

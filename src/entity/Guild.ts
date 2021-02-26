@@ -9,9 +9,7 @@ export class Guild {
   @Column()
   name: string;
 
-  @OneToMany(() => Category, category => category.guild, {
-    eager: true,
-  })
+  @OneToMany(() => Category, category => category.guild)
   categories: Category[];
 
   @Column("simple-json")
