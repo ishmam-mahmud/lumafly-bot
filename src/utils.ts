@@ -385,6 +385,9 @@ const setupCats = async (guild: DiscordGuild) =>
       "Bialterous",
       "Androalterous",
       "Aplatonic Spectrum",
+      "Iodic",
+      "Europic",
+      "Callistic",
     ];
 
     let tabletop_labels = [
