@@ -106,12 +106,6 @@ class MoveRoleCommand extends Command
         if (!msg.member.permissions.has("MANAGE_GUILD"))
           return await msg.reply("You need to have the Manage Server permission to change the self-assignability of a role");
       }
-  
-      if (newCat.selfAssignable && newCat.defaultRoleColor !== "DEFAULT")
-      {
-        let discRole = await msg.guild.roles.fetch(targetRole.id);
-        discRole = await discRole.setColor(newCat.defaultRoleColor);
-      }
 
       await getRepository(Category)
         .createQueryBuilder("cat")
