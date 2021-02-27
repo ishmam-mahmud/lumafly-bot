@@ -9,14 +9,12 @@ interface EntityName {
   name: string;
 }
 
-const fakeFuzzySearch = (searchInput: string, list: EntityName[]) =>
-{
-  let foundTargets: Map<number, EntityName> = new Map<number, EntityName>();
+export const fakeFuzzySearch = <T extends EntityName>(searchInput: string, list: T[]): T => {
+  let foundTargets: Map<number, T> = new Map<number, T>();
+  let parsedInput = searchInput.toLowerCase().trim();
   for (const it of list)
   {
     let parsedName = it.name.toLowerCase();
-    let parsedInput = searchInput.toLowerCase().trim();
-
     let foundIndex = parsedName.indexOf(parsedInput);
     if (foundIndex !== -1)
     {
@@ -42,7 +40,7 @@ const fakeFuzzySearch = (searchInput: string, list: EntityName[]) =>
   throw new Error(`${searchInput} not found`);
 }
 
-const logErrorFromCommand = async (error: Error, msg: CommandoMessage) =>
+export const logErrorFromCommand = async (error: Error, msg: CommandoMessage) =>
 {
   let e = `${error.message}\n${msg.url}`;
   logger.error(error);
@@ -52,7 +50,7 @@ const logErrorFromCommand = async (error: Error, msg: CommandoMessage) =>
   return await msg.say("Error reported. I failed :pensive: I'm so sorry");
 }
 
-const logErrorFromMsg = async (error: Error, msg: Message) =>
+export const logErrorFromMsg = async (error: Error, msg: Message) =>
 {
   let e = `${error.message}\n${msg.url}`;
   logger.error(error);
@@ -61,7 +59,7 @@ const logErrorFromMsg = async (error: Error, msg: Message) =>
   return await owner.send(e);
 }
 
-const logError = async (error: Error, client: CommandoClient) =>
+export const logError = async (error: Error, client: CommandoClient) =>
 {
   let e = `${error.message}`;
   logger.error(error);
@@ -70,7 +68,7 @@ const logError = async (error: Error, client: CommandoClient) =>
   return r;
 }
 
-const setupCats = async (guild: DiscordGuild) =>
+export const setupCats = async (guild: DiscordGuild) =>
 {
   let dbGuild = await getRepository(Guild)
     .createQueryBuilder("guild")
@@ -540,7 +538,7 @@ const setupCats = async (guild: DiscordGuild) =>
   return `${guild.name} has already been setup`;
 }
 
-const createEmbeds = (embed: MessageEmbed, descriptionSeparator: string) : MessageEmbed[] =>
+export const createEmbeds = (embed: MessageEmbed, descriptionSeparator: string) : MessageEmbed[] =>
 {
   if (embed.description.length > 2048)
   {
@@ -554,13 +552,4 @@ const createEmbeds = (embed: MessageEmbed, descriptionSeparator: string) : Messa
     return [...embed1, ...embed2];
   }
   return [embed];
-}
-
-export {
-  fakeFuzzySearch,
-  logErrorFromCommand,
-  setupCats,
-  logError,
-  logErrorFromMsg,
-  createEmbeds,
 }

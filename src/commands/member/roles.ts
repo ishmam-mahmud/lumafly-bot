@@ -72,7 +72,7 @@ class RolesCommand extends Command
       let catAskedFor: Category;
       try
       {
-        catAskedFor = fakeFuzzySearch(catName, results) as Category;
+        catAskedFor = fakeFuzzySearch<Category>(catName, results);
       } catch (error)
       {
         console.error(error);
