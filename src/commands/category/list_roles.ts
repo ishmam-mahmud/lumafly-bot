@@ -68,9 +68,7 @@ class ListRolesCommand extends Command
 
       for (const role of rolesArr)
       {
-        let discordRole = await msg.guild.roles.fetch(role.id);
-        let memberSize = discordRole.members.reduce(a => ++a, 0);
-        roleString = `${roleString}<@&${role.id}> - ${memberSize} members\n`;
+        roleString = `${roleString}<@&${role.id}> - ${role.id}\n`;
       }
 
       let bigEmbed = new MessageEmbed({
