@@ -1,7 +1,8 @@
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
 import { Category } from "../../entity/Category"
 import { getRepository } from "typeorm"
-import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
+import { createEmbeds, fakeFuzzySearch, logErrorFromCommand } from "../../utils";
+import { MessageEmbed } from "discord.js";
 
 type ListRoleArgs = {
   catName: string;
@@ -49,7 +50,7 @@ class ListRolesCommand extends Command
       let catAskedFor: Category;
       try
       {
-        catAskedFor = fakeFuzzySearch(catName, results) as Category;
+        catAskedFor = fakeFuzzySearch<Category>(catName, results);
       } catch (error)
       {
         console.error(error);
@@ -64,36 +65,29 @@ class ListRolesCommand extends Command
           if (r1.name > r2.name) return 1;
           return 0;
         });
-  
-      let i = 0;
-      let embedSends: Promise<CommandoMessage>[] = [];
-      for (const r of rolesArr)
+
+      for (const role of rolesArr)
       {
-        roleString = `${roleString}<@&${r.id}> : ${r.id}\n`;
-        ++i;
-        if (i % 20 === 0 || i === rolesArr.length)
-        {
-          embedSends.push(msg.say({
-            embed: {
-              title: `${catAskedFor.name} : ID${catAskedFor.id}`,
-              color: catAskedFor.defaultRoleColor,
-              description: roleString,
-              fields: [
-                {
-                  name: "Default Color",
-                  value: catAskedFor.defaultRoleColor,
-                },
-                {
-                  name: "Self-Assignable",
-                  value: catAskedFor.selfAssignable,
-                },
-              ]
-            }
-          }));
-          roleString = ``;
-        }
+        let discordRole = await msg.guild.roles.fetch(role.id);
+        let memberSize = discordRole.members.reduce(a => ++a, 0);
+        roleString = `${roleString}<@&${role.id}> - ${memberSize} members\n`;
       }
-      return await Promise.all(embedSends);
+
+      let bigEmbed = new MessageEmbed({
+        title: `${catAskedFor.name}`,
+        description: roleString.slice(0, roleString.length - 1),
+        fields: [
+          {
+            name: "selfAssignable",
+            value: catAskedFor.selfAssignable
+          }
+        ],
+        color: catAskedFor.defaultRoleColor
+      });
+
+      let embeds = createEmbeds(bigEmbed, '\n');
+
+      return await Promise.all(embeds.map(e => msg.embed(e)));
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);

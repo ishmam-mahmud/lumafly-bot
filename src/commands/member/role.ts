@@ -62,7 +62,7 @@ class RoleCommand extends Command
       let foundRole: Role;
       try
       {
-        foundRole = fakeFuzzySearch(roleName, rolesToSearchThrough) as Role;
+        foundRole = fakeFuzzySearch<Role>(roleName, rolesToSearchThrough);
       } catch (error)
       {
         console.error(error);
