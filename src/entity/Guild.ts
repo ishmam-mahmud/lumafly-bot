@@ -1,8 +1,9 @@
-import { Entity, PrimaryColumn, Column, OneToMany } from "typeorm"
+import { Entity, PrimaryColumn, Column, OneToMany } from "typeorm";
 import { Category } from "./Category";
 
 @Entity()
-export class Guild {
+export class Guild
+{
   @PrimaryColumn()
   id: string;
 
@@ -18,4 +19,4 @@ export class Guild {
 
 type GuildConfig = {
   suggestionsChannelID: string;
-}
+};

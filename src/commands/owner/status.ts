@@ -3,17 +3,17 @@ import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 type PresenceArgs = {
   name: string;
   status: string;
-}
+};
 
 class Presence extends Command
 {
   constructor(client: CommandoClient)
   {
     super(client, {
-      name: "pres",
-      aliases: ["setpres", "setpresence", "status", "setstat", "setstatus"],
+      name: "status",
+      aliases: ["setstatus"],
       group: "owner",
-      memberName: "pres",
+      memberName: "status",
       description: "Set custom status for bot",
       args: [
         {
@@ -27,7 +27,7 @@ class Presence extends Command
     });
   }
 
-  async run(msg: CommandoMessage, { name }: PresenceArgs)
+  async run(msg: CommandoMessage, { name }: PresenceArgs): Promise<CommandoMessage>
   {
     await this.client.user.setPresence({ activity: { name } });
     return await msg.say(`Set status to \`Playing ${name}\``);

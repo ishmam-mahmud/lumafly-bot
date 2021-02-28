@@ -2,13 +2,13 @@ import { CommandoClient } from "discord.js-commando";
 import path from "path";
 import "reflect-metadata";
 import { createConnection, getRepository } from "typeorm";
-import { Category } from "./entity/Category"
-import { Guild } from "./entity/Guild"
-import { Role } from "./entity/Role"
+import { Category } from "./entity/Category";
+import { Guild } from "./entity/Guild";
+import { Role } from "./entity/Role";
 import { setupCats, logError, logErrorFromMsg } from "./utils";
 import logger from "./log";
 import * as entities from './entity';
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -33,7 +33,7 @@ client.registry
   .registerDefaultCommands({
     unknownCommand: false,
   })
-  .registerCommandsIn(path.join(__dirname, "commands"))
+  .registerCommandsIn(path.join(__dirname, "commands"));
 
 client.once("ready", async () =>
 {
@@ -61,7 +61,7 @@ client.once("ready", async () =>
       console.error(error);
       console.error(`Retries left = ${retries}`);
       --retries;
-      await new Promise((res, rej) =>
+      await new Promise(res =>
       {
         setTimeout(res, 5000);
       });
@@ -72,7 +72,7 @@ client.once("ready", async () =>
     await logError(Error("Failed to connect to db"), client);
     process.exit();
   }
-})
+});
 
 client.on("guildCreate", async guild =>
 {
@@ -83,37 +83,37 @@ client.on("guildCreate", async guild =>
   {
     await logError(error, client);
   }
-})
+});
 
 client.on("roleCreate", async (roleCreated) =>
 {
   try
   {
-    let uncat = await getRepository(Category)
+    const uncat = await getRepository(Category)
       .createQueryBuilder("cat")
       .innerJoin("cat.guild", "guild")
       .innerJoinAndSelect("cat.roles", "role")
       .where("cat.name = :name", { name: "Uncategorized" })
       .andWhere("guild.id = :id", { id: roleCreated.guild.id })
       .getOne();
-  
+
     if (!uncat)
     {
       logger.error(`${roleCreated.guild.name} has not been setup properly.`);
       return;
     }
-  
-    let checkRoles = uncat.roles.filter(role => role.name === roleCreated.name);
+
+    const checkRoles = uncat.roles.filter(role => role.name === roleCreated.name);
     if (checkRoles.length > 0)
     {
       roleCreated = await roleCreated.delete("An uncategorized role with the same name already exists");
       return;
     }
-    
-    let dbRole = new Role();
+
+    const dbRole = new Role();
     dbRole.id = roleCreated.id;
     dbRole.name = roleCreated.name;
-  
+
     await getRepository(Role)
       .createQueryBuilder("role")
       .insert()
@@ -129,13 +129,13 @@ client.on("roleCreate", async (roleCreated) =>
   {
     await logError(error, client);
   }
-})
+});
 
 client.on("roleDelete", async (roleDeleted) =>
 {
   try
   {
-    let role = await getRepository(Role)
+    const role = await getRepository(Role)
       .createQueryBuilder("role")
       .innerJoin("role.category", "cat")
       .innerJoin("cat.guild", "guild")
@@ -150,9 +150,9 @@ client.on("roleDelete", async (roleDeleted) =>
       .execute();
   } catch (error)
   {
-    await logError(error, client);  
+    await logError(error, client);
   }
-})
+});
 
 client.on("roleUpdate", async (oldRole, newRole) =>
 {
@@ -171,7 +171,7 @@ client.on("roleUpdate", async (oldRole, newRole) =>
   {
     await logError(error, client);
   }
-})
+});
 
 client.on("message", async msg =>
 {
@@ -183,17 +183,17 @@ client.on("message", async msg =>
     // Handle guild and dms differently
     if (msg.guild)
     {
-      let dbGuild = await getRepository(Guild)
+      const dbGuild = await getRepository(Guild)
         .createQueryBuilder("guild")
-        .where("guild.id = :id", { id: msg.guild?.id})
+        .where("guild.id = :id", { id: msg.guild?.id })
         .getOne();
-  
+
       if (dbGuild)
       {
-        let channelSuggestionsID = dbGuild.config.suggestionsChannelID;
+        const channelSuggestionsID = dbGuild.config.suggestionsChannelID;
         if (msg.channel.id === channelSuggestionsID)
         {
-          let reactions = [msg.react("👍"), msg.react("👎")];
+          const reactions = [msg.react("👍"), msg.react("👎")];
           await Promise.all(reactions);
         }
       }
@@ -202,7 +202,7 @@ client.on("message", async msg =>
   {
     await logErrorFromMsg(error, msg);
   }
-})
+});
 
 client.on("error", async err =>
 {

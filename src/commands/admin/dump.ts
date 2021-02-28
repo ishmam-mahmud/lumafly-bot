@@ -1,9 +1,9 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Role } from "../../entity/Role"
-import { Category } from "../../entity/Category"
-import { Guild } from "../../entity/Guild"
-import { getRepository } from "typeorm"
-import { logErrorFromCommand } from "../../utils"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { Role } from "../../entity/Role";
+import { Category } from "../../entity/Category";
+import { Guild } from "../../entity/Guild";
+import { getRepository } from "typeorm";
+import { logErrorFromCommand } from "../../utils";
 class DumpCommand extends Command
 {
   constructor(client: CommandoClient)
@@ -16,14 +16,14 @@ class DumpCommand extends Command
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
       userPermissions: ["ADMINISTRATOR"],
-    })
+    });
   }
 
-  async run(msg: CommandoMessage)
+  async run(msg: CommandoMessage): Promise<CommandoMessage>
   {
     try
     {
-      let roles = await getRepository(Role)
+      const roles = await getRepository(Role)
         .createQueryBuilder("role")
         .innerJoin("role.category", "cat")
         .innerJoin("cat.guild", "guild")

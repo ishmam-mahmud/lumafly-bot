@@ -1,7 +1,6 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Category } from "../../entity/Category"
-import { Role } from "../../entity/Role"
-import { getRepository } from "typeorm"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { Category } from "../../entity/Category";
+import { getRepository } from "typeorm";
 import { logErrorFromCommand } from "../../utils";
 
 type RmCatCommandArgs = {
@@ -28,20 +27,20 @@ class RmCatCommand extends Command
           default: "*"
         },
       ]
-    })
+    });
   }
 
-  async run(msg: CommandoMessage, { nameCatToRemove }: RmCatCommandArgs)
+  async run(msg: CommandoMessage, { nameCatToRemove }: RmCatCommandArgs): Promise<CommandoMessage>
   {
     try
     {
       if (/Uncategorized/.exec(nameCatToRemove))
         return await msg.say("No removing the Uncategorized category");
-      
+
       if (nameCatToRemove.length < 3)
         return await msg.say("too few characters in the given cat's name");
-  
-      let catToRemove = await getRepository(Category)
+
+      const catToRemove = await getRepository(Category)
         .createQueryBuilder("cat")
         .innerJoin("cat.guild", "guild")
         .leftJoinAndSelect("cat.roles", "role")
@@ -51,32 +50,32 @@ class RmCatCommand extends Command
 
       if (!catToRemove)
         return await msg.say(`${nameCatToRemove} category does not exist!`);
-  
-      let uncat = await getRepository(Category)
+
+      const uncat = await getRepository(Category)
         .createQueryBuilder("cat")
         .innerJoin("cat.guild", "guild")
         .where("cat.name = :n", { n: "Uncategorized" })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getOne();
 
-      let roleRemoves = catToRemove.roles.map(r =>
-        {
-          return getRepository(Category)
-            .createQueryBuilder("cat")
-            .relation("roles")
-            .of(catToRemove.id)
-            .remove(r.id);
-        })
+      const roleRemoves = catToRemove.roles.map(r =>
+      {
+        return getRepository(Category)
+          .createQueryBuilder("cat")
+          .relation("roles")
+          .of(catToRemove.id)
+          .remove(r.id);
+      });
       await Promise.all(roleRemoves);
 
-      let roleAdds = catToRemove.roles.map(r =>
-        {
-          return getRepository(Category)
-            .createQueryBuilder("cat")
-            .relation("roles")
-            .of(uncat.id)
-            .add(r.id)
-        })
+      const roleAdds = catToRemove.roles.map(r =>
+      {
+        return getRepository(Category)
+          .createQueryBuilder("cat")
+          .relation("roles")
+          .of(uncat.id)
+          .add(r.id);
+      });
       await Promise.all(roleAdds);
 
       await getRepository(Category)

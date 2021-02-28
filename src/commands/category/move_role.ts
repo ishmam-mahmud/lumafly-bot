@@ -1,8 +1,8 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { getRepository } from "typeorm"
-import { Guild } from "../../entity/Guild"
-import { Category } from "../../entity/Category"
-import { Role } from "../../entity/Role"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { getRepository } from "typeorm";
+import { Guild } from "../../entity/Guild";
+import { Category } from "../../entity/Category";
+import { Role } from "../../entity/Role";
 import { logErrorFromCommand } from "../../utils";
 
 type MoveRoleCommandArgs = {
@@ -36,25 +36,25 @@ class MoveRoleCommand extends Command
           default: "*",
         },
       ],
-    })
+    });
   }
-  
 
 
-  async run(msg: CommandoMessage, { name, newCatName }: MoveRoleCommandArgs)
+
+  async run(msg: CommandoMessage, { name, newCatName }: MoveRoleCommandArgs): Promise<CommandoMessage>
   {
     try
     {
       if (/everyone/.exec(name))
         return await msg.say("No moving everyone around");
-  
+
       if (name.length < 3)
         return await msg.say("too few characters in the role name");
-  
+
       if (newCatName.length < 3)
         return await msg.say("too few characters in the destination cat name");
 
-      let guild = await getRepository(Guild)
+      const guild = await getRepository(Guild)
         .createQueryBuilder("guild")
         .innerJoinAndSelect("guild.categories", "cat")
         .innerJoinAndSelect("cat.roles", "role")
@@ -63,18 +63,18 @@ class MoveRoleCommand extends Command
 
       if (!guild)
         return await msg.say(`Server DB has not been setup yet. Run ${this.client.commandPrefix}setup again`);
-  
-      let newCat = await getRepository(Category)
+
+      const newCat = await getRepository(Category)
         .createQueryBuilder("cat")
         .innerJoin("cat.guild", "guild")
         .leftJoinAndSelect("cat.roles", "roles")
         .where("cat.name = :name", { name: newCatName })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getOne();
-      
+
       if (!newCat)
         return await msg.say(`${newCatName} category does not exist`);
-  
+
       for (const role of newCat.roles)
       {
         if (name === role.name)
@@ -83,9 +83,11 @@ class MoveRoleCommand extends Command
 
       let currCat: Category;
       let targetRole: Role;
-  
-      for (const cat of guild.categories) {
-        for (const role of cat.roles) {
+
+      for (const cat of guild.categories)
+      {
+        for (const role of cat.roles)
+        {
           if (role.name === name)
           {
             targetRole = role;
@@ -94,17 +96,17 @@ class MoveRoleCommand extends Command
           }
         }
       }
-      
+
       if (!currCat)
         return await msg.say(`${name} role was not found`);
-  
+
       if (currCat.id === newCat.id)
         return await msg.say(`${name} is already in ${newCat.name} category`);
-  
+
       if (!currCat.selfAssignable || currCat.selfAssignable !== newCat.selfAssignable)
       {
         if (!msg.member.permissions.has("MANAGE_GUILD"))
-          return await msg.reply("You need to have the Manage Server permission to change the self-assignability of a role");
+          return await msg.say("You need to have the Manage Server permission to change the self-assignability of a role");
       }
 
       await getRepository(Category)
