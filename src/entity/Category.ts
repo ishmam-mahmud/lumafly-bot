@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm"
-import { Guild } from "./Guild"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import { Guild } from "./Guild";
 import { Role } from "./Role";
-
 @Entity()
-export class Category {
+export class Category
+{
   @PrimaryGeneratedColumn()
   id: number;
 

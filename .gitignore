@@ -9,3 +9,4 @@ node_modules
 *.ps1
 db
 *.log
+.vscode

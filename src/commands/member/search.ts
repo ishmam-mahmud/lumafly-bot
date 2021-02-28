@@ -1,12 +1,11 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Category } from "../../entity/Category"
-import { getRepository } from "typeorm"
-import { Role } from "../../entity/Role"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { getRepository } from "typeorm";
+import { Role } from "../../entity/Role";
 import { logErrorFromCommand } from "../../utils";
 
 type SearchCommandArgs = {
   roleName: string;
-}
+};
 
 class SearchCommand extends Command
 {
@@ -28,29 +27,29 @@ class SearchCommand extends Command
           default: "*"
         }
       ]
-    })
+    });
   }
 
-  async run(msg: CommandoMessage, { roleName }: SearchCommandArgs)
+  async run(msg: CommandoMessage, { roleName }: SearchCommandArgs): Promise<CommandoMessage>
   {
     try
     {
       if (/everyone/.exec(roleName))
         return await msg.say("no");
-      
+
       if (roleName.length < 3)
         return await msg.say("too few characters from the role name");
-  
-      let foundRoles: string[] = [];
+
+      const foundRoles: string[] = [];
       for (const role of msg.guild.roles.cache.values())
       {
-        let dsRoleName = role.name.toLowerCase().trim();
-        let input = roleName.toLowerCase().trim();
+        const dsRoleName = role.name.toLowerCase().trim();
+        const input = roleName.toLowerCase().trim();
         if (dsRoleName.includes(input))
           foundRoles.push(role.name);
       }
-  
-      let dbRoles = await getRepository(Role)
+
+      const dbRoles = await getRepository(Role)
         .createQueryBuilder("role")
         .innerJoin("role.category", "cat")
         .innerJoin("cat.guild", "guild")
@@ -58,24 +57,24 @@ class SearchCommand extends Command
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getMany();
 
-      let rolesFound = dbRoles.filter(r =>
-        {
-          return foundRoles.includes(r.name);
-        }).sort((r1, r2) =>
-        {
-          if (r1.name < r2.name) return -1;
-          if (r1.name > r2.name) return 1;
-          return 0;
-        })
-  
+      const rolesFound = dbRoles.filter(r =>
+      {
+        return foundRoles.includes(r.name);
+      }).sort((r1, r2) =>
+      {
+        if (r1.name < r2.name) return -1;
+        if (r1.name > r2.name) return 1;
+        return 0;
+      });
+
       let roleString = '';
 
       rolesFound.forEach(r =>
-        {
-          roleString = `${roleString}<@&${r.id}>, `;
-        });
+      {
+        roleString = `${roleString}<@&${r.id}>, `;
+      });
 
-      let description = roleString.length > 0 ? roleString.slice(0, roleString.length - 2) : "No results found";
+      const description = roleString.length > 0 ? roleString.slice(0, roleString.length - 2) : "No results found";
 
       return await msg.say({
         embed: {
@@ -85,7 +84,7 @@ class SearchCommand extends Command
       });
     } catch (error)
     {
-      return await logErrorFromCommand(error, msg);    
+      return await logErrorFromCommand(error, msg);
     }
   }
 }

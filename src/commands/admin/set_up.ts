@@ -1,5 +1,5 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { logErrorFromCommand, setupCats } from "../../utils"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { logErrorFromCommand, setupCats } from "../../utils";
 class SetUpCommand extends Command
 {
   constructor(client: CommandoClient)
@@ -12,15 +12,14 @@ class SetUpCommand extends Command
       guildOnly: true,
       clientPermissions: ["MANAGE_ROLES"],
       userPermissions: ["ADMINISTRATOR"],
-    })
+    });
   }
 
-  async run(msg: CommandoMessage)
+  async run(msg: CommandoMessage): Promise<CommandoMessage>
   {
     try
     {
-      let res = await setupCats(msg.guild);
-      return await msg.say(res);
+      return await msg.say(await setupCats(msg.guild));
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);

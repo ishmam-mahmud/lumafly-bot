@@ -1,8 +1,8 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Category } from "../../entity/Category"
-import { Guild } from "../../entity/Guild"
-import { getRepository } from "typeorm"
-import { logErrorFromCommand } from "../../utils"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { Category } from "../../entity/Category";
+import { Guild } from "../../entity/Guild";
+import { getRepository } from "typeorm";
+import { logErrorFromCommand } from "../../utils";
 
 type AddCatCommandArgs = {
   name: string,
@@ -42,22 +42,22 @@ class AddCatCommand extends Command
           default: false,
         },
       ]
-    })
+    });
   }
 
-  async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs)
+  async run(msg: CommandoMessage, { name, defaultRoleColor, isSelfAssignable }: AddCatCommandArgs): Promise<CommandoMessage>
   {
     try
     {
       if (name.length < 3)
         return await msg.say(`too few characters in the name`);
-  
+
       defaultRoleColor = defaultRoleColor.toUpperCase();
-      let colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
+      const colorRe = /^#[A-F0-9]{6}$|^DEFAULT$|^\*$/;
       if (!colorRe.exec(defaultRoleColor))
         return await msg.say(`You need to pass a hex color code for the category color, or leave it empty`);
 
-      let guild = await getRepository(Guild)
+      const guild = await getRepository(Guild)
         .createQueryBuilder("guild")
         .where("id = :id", { id: msg.guild.id })
         .getOne();
@@ -71,7 +71,7 @@ class AddCatCommand extends Command
         .where("cat.name = :name", { name })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getOne();
-  
+
       if (cat)
         return await msg.say(`A category with that name already exists.`);
 

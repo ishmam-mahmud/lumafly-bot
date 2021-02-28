@@ -1,12 +1,11 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Category } from "../../entity/Category"
-import { getRepository } from "typeorm"
-import { Role } from "../../entity/Role"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { getRepository } from "typeorm";
+import { Role } from "../../entity/Role";
 import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
 
 type RoleCommandArgs = {
   roleName: string;
-}
+};
 
 class RoleCommand extends Command
 {
@@ -28,37 +27,37 @@ class RoleCommand extends Command
           default: "*"
         }
       ]
-    })
+    });
   }
 
-  async run(msg: CommandoMessage, { roleName }: RoleCommandArgs)
+  async run(msg: CommandoMessage, { roleName }: RoleCommandArgs): Promise<CommandoMessage>
   {
     try
     {
       if (/everyone/.exec(roleName))
         return await msg.say("no");
-      
+
       if (roleName.length < 3)
         return await msg.say("too few characters from the role name");
-  
+
       for (const role of msg.member.roles.cache.values())
       {
-        let dsRoleName = role.name.toLowerCase().trim();
-        let input = roleName.toLowerCase().trim();
+        const dsRoleName = role.name.toLowerCase().trim();
+        const input = roleName.toLowerCase().trim();
         if (dsRoleName === input)
         {
           return await msg.say(`You already have the ${role.name} role`);
-        }  
+        }
       }
-  
-      let rolesToSearchThrough = await getRepository(Role)
+
+      const rolesToSearchThrough = await getRepository(Role)
         .createQueryBuilder("role")
         .innerJoin("role.category", "cat")
         .innerJoin("cat.guild", "guild")
         .where("cat.selfAssignable = :s", { s: true })
         .andWhere("guild.id = :id", { id: msg.guild.id })
         .getMany();
-  
+
       let foundRole: Role;
       try
       {
@@ -66,13 +65,13 @@ class RoleCommand extends Command
       } catch (error)
       {
         console.error(error);
-        return await msg.say(`${roleName} role not found among self-assignable roles`);  
+        return await msg.say(`${roleName} role not found among self-assignable roles`);
       }
       await msg.member.roles.add(foundRole.id);
       return await msg.say(`access granted to role ${foundRole.name}. congratulations !`);
     } catch (error)
     {
-      return await logErrorFromCommand(error, msg);    
+      return await logErrorFromCommand(error, msg);
     }
   }
 }
