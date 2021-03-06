@@ -1,10 +1,10 @@
-name: Type Coverage
+name: Code Checks
 
 on: push
 
 jobs:
-  type-coverage:
-    name: Check type coverage
+  app-checks:
+    name: Check type-coverage, linting, and build
     runs-on: ubuntu-latest
 
     steps:
@@ -25,3 +25,9 @@ jobs:
 
       - name: Type Coverage
         run: npm run type-coverage
+
+      - name: Code linting
+        run: npm run lint
+
+      - name: Check types and build
+        run: npm run type-check
