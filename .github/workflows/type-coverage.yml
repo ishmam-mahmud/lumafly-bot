@@ -21,7 +21,7 @@ jobs:
           node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
 
       - name: Install dependencies
-        run: npm Install
+        run: npm install
 
       - name: Type Coverage
         run: npm run type-coverage
