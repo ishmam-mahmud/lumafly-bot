@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm"
-import { Category } from "./Category"
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Category } from "./Category";
 
 @Entity()
-export class Role {
+export class Role
+{
   @PrimaryColumn()
   id: string;
 

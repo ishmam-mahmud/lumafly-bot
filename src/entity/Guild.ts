@@ -1,17 +1,16 @@
-import { Entity, PrimaryColumn, Column, OneToMany } from "typeorm"
+import { Entity, PrimaryColumn, Column, OneToMany } from "typeorm";
 import { Category } from "./Category";
 
 @Entity()
-export class Guild {
+export class Guild
+{
   @PrimaryColumn()
   id: string;
 
   @Column()
   name: string;
 
-  @OneToMany(() => Category, category => category.guild, {
-    eager: true,
-  })
+  @OneToMany(() => Category, category => category.guild)
   categories: Category[];
 
   @Column("simple-json")
@@ -20,4 +19,4 @@ export class Guild {
 
 type GuildConfig = {
   suggestionsChannelID: string;
-}
+};

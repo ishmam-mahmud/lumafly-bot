@@ -1,12 +1,11 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { Category } from "../../entity/Category"
-import { Role } from "../../entity/Role"
-import { getRepository } from "typeorm"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { Role } from "../../entity/Role";
+import { getRepository } from "typeorm";
 import { fakeFuzzySearch, logErrorFromCommand } from "../../utils";
 
 type DeroleCommandArgs = {
   roleName: string;
-}
+};
 
 class DeroleCommand extends Command
 {
@@ -28,24 +27,24 @@ class DeroleCommand extends Command
           default: "*",
         }
       ],
-    })
+    });
   }
 
-  async run(msg: CommandoMessage, { roleName }: DeroleCommandArgs)
+  async run(msg: CommandoMessage, { roleName }: DeroleCommandArgs): Promise<CommandoMessage>
   {
     try
     {
       if (/everyone/.exec(roleName))
         return await msg.say("no");
-    
+
       if (roleName.length < 3)
         return await msg.say("too few characters from the role name");
 
       let found = false;
       for (const role of msg.member.roles.cache.values())
       {
-        let dsRoleName = role.name.toLowerCase().trim();
-        let input = roleName.toLowerCase().trim();
+        const dsRoleName = role.name.toLowerCase().trim();
+        const input = roleName.toLowerCase().trim();
         if (dsRoleName.includes(input))
         {
           found = true;
@@ -55,39 +54,34 @@ class DeroleCommand extends Command
       if (!found)
         return await msg.say(`You don't have that role, whatever it is.`);
 
-      let results = await getRepository(Category).find({
-        selfAssignable: true,
-        guild: {
-          id: msg.guild.id,
-        }
-      });
-
-      let rolesToSearchThrough: Role[] = [];
-      for (const cat of results)
-      {
-        rolesToSearchThrough = [...rolesToSearchThrough, ...cat.roles];
-      }
+      let rolesToSearchThrough = await getRepository(Role)
+        .createQueryBuilder("role")
+        .innerJoin("role.category", "cat")
+        .innerJoin("cat.guild", "guild")
+        .where("cat.selfAssignable = :s", { s: true })
+        .andWhere("guild.id = :id", { id: msg.guild.id })
+        .getMany();
 
       rolesToSearchThrough = rolesToSearchThrough.filter(r =>
-        {
-          return msg.member.roles.cache.has(r.id);
-        })
+      {
+        return msg.member.roles.cache.has(r.id);
+      });
 
       let foundRole: Role;
       try
       {
-        foundRole = fakeFuzzySearch(roleName, rolesToSearchThrough) as Role;
+        foundRole = fakeFuzzySearch<Role>(roleName, rolesToSearchThrough);
       } catch (error)
       {
         console.error(error);
-        return await msg.say(`${roleName} role not found among self-assignable roles`);  
+        return await msg.say(`${roleName} role not found among self-assignable roles`);
       }
 
       await msg.member.roles.remove(foundRole.id);
       return await msg.say(`access removed from role ${foundRole.name}. congratulation ?`);
     } catch (error)
     {
-      return await logErrorFromCommand(error, msg);  
+      return await logErrorFromCommand(error, msg);
     }
   }
 }

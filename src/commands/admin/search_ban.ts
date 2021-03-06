@@ -1,5 +1,5 @@
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando"
-import { logErrorFromCommand } from "../../utils"
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import { logErrorFromCommand } from "../../utils";
 
 type SearchBanArgs = {
   userID: string;
@@ -11,7 +11,7 @@ class SearchBanCommand extends Command
   {
     super(client, {
       name: "get_ban",
-      group: "ban",
+      group: "admin",
       memberName: "get_ban",
       aliases: ["find_ban, search_ban"],
       description: "Search info about a ban by user ID",
@@ -26,17 +26,17 @@ class SearchBanCommand extends Command
           default: "*",
         },
       ]
-    })
+    });
   }
 
-  async run(msg: CommandoMessage, { userID }: SearchBanArgs)
+  async run(msg: CommandoMessage, { userID }: SearchBanArgs): Promise<CommandoMessage>
   {
     try
     {
       if (!/^\d{18}$/.exec(userID))
         return await msg.say("Please provide a valid user ID");
 
-      let ban = await msg.guild.fetchBan(userID);
+      const ban = await msg.guild.fetchBan(userID);
 
       if (ban)
       {

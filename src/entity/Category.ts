@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm"
-import { Guild } from "./Guild"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import { Guild } from "./Guild";
 import { Role } from "./Role";
-
 @Entity()
-export class Category {
+export class Category
+{
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,9 +13,7 @@ export class Category {
   @ManyToOne(() => Guild, guild => guild.categories)
   guild: Guild;
 
-  @OneToMany(() => Role, role => role.category, {
-    eager: true,
-  })
+  @OneToMany(() => Role, role => role.category)
   roles: Role[];
 
   @Column({

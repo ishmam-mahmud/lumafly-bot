@@ -1,0 +1,15 @@
+name: Docker Build Check
+
+on: push
+
+jobs:
+  build-container:
+    name: Build app docker container
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build container
+        run: docker build -t lumafly:latest .

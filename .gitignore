@@ -1,6 +1,6 @@
 dist
 node_modules
-.env
+*.env
 *.sh
 !install.sh
 *.ps1
@@ -8,3 +8,5 @@ node_modules
 *.sql
 *.ps1
 db
+*.log
+.vscode
