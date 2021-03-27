@@ -195,6 +195,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "botless",
       "Member",
       "no-pictures",
+      "Minecrafter",
       "@everyone",
     ];
 
@@ -216,7 +217,8 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "It-Its",
       "Ask-Pronouns",
       "Any-Pronouns",
-      "Prefer-Not-To-Say"
+      "Prefer-Not-To-Say",
+      "No-Pronouns",
     ];
 
     const gender_labels = [
@@ -395,7 +397,6 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
     ];
 
     const miscellaneous_labels = [
-      "Minecrafter",
       "Neurodivergent",
       "Writing Club",
       "N&P Opt-In",
