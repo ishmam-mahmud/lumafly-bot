@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist",
     "start": "npm run clean && npx tsc && node dist/index.js",
+    "sendMessage": "npx tsc && node dist/cronjobs/sendMessage",
     "type-check": "npx tsc",
     "lint": "npx eslint ./src/**/*.ts",
     "type-coverage": "npx type-coverage"
@@ -33,6 +34,9 @@
   },
   "typeCoverage": {
     "atLeast": 100,
+    "ignoreFiles": [
+      "src/cronjobs/*.ts"
+    ],
     "ignoreCatch": true,
     "project": "tsconfig.json",
     "strict": true,
