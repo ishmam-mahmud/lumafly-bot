@@ -222,7 +222,6 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
     ];
 
     const gender_labels = [
-      "Voidpunk",
       "Transmasculine",
       "Transsexual",
       "Transneutral",
@@ -246,7 +245,6 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Girlflux",
       "Genderqueer",
       "Gender-Non-Conforming",
-      "Gender-Nihilist",
       "Gender-Neutral",
       "Genderless",
       "Genderflux",
@@ -254,7 +252,6 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Genderflor",
       "Genderfaun",
       "Genderfae",
-      "Gender-Egoist",
       "Femme",
       "Feminine",
       "Female",
@@ -418,6 +415,9 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "DMs-Closed",
       "DMs-Ask-First",
       "Updates",
+      "Book Club",
+      "Gender-Egoist",
+      "Gender-Nihilist"
     ];
 
     const roles = guild.roles.cache.map(r =>
