@@ -382,6 +382,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Bialterous",
       "Androalterous",
       "Aplatonic Spectrum",
+      "Aplatonic",
       "Iodic",
       "Europic",
       "Callistic",
