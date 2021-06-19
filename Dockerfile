@@ -6,7 +6,7 @@ COPY . .
 
 RUN apk add python3 make gcc musl-dev g++
 
-RUN npm install && npm install better-sqlite3
+RUN npm install --production && npm install better-sqlite3
 
 EXPOSE 4000
 
