@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ssh-connect:
+    name: Connect to Remote host, build and run
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ssh pipeline
+        uses: cross-the-world/ssh-pipeline@master
+        env:
+          WELCOME: "ssh pipeline"
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          user: ${{ secrets.REMOTE_USER }}
+          pass: ${{ secrets.REMOTE_PASS }}
+          key: ${{ secrets.SSH_PRV_KEY }}
+          connect_timeout: 10s
+          script: |
+            cd aasd_bot
+            git pull
+            docker-compose down
+            docker-compose up --build
