@@ -271,6 +271,8 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Androgyne",
       "Agenderflux",
       "Agender",
+      "Cassgender",
+      "Voidgender",
     ];
 
     const aro_labels = [
@@ -310,6 +312,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Romance-Indifferent",
       "Romance-Favorable",
       "Romance-Averse",
+      "Romance-Ambivalent",
     ];
 
     const ace_labels = [
@@ -351,6 +354,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Sex-Indifferent",
       "Sex-Favorable",
       "Sex-Averse",
+      "Sex-Ambivalent",
     ];
 
     const ter_labels = [
@@ -418,7 +422,13 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Updates",
       "Book Club",
       "Gender-Egoist",
-      "Gender-Nihilist"
+      "Gender-Nihilist",
+      "Avoid-Feminine-Terms",
+      "Avoid-Masculine-Terms",
+      "Important-Mentions-Only",
+      "Voice Training Club",
+      "Water-Drinker",
+      "Voidpunk",
     ];
 
     const roles = guild.roles.cache.map(r =>
