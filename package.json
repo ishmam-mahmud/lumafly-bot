@@ -4,14 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist",
-    "start": "npm run clean && npx tsc && node dist/index.js",
-    "sendMessage": "npx tsc && node dist/cronjobs/sendMessage",
-    "type-check": "npx tsc",
-    "lint": "npx eslint ./src/**/*.ts",
-    "type-coverage": "npx type-coverage",
-    "prepare": "husky install"
+    "lint": "eslint ./src/**/*.ts",
+    "start": "npm run clean && tsc && node dist/index.js",
+    "type-check": "tsc"
   },
   "author": "glowstick-lamp",
   "license": "MIT",
@@ -29,17 +25,6 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
-    "eslint": "^7.29.0",
-    "husky": "^6.0.0"
-  },
-  "typeCoverage": {
-    "atLeast": 100,
-    "ignoreFiles": [
-      "src/cronjobs/*.ts"
-    ],
-    "ignoreCatch": true,
-    "project": "tsconfig.json",
-    "strict": true,
-    "update": true
+    "eslint": "^7.29.0"
   }
 }
