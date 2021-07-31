@@ -23,9 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Type Coverage
-        run: npm run type-coverage
-
       - name: Code linting
         run: npm run lint
 
