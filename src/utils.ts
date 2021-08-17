@@ -202,6 +202,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
     const color_labels = "Color-";
 
     const pronoun_labels = [
+      "Pronouns-in-Bio",
       "Spide-Spider-Spideself",
       "She-Her-Hers",
       "He-Him-His",
@@ -223,6 +224,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
 
     const gender_labels = [
       "Transmasculine",
+      "Xenogender",
       "Transsexual",
       "Transneutral",
       "Transfeminine",
@@ -313,6 +315,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Romance-Favorable",
       "Romance-Averse",
       "Romance-Ambivalent",
+      "Recipromantic",
     ];
 
     const ace_labels = [
@@ -387,6 +390,7 @@ export const setupCats = async (guild: DiscordGuild): Promise<string> =>
       "Androalterous",
       "Aplatonic Spectrum",
       "Aplatonic",
+      "Alloplatonic",
       "Iodic",
       "Europic",
       "Callistic",

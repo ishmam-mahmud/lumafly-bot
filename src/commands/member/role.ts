@@ -68,7 +68,7 @@ class RoleCommand extends Command
         return await msg.say(`${roleName} role not found among self-assignable roles`);
       }
       await msg.member.roles.add(foundRole.id);
-      return await msg.say(`access granted to role ${foundRole.name}. congratulations !`);
+      return await msg.say(`Added role ${foundRole.name}`);
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);

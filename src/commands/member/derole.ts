@@ -78,7 +78,7 @@ class DeroleCommand extends Command
       }
 
       await msg.member.roles.remove(foundRole.id);
-      return await msg.say(`access removed from role ${foundRole.name}. congratulation ?`);
+      return await msg.say(`Removed role ${foundRole.name}`);
     } catch (error)
     {
       return await logErrorFromCommand(error, msg);
