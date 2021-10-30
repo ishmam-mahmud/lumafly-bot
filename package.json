@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Lumafly - A bot for the Asexual and Aromantic Spectrum Discord",
   "workspaces": [
-    "packages/core"
+    "./packages/*"
   ],
   "scripts": {
     "prettier": "prettier --write . '!packages' && npm run prettier --workspaces",
