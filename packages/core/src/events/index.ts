@@ -1,11 +1,15 @@
-import { Collection } from 'discord.js';
+// @generated
+// This file was automatically generated and should not be edited.
+// Try running `npm run gen:event` instead.
+
+import { ClientEvents } from 'discord.js';
 import Event from './eventTypes';
-import ReadyEvent from './ready';
-import InteractionCreateEvent from './interactionCreate';
+import interactionCreateEventHandler from './interactionCreate';
+import readyEventHandler from './ready';
 
-const events = new Collection<string, Event<any>>();
-
-events.set(ReadyEvent.name, ReadyEvent);
-events.set(InteractionCreateEvent.name, InteractionCreateEvent);
+const events: Partial<Record<keyof ClientEvents, Event<any>>> = {
+  interactionCreate: interactionCreateEventHandler,
+  ready: readyEventHandler,
+};
 
 export default events;

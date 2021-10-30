@@ -12,6 +12,11 @@
     "postgen:command": "npm run index:command",
     "index:command": "ts-node -T scripts/indexCommands.ts",
     "postindex:command": "prettier --write src/commands",
+    "-----events-----": "",
+    "gen:event": "ts-node -T scripts/generateEventHandler.ts",
+    "postgen:event": "npm run index:event",
+    "index:event": "ts-node -T scripts/indexEvents.ts",
+    "postindex:event": "prettier --write src/events",
     "-----deploy-----": "",
     "deploy:commands": "ts-node -T scripts/deployCommands.ts"
   },
