@@ -1,0 +1,32 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "description": "Core Lumafly Client and DB",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild --bundle --format=esm --outfile=dist/index.js --platform=node src/index.ts",
+    "prettier": "prettier --write .",
+    "gen:command": "module-butler generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glowstick-lamp/aasd-bot.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/glowstick-lamp/aasd-bot/issues"
+  },
+  "homepage": "https://github.com/glowstick-lamp/aasd-bot#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.8.1",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.24.0",
+    "discord.js": "^13.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "esbuild": "^0.13.10",
+    "handlebars": "^4.7.7",
+    "module-butler": "^1.0.3"
+  }
+}
