@@ -2,7 +2,7 @@ import Command from './commandTypes';
 
 const PingCommand: Command = {
   name: 'ping',
-  description: '',
+  description: 'Replies with pong',
   async execute(interaction) {
     await interaction.reply('PONG');
   },

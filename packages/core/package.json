@@ -4,12 +4,16 @@
   "description": "Core Lumafly Client and DB",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild --bundle --format=esm --outfile=dist/index.js --platform=node src/index.ts",
+    "start": "ts-node -T src/index.ts",
+    "-----utils-----": "",
     "prettier": "prettier --write .",
+    "-----commands-----": "",
     "gen:command": "ts-node -T scripts/generateCommand.ts",
     "postgen:command": "npm run index:command",
     "index:command": "ts-node -T scripts/indexCommands.ts",
-    "postindex:command": "prettier --write src/commands"
+    "postindex:command": "prettier --write src/commands",
+    "-----deploy-----": "",
+    "deploy:commands": "ts-node -T scripts/deployCommands.ts"
   },
   "repository": {
     "type": "git",
