@@ -1,10 +1,14 @@
-import Command from './commandTypes';
-import PingCommand from './ping';
+// @generated
+// This file was automatically generated and should not be edited.
+// Try running `npm run gen:command` instead.
 
-type commandName = 'ping';
+import Command from './commandTypes';
+import pingCommand from './ping';
+
+export type commandName = 'ping';
 
 const commands: Record<commandName, Command> = {
-  ping: PingCommand,
+  ping: pingCommand,
 };
 
 export default commands;

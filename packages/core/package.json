@@ -6,7 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "esbuild --bundle --format=esm --outfile=dist/index.js --platform=node src/index.ts",
     "prettier": "prettier --write .",
-    "gen:command": "module-butler generate"
+    "gen:command": "ts-node -T scripts/generateCommand.ts",
+    "postgen:command": "npm run index:command",
+    "index:command": "ts-node -T scripts/indexCommands.ts",
+    "postindex:command": "prettier --write src/commands"
   },
   "repository": {
     "type": "git",
@@ -26,7 +29,6 @@
   "devDependencies": {
     "dotenv": "^10.0.0",
     "esbuild": "^0.13.10",
-    "handlebars": "^4.7.7",
-    "module-butler": "^1.0.3"
+    "handlebars": "^4.7.7"
   }
 }
