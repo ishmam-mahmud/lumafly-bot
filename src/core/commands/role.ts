@@ -13,7 +13,7 @@ const RoleCommand: Command = {
     },
   ],
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply();
     const roleToAdd = interaction.options.getRole('role-to-add');
     if (!roleToAdd) {
       throw 'Role not provided in options';
