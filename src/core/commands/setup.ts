@@ -7,6 +7,7 @@ const SetupCommand: Command = {
   description: 'Setup Command for Server',
   options: [],
   async execute(interaction) {
+    await interaction.deferReply();
     if (interaction.user.id !== getEnv('CLIENT_OWNER')) {
       return await interaction.reply('owner only');
     }

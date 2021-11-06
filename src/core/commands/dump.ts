@@ -8,6 +8,7 @@ const DumpCommand: Command = {
   description: 'Reset command for server',
   options: [],
   async execute(interaction) {
+    await interaction.deferReply();
     if (interaction.user.id !== getEnv('CLIENT_OWNER')) {
       return await interaction.reply('owner only');
     }

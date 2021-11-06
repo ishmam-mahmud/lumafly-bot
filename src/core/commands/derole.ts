@@ -14,6 +14,9 @@ const DeroleCommand: Command = {
   ],
   async execute(interaction) {
     const roleToRemove = interaction.options.getRole('role-to-remove');
+
+    await interaction.deferReply();
+
     if (!roleToRemove) {
       throw 'Role not provided in options';
     }
