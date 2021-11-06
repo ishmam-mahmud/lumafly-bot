@@ -1,7 +1,14 @@
 node_modules
+.pgdata
 .gitignore
-*.ps1
-**/*.ps1
-dist
 .git
 *.env
+*.log
+*.bak
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
