@@ -6,4 +6,6 @@ COPY . .
 
 RUN yarn install
 
+RUN yarn deploy:commands
+
 ENTRYPOINT [ "yarn", "core:start" ]
