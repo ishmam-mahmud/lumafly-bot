@@ -7,9 +7,9 @@ const SetupCommand: Command = {
   description: 'Setup Command for Server',
   options: [],
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
     if (interaction.user.id !== getEnv('CLIENT_OWNER')) {
-      return await interaction.reply('owner only');
+      return await interaction.editReply('owner only');
     }
     const server = await dbClient.server.findFirst({
       where: {
@@ -18,11 +18,11 @@ const SetupCommand: Command = {
     });
 
     if (server) {
-      return await interaction.reply(`Server ${server.name} already setup`);
+      return await interaction.editReply(`Server ${server.name} already setup`);
     }
 
     if (!interaction.guild?.name) {
-      return await interaction.reply('Server name not available');
+      return await interaction.editReply('Server name not available');
     }
 
     const newServer = await dbClient.server.create({
@@ -332,25 +332,25 @@ const SetupCommand: Command = {
     ];
 
     const milkCat = newServer.RoleCategory.find((it) => it.name === 'Milk-Roles');
-    if (!milkCat) return await interaction.reply('Failed to create Milk-Roles category');
+    if (!milkCat) return await interaction.editReply('Failed to create Milk-Roles category');
     const colorCat = newServer.RoleCategory.find((it) => it.name === 'Colors');
-    if (!colorCat) return await interaction.reply('Failed to create Colors category');
+    if (!colorCat) return await interaction.editReply('Failed to create Colors category');
     const pronounsCat = newServer.RoleCategory.find((it) => it.name === 'Pronouns');
-    if (!pronounsCat) return await interaction.reply('Failed to create Pronouns category');
+    if (!pronounsCat) return await interaction.editReply('Failed to create Pronouns category');
     const gendersCat = newServer.RoleCategory.find((it) => it.name === 'Genders');
-    if (!gendersCat) return await interaction.reply('Failed to create Genders category');
+    if (!gendersCat) return await interaction.editReply('Failed to create Genders category');
     const sexualityCat = newServer.RoleCategory.find((it) => it.name === 'Sexuality');
-    if (!sexualityCat) return await interaction.reply('Failed to create sexuality category');
+    if (!sexualityCat) return await interaction.editReply('Failed to create sexuality category');
     const romCat = newServer.RoleCategory.find((it) => it.name === 'Romantic-Attraction');
-    if (!romCat) return await interaction.reply('Failed to create romantic category');
+    if (!romCat) return await interaction.editReply('Failed to create romantic category');
     const otherCat = newServer.RoleCategory.find((it) => it.name === 'Other-Attraction');
-    if (!otherCat) return await interaction.reply('Failed to create other category');
+    if (!otherCat) return await interaction.editReply('Failed to create other category');
     const tabletopCat = newServer.RoleCategory.find((it) => it.name === 'Tabletop-RPGs');
-    if (!tabletopCat) return await interaction.reply('Failed to create tabletop category');
+    if (!tabletopCat) return await interaction.editReply('Failed to create tabletop category');
     const miscCat = newServer.RoleCategory.find((it) => it.name === 'Miscellaneous');
-    if (!miscCat) return await interaction.reply('Failed to create misc category');
+    if (!miscCat) return await interaction.editReply('Failed to create misc category');
     const uncat = newServer.RoleCategory.find((it) => it.name === 'Uncategorized');
-    if (!uncat) return await interaction.reply('Failed to create Uncategorized category');
+    if (!uncat) return await interaction.editReply('Failed to create Uncategorized category');
 
     await Promise.all(
       interaction.guild.roles.cache.map((it) => {
@@ -455,7 +455,7 @@ const SetupCommand: Command = {
       })
     );
 
-    return interaction.reply(`${newServer.name} has been initialized`);
+    return interaction.editReply(`${newServer.name} has been initialized`);
   },
 };
 export default SetupCommand;

@@ -10,6 +10,6 @@ export interface CommandOption {
 export default interface Command {
   name: string;
   description: string;
-  execute: (interaction: CommandInteraction<'cached'>) => Promise<void>;
+  execute: (interaction: CommandInteraction<'cached'>) => Promise<any>;
   options: CommandOption[];
 }

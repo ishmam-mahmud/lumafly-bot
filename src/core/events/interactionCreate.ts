@@ -5,7 +5,7 @@ const interactionCreateEvent: Event<'interactionCreate'> = {
   name: 'interactionCreate',
   once: true,
   async execute(interaction) {
-    if (interaction.isCommand()) {
+    if (interaction.isCommand() && interaction.inCachedGuild()) {
       const command = commands[interaction.commandName as commandName];
       if (!command) return;
       try {

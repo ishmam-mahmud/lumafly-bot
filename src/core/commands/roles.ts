@@ -7,7 +7,7 @@ const RolesCommand: Command = {
   description: 'See a list of all self-assignable roles',
   options: [],
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
     const categories = await dbClient.roleCategory.findMany({
       where: {
         Role: {
@@ -31,7 +31,7 @@ const RolesCommand: Command = {
       },
     });
 
-    return await interaction.reply({
+    return await interaction.editReply({
       embeds: categories.map((cat) => {
         return new MessageEmbed().setTitle(cat.name).setDescription(
           cat.Role.filter((role) => role.selfAssignable)

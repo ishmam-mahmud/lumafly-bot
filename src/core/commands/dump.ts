@@ -8,9 +8,9 @@ const DumpCommand: Command = {
   description: 'Reset command for server',
   options: [],
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
     if (interaction.user.id !== getEnv('CLIENT_OWNER')) {
-      return await interaction.reply('owner only');
+      return await interaction.editReply('owner only');
     }
     const server = await dbClient.server.findFirst({
       where: {
@@ -31,7 +31,7 @@ const DumpCommand: Command = {
       },
     });
 
-    if (!server) return interaction.reply(`${interaction.guild?.name} not found`);
+    if (!server) return interaction.editReply(`${interaction.guild?.name} not found`);
 
     await dbClient.role.deleteMany({
       where: {
@@ -54,7 +54,7 @@ const DumpCommand: Command = {
       },
     });
 
-    return await interaction.reply(`${interaction.guild?.name} reset`);
+    return await interaction.editReply(`${interaction.guild?.name} reset`);
   },
 };
 export default DumpCommand;

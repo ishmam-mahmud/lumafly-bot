@@ -13,7 +13,7 @@ const RoleCommand: Command = {
     },
   ],
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
     const roleToAdd = interaction.options.getRole('role-to-add');
     if (!roleToAdd) {
       throw 'Role not provided in options';
@@ -29,14 +29,14 @@ const RoleCommand: Command = {
     });
 
     if (!dbRole) {
-      return await interaction.reply('Could not determine if role is self-assignable');
+      return await interaction.editReply('Could not determine if role is self-assignable');
     }
     if (!dbRole.selfAssignable) {
-      return await interaction.reply(`Role ${dbRole.name} is not self-assignable`);
+      return await interaction.editReply(`Role ${dbRole.name} is not self-assignable`);
     }
 
     await interaction.member.roles.add(roleToAdd);
-    return await interaction.reply(`Added role ${roleToAdd.name}`);
+    return await interaction.editReply(`Added role ${roleToAdd.name}`);
   },
 };
 

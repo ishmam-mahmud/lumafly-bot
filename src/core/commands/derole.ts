@@ -13,9 +13,8 @@ const DeroleCommand: Command = {
     },
   ],
   async execute(interaction) {
+    await interaction.deferReply({ ephemeral: true });
     const roleToRemove = interaction.options.getRole('role-to-remove');
-
-    await interaction.deferReply();
 
     if (!roleToRemove) {
       throw 'Role not provided in options';
@@ -31,14 +30,14 @@ const DeroleCommand: Command = {
     });
 
     if (!dbRole) {
-      return await interaction.reply('Could not determine if role is self-manageable');
+      return await interaction.editReply('Could not determine if role is self-manageable');
     }
     if (!dbRole.selfAssignable) {
-      return await interaction.reply(`Role ${dbRole.name} is not self-manageable`);
+      return await interaction.editReply(`Role ${dbRole.name} is not self-manageable`);
     }
 
     await interaction.member.roles.remove(roleToRemove);
-    return await interaction.reply(`Removed role ${roleToRemove.name}`);
+    return await interaction.editReply(`Removed role ${roleToRemove.name}`);
   },
 };
 
