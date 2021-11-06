@@ -1,4 +1,14 @@
-import Command from './commandTypes'; const
-{{Name}}Command: Command = { name: '{{name}}', description: '{{description}}', async execute(args)
-{}, }; export default
-{{Name}}Command;
+import Command from './commandTypes';
+
+const {{Name}}Command: Command = { 
+  name: '{{name}}',
+  // TODO: Set Description
+  description: '{{description}}',
+  options: [],
+  async execute(interaction) {
+    // TODO: Implement command
+    return await interaction.reply("Not implemented yet");
+  }
+};
+
+export default {{Name}}Command;

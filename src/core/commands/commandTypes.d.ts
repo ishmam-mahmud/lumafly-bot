@@ -1,7 +1,15 @@
-import { CacheType, CommandInteraction } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 
+type CommandOptionType = 'ROLE';
+export interface CommandOption {
+  type: CommandOptionType;
+  name: string;
+  description: string;
+  required: boolean;
+}
 export default interface Command {
   name: string;
   description: string;
-  execute: (interaction: CommandInteraction<CacheType>) => Promise<void>;
+  execute: (interaction: CommandInteraction<'cached'>) => Promise<void>;
+  options: CommandOption[];
 }

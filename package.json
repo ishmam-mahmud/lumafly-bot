@@ -15,6 +15,8 @@
     "----db----": "",
     "db:migrate:gen": "prisma migrate dev --create-only --name",
     "db:migrate:run": "prisma migrate dev",
+    "db:orm:gen": "prisma generate",
+    "db:studio": "prisma studio",
     "-----commands-----": "",
     "gen:command": "ts-node -T scripts/generateCommand.ts",
     "postgen:command": "yarn index:command",

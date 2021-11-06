@@ -6,7 +6,21 @@ import commands, { commandName } from '../src/core/commands/index';
 import getEnv from '../src/core/getEnv';
 
 function getSlashCommandBuilder(command: Command) {
-  return new SlashCommandBuilder().setName(command.name).setDescription(command.description);
+  const builder = new SlashCommandBuilder()
+    .setName(command.name)
+    .setDescription(command.description);
+  for (const option of command.options) {
+    // TODO: Support other option types as they come along
+    if (option.type === 'ROLE') {
+      builder.addRoleOption((roleOption) =>
+        roleOption
+          .setName(option.name)
+          .setDescription(option.description)
+          .setRequired(option.required)
+      );
+    }
+  }
+  return builder;
 }
 
 const commandsJson = [];

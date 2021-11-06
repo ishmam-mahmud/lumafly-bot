@@ -7,7 +7,6 @@ interface EnvObj {
   CLIENT_OWNER: string;
   CLIENT_ID: string;
   GUILD_ID: string;
-  COMMAND_PREFIX: string;
 }
 
 type Env = keyof EnvObj;
