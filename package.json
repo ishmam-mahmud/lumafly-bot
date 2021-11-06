@@ -28,7 +28,8 @@
     "index:event": "ts-node -T scripts/indexEvents.ts",
     "postindex:event": "prettier --write src/core/events",
     "-----deploy-----": "",
-    "deploy:commands": "ts-node -T scripts/deployCommands.ts"
+    "deploy:commands": "ts-node -T scripts/deployCommands.ts",
+    "deploy": "yarn deploy:commands && yarn core:start"
   },
   "author": "glowstick-lamp",
   "license": "MIT",

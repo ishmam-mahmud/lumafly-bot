@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:16-alpine
 
 WORKDIR /lumafly
 
@@ -6,6 +6,4 @@ COPY . .
 
 RUN yarn install
 
-RUN yarn deploy:commands
-
-ENTRYPOINT [ "yarn", "core:start" ]
+ENTRYPOINT [ "yarn", "deploy" ]
