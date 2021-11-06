@@ -2,9 +2,8 @@ FROM node:lts-alpine
 
 WORKDIR /lumafly
 
-COPY ../../ .
-COPY ../../**/* .
+COPY . .
 
 RUN yarn install
 
-ENTRYPOINT [ "npx", "start", "-w", "@lumafly/core" ]
+ENTRYPOINT [ "yarn", "core:start" ]

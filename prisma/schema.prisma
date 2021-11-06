@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Server {
+  id                  String         @id
+  name                String
+  suggestionChannelId String?
+  RoleCategory        RoleCategory[]
+}
+
+model RoleCategory {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  server   Server @relation(fields: [serverId], references: [id])
+  serverId String
+
+  Role Role[]
+}
+
+model Role {
+  id             String  @id
+  name           String
+  selfAssignable Boolean
+
+  category       RoleCategory @relation(fields: [roleCategoryId], references: [id])
+  roleCategoryId Int
+}
