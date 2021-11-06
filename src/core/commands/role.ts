@@ -16,7 +16,7 @@ const RoleCommand: Command = {
     await interaction.deferReply();
     const roleToAdd = interaction.options.getRole('role-to-add');
     if (!roleToAdd) {
-      throw 'Role not provided in options';
+      return await interaction.editReply('Role not provided in options');
     }
     const dbRole = await dbClient.role.findFirst({
       where: {

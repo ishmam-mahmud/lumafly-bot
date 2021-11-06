@@ -29,6 +29,7 @@
     "postindex:event": "prettier --write src/core/events",
     "-----deploy-----": "",
     "deploy:commands": "ts-node -T scripts/deployCommands.ts",
+    "predeploy": "yarn db:migrate:run",
     "deploy": "yarn deploy:commands && yarn core:start"
   },
   "author": "glowstick-lamp",

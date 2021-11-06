@@ -17,7 +17,7 @@ const DeroleCommand: Command = {
     const roleToRemove = interaction.options.getRole('role-to-remove');
 
     if (!roleToRemove) {
-      throw 'Role not provided in options';
+      return await interaction.editReply('Role not provided in options');
     }
     const dbRole = await dbClient.role.findFirst({
       where: {

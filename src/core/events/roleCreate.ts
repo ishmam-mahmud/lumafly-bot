@@ -26,7 +26,8 @@ const RoleCreateEvent: Event<'roleCreate'> = {
     });
 
     if (!uncategorized) {
-      throw new Error(`${role.guild.name} does not have an Uncategorized role category`);
+      console.error(`${role.guild.name} does not have an Uncategorized role category`);
+      return;
     }
 
     await dbClient.role.create({

@@ -16,7 +16,8 @@ const MessageEvent: Event<'message'> = {
     });
 
     if (!dbGuild) {
-      throw new Error(`Message Event: Server with ${message.guildId} not found in db`);
+      console.error(`Message Event: Server with ${message.guildId} not found in db`);
+      return;
     }
 
     if (dbGuild.suggestionChannelId) {
