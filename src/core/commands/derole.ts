@@ -13,7 +13,7 @@ const DeroleCommand: Command = {
     },
   ],
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply();
     const roleToRemove = interaction.options.getRole('role-to-remove');
 
     if (!roleToRemove) {

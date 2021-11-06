@@ -7,7 +7,7 @@ const RolesCommand: Command = {
   description: 'See a list of all self-assignable roles',
   options: [],
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply();
     const categories = await dbClient.roleCategory.findMany({
       where: {
         Role: {
