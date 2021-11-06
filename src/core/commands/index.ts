@@ -3,12 +3,20 @@
 // Try running `npm run gen:command` instead.
 
 import Command from './commandTypes';
-import pingCommand from './ping';
+import deroleCommand from './derole';
+import dumpCommand from './dump';
+import roleCommand from './role';
+import rolesCommand from './roles';
+import setupCommand from './setup';
 
-export type commandName = 'ping';
+export type commandName = 'derole' | 'dump' | 'role' | 'roles' | 'setup';
 
 const commands: Record<commandName, Command> = {
-  ping: pingCommand,
+  derole: deroleCommand,
+  dump: dumpCommand,
+  role: roleCommand,
+  roles: rolesCommand,
+  setup: setupCommand,
 };
 
 export default commands;
