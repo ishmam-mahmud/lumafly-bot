@@ -2,6 +2,7 @@ import Event from './eventTypes';
 
 const {{Name}}Event: Event<'{{name}}'> = {
   name: '{{name}}',
+  // TODO: set this to false if event is not intended to be one-time
   once: true,
   async execute(args) {},
 };

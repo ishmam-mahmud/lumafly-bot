@@ -3,7 +3,7 @@ import Event from './eventTypes';
 
 const interactionCreateEvent: Event<'interactionCreate'> = {
   name: 'interactionCreate',
-  once: true,
+  once: false,
   async execute(interaction) {
     if (interaction.isCommand() && interaction.inCachedGuild()) {
       const command = commands[interaction.commandName as commandName];
