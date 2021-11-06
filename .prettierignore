@@ -1,0 +1,8 @@
+.pgdata/**
+.pgdata/**/*
+.yarn/*
+dist
+*.hbs
+Dockerfile
+Dockerfile-dev
+.pnp.cjs

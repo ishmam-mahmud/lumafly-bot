@@ -2,30 +2,47 @@
   "name": "lumafly",
   "version": "2.0.0",
   "description": "Lumafly - A bot for the Asexual and Aromantic Spectrum Discord",
-  "workspaces": [
-    "./packages/*"
-  ],
   "scripts": {
-    "prettier": "prettier --write . '!packages' && npm run prettier --workspaces",
-    "---------util---------": "",
-    "setup:init": "npm install && npm run setup:env:root && npm run setup:env:packages",
-    "setup:env:root": "cp .env.base .env",
-    "setup:env:packages": "ts-node -T scripts/setupEnvPackages.ts"
+    "----util----": "",
+    "setup:init": "npm install && npm run setup:env",
+    "setup:env": "ts-node -T scripts/setupEnv.ts",
+    "prettier": "prettier --write .",
+    "----run----": "",
+    "core:start": "ts-node -T src/core/index.ts",
+    "-----commands-----": "",
+    "gen:command": "ts-node -T scripts/generateCommand.ts",
+    "postgen:command": "yarn index:command",
+    "index:command": "ts-node -T scripts/indexCommands.ts",
+    "postindex:command": "prettier --write src/commands",
+    "-----events-----": "",
+    "gen:event": "ts-node -T scripts/generateEventHandler.ts",
+    "postgen:event": "yarn index:event",
+    "index:event": "ts-node -T scripts/indexEvents.ts",
+    "postindex:event": "prettier --write src/events",
+    "-----deploy-----": "",
+    "deploy:commands": "ts-node -T scripts/deployCommands.ts"
   },
   "author": "glowstick-lamp",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/builders": "^0.8.1",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.24.0",
+    "discord.js": "^13.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "dotenv": "^10.0.0",
+    "dotenv-expand": "^5.1.0",
+    "handlebars": "^4.7.7",
     "prettier": "^2.4.1",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
-  },
-  "devDependencies": {
-    "dotenv": "^10.0.0",
-    "dotenv-expand": "^5.1.0"
   },
   "prettier": {
     "singleQuote": true,
     "printWidth": 100,
     "bracketSameLine": true
-  }
+  },
+  "packageManager": "yarn@3.1.0"
 }
