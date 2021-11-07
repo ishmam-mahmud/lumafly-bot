@@ -1,6 +1,7 @@
 import { ClientEvents } from 'discord.js';
 import discordClient from './client';
 import events from './events';
+import logError from './logError';
 
 for (const eventHandlerName in events) {
   if (Object.prototype.hasOwnProperty.call(events, eventHandlerName)) {
@@ -11,7 +12,7 @@ for (const eventHandlerName in events) {
         try {
           await eventHandler.execute(...args);
         } catch (error) {
-          console.error('lol');
+          await logError(error);
         }
       });
     } else {
@@ -19,7 +20,7 @@ for (const eventHandlerName in events) {
         try {
           await eventHandler.execute(...args);
         } catch (error) {
-          console.error('lol');
+          await logError(error);
         }
       });
     }
