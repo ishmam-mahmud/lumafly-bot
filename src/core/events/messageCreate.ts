@@ -2,8 +2,8 @@ import dbClient from '../../db/client';
 import getEnv from '../getEnv';
 import Event from './eventTypes';
 
-const MessageEvent: Event<'message'> = {
-  name: 'message',
+const MessageCreateEvent: Event<'messageCreate'> = {
+  name: 'messageCreate',
   once: false,
   async execute(message) {
     if (!message.guildId) return;
@@ -31,4 +31,4 @@ const MessageEvent: Event<'message'> = {
   },
 };
 
-export default MessageEvent;
+export default MessageCreateEvent;
