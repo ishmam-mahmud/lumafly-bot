@@ -1,4 +1,5 @@
 import commands, { commandName } from '../commands';
+import logError from '../logError';
 import Event from './eventTypes';
 
 const interactionCreateEvent: Event<'interactionCreate'> = {
@@ -14,6 +15,7 @@ const interactionCreateEvent: Event<'interactionCreate'> = {
         const message = `Failed to handle ${interaction.commandName}`;
         if (interaction.deferred || interaction.replied) await interaction.editReply(message);
         else await interaction.reply({ content: message, ephemeral: true });
+        await logError(error);
       }
     }
   },
