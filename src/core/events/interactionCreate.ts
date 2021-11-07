@@ -11,8 +11,9 @@ const interactionCreateEvent: Event<'interactionCreate'> = {
       try {
         await command.execute(interaction);
       } catch (error) {
-        console.error(error);
-        await interaction.reply({ content: 'Error', ephemeral: true });
+        const message = `Failed to handle ${interaction.commandName}`;
+        if (interaction.deferred || interaction.replied) await interaction.editReply(message);
+        else await interaction.reply({ content: message, ephemeral: true });
       }
     }
   },
