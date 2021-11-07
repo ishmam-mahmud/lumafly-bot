@@ -8,7 +8,7 @@ import errorEventHandler from './error';
 import guildCreateEventHandler from './guildCreate';
 import guildDeleteEventHandler from './guildDelete';
 import interactionCreateEventHandler from './interactionCreate';
-import messageEventHandler from './message';
+import messageCreateEventHandler from './messageCreate';
 import readyEventHandler from './ready';
 import roleCreateEventHandler from './roleCreate';
 import roleDeleteEventHandler from './roleDelete';
@@ -19,7 +19,7 @@ const events: Partial<Record<keyof ClientEvents, Event<any>>> = {
   guildCreate: guildCreateEventHandler,
   guildDelete: guildDeleteEventHandler,
   interactionCreate: interactionCreateEventHandler,
-  message: messageEventHandler,
+  messageCreate: messageCreateEventHandler,
   ready: readyEventHandler,
   roleCreate: roleCreateEventHandler,
   roleDelete: roleDeleteEventHandler,
