@@ -7,9 +7,21 @@ for (const eventHandlerName in events) {
     const eventHandler = events[eventHandlerName as keyof ClientEvents];
     if (!eventHandler) continue;
     if (eventHandler.once) {
-      discordClient.once(eventHandlerName, (...args) => eventHandler.execute(...args));
+      discordClient.once(eventHandlerName, async (...args) => {
+        try {
+          await eventHandler.execute(...args);
+        } catch (error) {
+          console.error('lol');
+        }
+      });
     } else {
-      discordClient.on(eventHandlerName, (...args) => eventHandler.execute(...args));
+      discordClient.on(eventHandlerName, async (...args) => {
+        try {
+          await eventHandler.execute(...args);
+        } catch (error) {
+          console.error('lol');
+        }
+      });
     }
   }
 }
