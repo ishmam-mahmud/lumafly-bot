@@ -1,7 +1,3 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
 interface EnvObj {
   CLIENT_TOKEN: string;
   CLIENT_OWNER: string;
