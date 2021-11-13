@@ -29,9 +29,9 @@
     "index:event": "ts-node -T scripts/indexEvents.ts",
     "postindex:event": "prettier --write src/core/events",
     "-----deploy-----": "",
+    "build:deploy:commands": "ts-node -T scripts/buildDeployCommands.ts",
     "deploy:commands": "node -r dotenv/config dist/deploy.js",
-    "build:deploy:commands": "esbuild --bundle --outfile=dist/deploy.js --minify --external:discord.js --platform=node scripts/deployCommands.ts",
-    "prod:run": "yarn db:migrate:run && node deploy.js && node main.js"
+    "prod:run": "yarn db:migrate:run && node deploy.js &&node main.js"
   },
   "author": "glowstick-lamp",
   "license": "MIT",
