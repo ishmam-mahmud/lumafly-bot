@@ -23,13 +23,17 @@ const MessageCreateEvent: Event<'messageCreate'> = {
     if (dbGuild.suggestionChannelId) {
       if (message.channelId === dbGuild.suggestionChannelId) {
         if (message.channel.type === 'GUILD_TEXT') {
-          await message.channel.threads.create({
+          const thread = await message.channel.threads.create({
             startMessage: message,
             name: `${message.member?.nickname} suggestion`,
             reason: 'new suggestion posted',
           });
 
-          await Promise.all([message.react('👍'), message.react('👎')]);
+          await Promise.all([
+            message.react('👍'),
+            message.react('👎'),
+            thread.setRateLimitPerUser(30, 'rate limit for suggestion discussions'),
+          ]);
         }
       }
     }
