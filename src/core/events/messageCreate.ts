@@ -6,7 +6,7 @@ const MessageCreateEvent: Event<'messageCreate'> = {
   name: 'messageCreate',
   once: false,
   async execute(message) {
-    if (!message.guildId) return;
+    if (!message.guildId || !message.inGuild()) return;
     if (message.author.id === getEnv('CLIENT_ID')) return;
 
     const dbGuild = await dbClient.server.findFirst({
@@ -22,10 +22,15 @@ const MessageCreateEvent: Event<'messageCreate'> = {
 
     if (dbGuild.suggestionChannelId) {
       if (message.channelId === dbGuild.suggestionChannelId) {
-        await Promise.all([message.react('👍'), message.react('👎')]);
-        console.log(
-          `Successfully reacted to message with id ${message.id} in suggestions channel of ${dbGuild.name} `
-        );
+        if (message.channel.type === 'GUILD_TEXT') {
+          await message.channel.threads.create({
+            startMessage: message,
+            name: `${message.member?.nickname} suggestion`,
+            reason: 'new suggestion posted',
+          });
+
+          await Promise.all([message.react('👍'), message.react('👎')]);
+        }
       }
     }
   },
