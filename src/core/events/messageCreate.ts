@@ -16,8 +16,7 @@ const MessageCreateEvent: Event<'messageCreate'> = {
     });
 
     if (!dbGuild) {
-      console.error(`Message Event: Server with ${message.guildId} not found in db`);
-      return;
+      throw new Error(`Message Event: Server with ${message.guildId} not found in db`);
     }
 
     if (dbGuild.suggestionChannelId) {
@@ -25,7 +24,7 @@ const MessageCreateEvent: Event<'messageCreate'> = {
         if (message.channel.type === 'GUILD_TEXT') {
           const thread = await message.channel.threads.create({
             startMessage: message,
-            name: `${message.member?.nickname} suggestion`,
+            name: `${message.member?.displayName} suggestion`,
             reason: 'new suggestion posted',
           });
 
