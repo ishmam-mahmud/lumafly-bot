@@ -15,7 +15,7 @@
     "core:start:watch": "nodemon -x \"yarn core:start\"",
     "----db----": "",
     "db:migrate:gen": "prisma migrate dev --create-only --name",
-    "db:migrate:run": "prisma migrate dev",
+    "db:migrate:run": "prisma migrate dev --skip-generate",
     "db:orm:gen": "prisma generate",
     "db:studio": "prisma studio",
     "-----commands-----": "",
@@ -31,7 +31,7 @@
     "-----deploy-----": "",
     "build:deploy:commands": "ts-node -T scripts/buildDeployCommands.ts",
     "deploy:commands": "node -r dotenv/config dist/deploy.js",
-    "prod:run": "yarn db:migrate:run && node deploy.js &&node main.js"
+    "prod:run": "yarn db:migrate:run && node deploy.js && node main.js"
   },
   "author": "glowstick-lamp",
   "license": "MIT",
