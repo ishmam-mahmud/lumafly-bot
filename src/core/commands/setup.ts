@@ -329,6 +329,7 @@ const SetupCommand: Command = {
       'Water-Drinker',
       'Voidpunk',
       'Avoid-Responding-Sexually',
+      'Party Games',
     ];
 
     const milkCat = newServer.RoleCategory.find((it) => it.name === 'Milk-Roles');
