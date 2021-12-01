@@ -65,6 +65,7 @@ const SetupCommand: Command = {
             ],
           },
         },
+        suggestionChannelId: '316753960813854720',
       },
       select: {
         id: true,
