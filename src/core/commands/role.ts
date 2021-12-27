@@ -4,6 +4,7 @@ import Command from './commandTypes';
 const RoleCommand: Command = {
   name: 'role',
   description: 'Add a self-assignable role',
+  type: "CHAT_INPUT",
   options: [
     {
       type: 'ROLE',

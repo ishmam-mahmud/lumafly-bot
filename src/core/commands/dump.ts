@@ -6,6 +6,7 @@ import Command from './commandTypes';
 const DumpCommand: Command = {
   name: 'dump',
   description: 'Reset command for server',
+  type: "CHAT_INPUT",
   options: [],
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: true });
