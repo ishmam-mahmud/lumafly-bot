@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import Command from '../src/core/commands/commandTypes';
@@ -23,12 +23,29 @@ function getSlashCommandBuilder(command: Command) {
   return builder;
 }
 
+function getContextMenuCommandBuilder(command: Command) {
+  let commandType: number;
+  if (command.type === 'MESSAGE') commandType = 3;
+  else if (command.type === 'USER') commandType = 2;
+  else throw new Error(`Invalid command ${{ command }}`);
+
+  const builder = new ContextMenuCommandBuilder()
+    .setName(command.name)
+    .setType(commandType)
+    .setDefaultPermission(true);
+  return builder;
+}
+
 const commandsJson = [];
 
 for (const commandName in commands) {
   if (Object.prototype.hasOwnProperty.call(commands, commandName)) {
     const command = commands[commandName as commandName];
-    commandsJson.push(getSlashCommandBuilder(command).toJSON());
+    if (!command.type || command.type === 'CHAT_INPUT') {
+      commandsJson.push(getSlashCommandBuilder(command).toJSON());
+    } else {
+      commandsJson.push(getContextMenuCommandBuilder(command).toJSON());
+    }
   }
 }
 

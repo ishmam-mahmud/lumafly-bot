@@ -1,4 +1,9 @@
-import { CommandInteraction } from 'discord.js';
+import {
+  ApplicationCommandType,
+  BaseCommandInteraction,
+  CommandInteraction,
+  ContextMenuInteraction,
+} from 'discord.js';
 
 type CommandOptionType = 'ROLE';
 export interface CommandOption {
@@ -7,9 +12,26 @@ export interface CommandOption {
   description: string;
   required: boolean;
 }
-export default interface Command {
-  name: string;
-  description: string;
-  execute: (interaction: CommandInteraction<'cached'>) => Promise<any>;
-  options: CommandOption[];
-}
+
+type Command =
+  | {
+      name: string;
+      description: string;
+      execute: (interaction: CommandInteraction<'cached'>) => Promise<any>;
+      options: CommandOption[];
+      type: 'CHAT_INPUT';
+    }
+  | {
+      name: string;
+      execute: (interaction: BaseCommandInteraction<'cached'>) => Promise<any>;
+      type: 'USER' | 'MESSAGE';
+    };
+
+export default Command;
+// export default interface Command {
+//   name: string;
+//   description: string;
+//   execute: (interaction: CommandInteraction<'cached'>) => Promise<any>;
+//   options: CommandOption[];
+//   type?: ApplicationCommandType;
+// }

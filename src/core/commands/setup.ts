@@ -5,6 +5,7 @@ import Command from './commandTypes';
 const SetupCommand: Command = {
   name: 'setup',
   description: 'Setup Command for Server',
+  type: 'CHAT_INPUT',
   options: [],
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: true });
