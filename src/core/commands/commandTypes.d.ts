@@ -28,10 +28,3 @@ type Command =
     };
 
 export default Command;
-// export default interface Command {
-//   name: string;
-//   description: string;
-//   execute: (interaction: CommandInteraction<'cached'>) => Promise<any>;
-//   options: CommandOption[];
-//   type?: ApplicationCommandType;
-// }
