@@ -1,0 +1,36 @@
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Docker Image Tag
+        required: true
+        default: 'latest'
+
+name: Build & Publish Lumafly Docker Image
+
+jobs:
+  build-publish-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Login to DockerHub
+        run: docker login -u ${{ secrets.DOCKERHUB_USER }} -p ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
+
+      - name: Pull build cache
+        continue-on-error: true
+        run: docker pull ${{ secrets.DOCKERHUB_USER }}/lumafly:latest
+
+      - name: Build Docker Image
+        run: docker build --rm=false --cache-from ${{ secrets.DOCKERHUB_USER }}/lumafly:latest -t ${{ secrets.DOCKERHUB_USER }}/lumafly:latest .
+
+      - name: Push Image To DockerHub with latest tag
+        run: docker push ${{ secrets.DOCKERHUB_USER }}/lumafly:latest
+
+      - name: Push Image To DockerHub with given tag
+        run: |
+          docker image tag ${{ secrets.DOCKERHUB_USER }}/lumafly:latest ${{ secrets.DOCKERHUB_USER }}/lumafly:${{ github.event.inputs.tag }}
+          docker push ${{ secrets.DOCKERHUB_USER }}/lumafly:${{ github.event.inputs.tag }}
