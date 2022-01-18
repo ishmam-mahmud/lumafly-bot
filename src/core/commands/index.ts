@@ -8,9 +8,9 @@ import deroleCommand from './derole';
 import nvinfoCommand from './nvinfo';
 import roleCommand from './role';
 import rolesCommand from './roles';
-// import setupCommand from './setup';
+import setupCommand from './setup';
 
-export type commandName = 'derole' | 'nvinfo' | 'role' | 'roles';
+export type commandName = 'derole' | 'nvinfo' | 'role' | 'roles' | 'setup';
 
 const commands: Record<commandName, Command> = {
   derole: deroleCommand,
@@ -18,7 +18,7 @@ const commands: Record<commandName, Command> = {
   nvinfo: nvinfoCommand,
   role: roleCommand,
   roles: rolesCommand,
-  // setup: setupCommand,
+  setup: setupCommand,
 };
 
 export default commands;

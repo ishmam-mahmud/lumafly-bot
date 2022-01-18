@@ -81,7 +81,7 @@ const SetupCommand: Command = {
     });
 
     const non_sa_labels = [
-      'Paul-Name-Color',
+      'Color-Spice-&-Wolf',
       'Radmilk',
       'Best Mod',
       'Milkerators',
@@ -121,6 +121,11 @@ const SetupCommand: Command = {
       'Prefer-Not-To-Say',
       'No-Pronouns',
       'Mixed-Pronouns',
+      'Avoid-Masculine-Terms',
+      'Avoid-Feminine-Terms',
+      'Use Masc Terms',
+      'Use Fem Terms',
+      'Use Neutral Terms',
     ];
 
     const gender_labels = [
@@ -271,6 +276,7 @@ const SetupCommand: Command = {
       'Questioning-Sensual-Attraction',
       'Polysensual',
       'Pansensual',
+      'Omnisensual',
       'Homosensual',
       'Heterosensual',
       'Gynosensual',
@@ -324,8 +330,6 @@ const SetupCommand: Command = {
       'Book Club',
       'Gender-Egoist',
       'Gender-Nihilist',
-      'Avoid-Feminine-Terms',
-      'Avoid-Masculine-Terms',
       'Important-Mentions-Only',
       'Voice Training Club',
       'Water-Drinker',
