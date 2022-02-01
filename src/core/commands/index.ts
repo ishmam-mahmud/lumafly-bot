@@ -4,21 +4,17 @@
 
 import Command from './commandTypes';
 import deroleCommand from './derole';
-// import dumpCommand from './dump';
 import nvinfoCommand from './nvinfo';
 import roleCommand from './role';
 import rolesCommand from './roles';
-import setupCommand from './setup';
 
-export type commandName = 'derole' | 'nvinfo' | 'role' | 'roles' | 'setup';
+export type commandName = 'derole' | 'nvinfo' | 'role' | 'roles';
 
 const commands: Record<commandName, Command> = {
   derole: deroleCommand,
-  // dump: dumpCommand,
   nvinfo: nvinfoCommand,
   role: roleCommand,
   roles: rolesCommand,
-  setup: setupCommand,
 };
 
 export default commands;

@@ -1,15 +1,43 @@
 name: Docker Build Check
 
-on: push
+on:
+  push:
+    branches-ignore: main
 
 jobs:
+  skip-check:
+    name: Skip Check
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip-check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'never'
+          skip_after_successful_duplicate: 'true'
+          paths: '["Dockerfile", "yarn.lock", "tsconfig.json", "src/**",".github/workflows/app-docker-build.yml"]'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+          cancel_others: 'true'
+
   build-container:
+    needs: skip-check
+    if: ${{ needs.skip-check.outputs.should_skip != 'true' }}
     name: Build app docker container
     runs-on: ubuntu-latest
 
     steps:
+      - name: Login to DockerHub
+        run: docker login -u ${{ secrets.DOCKERHUB_USER }} -p ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
+
+      - name: Pull build cache
+        continue-on-error: true
+        run: docker pull ${{ secrets.DOCKERHUB_USER }}/lumafly:latest
+
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
 
       - name: Build container
-        run: docker build -t lumafly:latest .
+        run: docker build --rm=false --cache-from ${{ secrets.DOCKERHUB_USER }}/lumafly:latest -t ${{ secrets.DOCKERHUB_USER }}/lumafly:latest .
