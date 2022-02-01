@@ -51,4 +51,7 @@ jobs:
         run: rm prisma/ca-cert.crt
 
       - name: Deploy Commands
+        env:
+          CLIENT_TOKEN: ${{ secrets.CLIENT_TOKEN }}
+          GUILD_ID: ${{ secrets.GUILD_ID }}
         run: yarn ts-node scripts/deployCommands.ts
