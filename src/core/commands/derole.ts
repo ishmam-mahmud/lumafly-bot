@@ -28,13 +28,21 @@ const DeroleCommand: Command = {
           serverId: interaction.guildId,
         },
       },
+      select: {
+        id: true,
+        selfAssignable: true,
+      },
     });
 
     if (!dbRole) {
-      return await interaction.editReply('Could not determine if role is self-manageable');
+      return await interaction.editReply(
+        'Could not determine if role is self-manageable'
+      );
     }
     if (!dbRole.selfAssignable) {
-      return await interaction.editReply(`Role ${dbRole.name} is not self-manageable`);
+      return await interaction.editReply(
+        `Role ${roleToRemove.name} is not self-manageable`
+      );
     }
 
     await interaction.member.roles.remove(roleToRemove);

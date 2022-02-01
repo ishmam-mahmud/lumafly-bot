@@ -12,10 +12,15 @@ const RoleCreateEvent: Event<'roleCreate'> = {
           serverId: role.guild.id,
         },
       },
+      select: {
+        id: true,
+      },
     });
 
     if (dbRole) {
-      await role.delete('A role with the same name already exists in the server');
+      await role.delete(
+        'A role with the same name already exists in the server'
+      );
     }
 
     const uncategorized = await dbClient.roleCategory.findFirst({
@@ -23,10 +28,15 @@ const RoleCreateEvent: Event<'roleCreate'> = {
         name: 'Uncategorized',
         serverId: role.guild.id,
       },
+      select: {
+        id: true,
+      },
     });
 
     if (!uncategorized) {
-      console.error(`${role.guild.name} does not have an Uncategorized role category`);
+      console.error(
+        `${role.guild.name} does not have an Uncategorized role category`
+      );
       return;
     }
 

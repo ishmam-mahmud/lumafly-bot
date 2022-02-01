@@ -25,14 +25,18 @@ const GuildDeleteEvent: Event<'guildDelete'> = {
     });
 
     if (!dbServer) {
-      console.log(`${server.name} not found in db in deletion. Skipping guildDelete`);
+      console.log(
+        `${server.name} not found in db in deletion. Skipping guildDelete`
+      );
       return;
     }
 
     await dbClient.role.deleteMany({
       where: {
         id: {
-          in: dbServer.RoleCategory.flatMap((cat) => cat.Role.map((role) => role.id)),
+          in: dbServer.RoleCategory.flatMap((cat) =>
+            cat.Role.map((role) => role.id)
+          ),
         },
       },
     });

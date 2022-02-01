@@ -12,6 +12,9 @@ const RoleDeleteEvent: Event<'roleDelete'> = {
           serverId: role.guild.id,
         },
       },
+      select: {
+        id: true,
+      },
     });
 
     if (!dbRole) {

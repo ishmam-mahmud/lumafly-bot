@@ -13,10 +13,16 @@ const MessageCreateEvent: Event<'messageCreate'> = {
       where: {
         id: message.guildId,
       },
+      select: {
+        id: true,
+        suggestionChannelId: true,
+      },
     });
 
     if (!dbGuild) {
-      throw new Error(`Message Event: Server with ${message.guildId} not found in db`);
+      throw new Error(
+        `Message Event: Server with ${message.guildId} not found in db`
+      );
     }
 
     if (dbGuild.suggestionChannelId) {
@@ -31,7 +37,10 @@ const MessageCreateEvent: Event<'messageCreate'> = {
           await Promise.all([
             message.react('👍'),
             message.react('👎'),
-            thread.setRateLimitPerUser(30, 'rate limit for suggestion discussions'),
+            thread.setRateLimitPerUser(
+              30,
+              'rate limit for suggestion discussions'
+            ),
           ]);
         }
       }
