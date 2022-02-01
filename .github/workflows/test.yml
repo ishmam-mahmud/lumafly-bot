@@ -5,22 +5,22 @@ on: push
 env:
   CLIENT_OWNER: ${{ secrets.CLIENT_OWNER }}
 
-skip-check:
-  name: Skip Check
-  runs-on: ubuntu-latest
-  outputs:
-    should_skip: ${{ steps.skip_check.outputs.should_skip }}
-  steps:
-    - id: skip-check
-      uses: fkirc/skip-duplicate-actions@master
-      with:
-        concurrent_skipping: 'never'
-        skip_after_successful_duplicate: 'true'
-        paths: '["src/**/*.ts", ".github/workflows/test.yml"]'
-        do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
-        cancel_others: 'true'
-
 jobs:
+  skip-check:
+    name: Skip Check
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip-check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'never'
+          skip_after_successful_duplicate: 'true'
+          paths: '["src/**/*.ts", ".github/workflows/test.yml"]'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+          cancel_others: 'true'
+
   test:
     runs-on: ubuntu-latest
 
