@@ -27,13 +27,21 @@ const RoleCommand: Command = {
           serverId: interaction.guildId,
         },
       },
+      select: {
+        id: true,
+        selfAssignable: true,
+      },
     });
 
     if (!dbRole) {
-      return await interaction.editReply('Could not determine if role is self-assignable');
+      return await interaction.editReply(
+        'Could not determine if role is self-assignable'
+      );
     }
     if (!dbRole.selfAssignable) {
-      return await interaction.editReply(`Role ${dbRole.name} is not self-assignable`);
+      return await interaction.editReply(
+        `Role ${roleToAdd.name} is not self-assignable`
+      );
     }
 
     await interaction.member.roles.add(roleToAdd);

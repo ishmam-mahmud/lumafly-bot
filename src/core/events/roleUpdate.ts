@@ -16,10 +16,13 @@ const RoleUpdateEvent: Event<'roleUpdate'> = {
       data: {
         name: newRole.name,
       },
+      select: {
+        id: true,
+      },
     });
 
     console.log(
-      `Role with id ${updatedRole.id} updated name from ${oldRole.name} to ${updatedRole.name}`
+      `Role with id ${updatedRole.id} updated name from ${oldRole.name} to ${newRole.name}`
     );
   },
 };

@@ -9,10 +9,13 @@ const GuildCreateEvent: Event<'guildCreate'> = {
       where: {
         id: server.id,
       },
+      select: {
+        id: true,
+      },
     });
 
     if (foundServer) {
-      console.log(`${foundServer.name} is already registered in DB`);
+      console.log(`${server.name} is already registered in DB`);
       return;
     }
 
@@ -35,9 +38,12 @@ const GuildCreateEvent: Event<'guildCreate'> = {
           },
         },
       },
+      select: {
+        id: true,
+      },
     });
 
-    console.log(`${newServer.name} with ${newServer.id} initialized in DB`);
+    console.log(`${server.name} with ${newServer.id} initialized in DB`);
   },
 };
 
