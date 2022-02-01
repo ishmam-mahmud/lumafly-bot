@@ -1,7 +1,7 @@
 version: '3'
 services:
   bot:
-    image: ishmammahmud/lumafly:1.0.1
+    image: ishmammahmud/lumafly:1.0.2
     environment:
       - CLIENT_TOKEN=${CLIENT_TOKEN}
       - CLIENT_OWNER=${CLIENT_OWNER}
