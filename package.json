@@ -12,11 +12,6 @@
     "build:watch": "yarn build --watch",
     "core:start": "node -r dotenv/config dist/main.js",
     "core:start:watch": "nodemon -x \"yarn core:start\"",
-    "----db----": "",
-    "db:migrate:gen": "prisma migrate dev --create-only --name",
-    "db:migrate:run": "prisma migrate dev --skip-generate",
-    "db:orm:gen": "prisma generate",
-    "db:studio": "prisma studio",
     "-----commands-----": "",
     "gen:command": "ts-node -T scripts/generateCommand.ts",
     "postgen:command": "yarn index:command",
@@ -57,5 +52,9 @@
     "ts-node": "^10.4.0",
     "typescript": "^4.5.2"
   },
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@3.1.0",
+  "prettier": {
+    "singleQuote": true,
+    "bracketSameLine": true
+  }
 }

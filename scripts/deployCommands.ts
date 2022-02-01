@@ -6,9 +6,9 @@ import commands, { commandName } from '../src/core/commands/index';
 import getEnv from '../src/core/getEnv';
 
 function getSlashCommandBuilder(command: Command) {
-  if(command.type !== "CHAT_INPUT") {
+  if (command.type !== 'CHAT_INPUT') {
     throw new Error(`Invalid command type: ${JSON.stringify(command)}
-    Expected command type CHAT_INPUT`)
+    Expected command type CHAT_INPUT`);
   }
   const builder = new SlashCommandBuilder()
     .setName(command.name)

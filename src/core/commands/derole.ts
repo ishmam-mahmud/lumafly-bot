@@ -4,7 +4,7 @@ import Command from './commandTypes';
 const DeroleCommand: Command = {
   name: 'derole',
   description: 'Remove a role you currently have',
-  type: "CHAT_INPUT",
+  type: 'CHAT_INPUT',
   options: [
     {
       type: 'ROLE',

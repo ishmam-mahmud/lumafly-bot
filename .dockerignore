@@ -1,6 +1,7 @@
 .github
 dist
 node_modules
+prisma/migrations
 scripts
 src/**/*.test.ts
 src/singleton.ts
