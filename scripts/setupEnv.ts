@@ -1,21 +1,30 @@
 import { config } from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import { writeFile, readFile } from 'fs/promises';
-import { resolve } from 'path';
+import path from 'path';
 
-dotenvExpand(config());
+const cwd = process.cwd();
+const pathToBaseEnv = path.resolve(cwd, '.env.base');
+dotenvExpand(
+  config({
+    path: pathToBaseEnv,
+  })
+);
 
 const matcher = /(\${?)(\w+)(}?)/g;
 
 (async () => {
-  const baseEnv = await readFile(resolve(process.cwd(), '.env.base'), { encoding: 'utf-8' });
+  const baseEnv = await readFile(pathToBaseEnv, { encoding: 'utf-8' });
 
   const outputString = baseEnv.replace(matcher, (...args) => {
     const key = args[2];
     let value = process.env[key];
-    if (!value) value = '';
+    if (!value) {
+      console.error(`Env ${key} not defined`);
+      value = '';
+    }
     return value;
   });
 
-  await writeFile(resolve(process.cwd(), '.env'), outputString);
+  await writeFile(path.resolve(cwd, '.env'), outputString);
 })();

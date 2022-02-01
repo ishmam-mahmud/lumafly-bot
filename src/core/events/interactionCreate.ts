@@ -15,7 +15,8 @@ const interactionCreateEvent: Event<'interactionCreate'> = {
         await command.execute(interaction);
       } catch (error) {
         const message = `Failed to handle ${interaction.commandName}`;
-        if (interaction.deferred || interaction.replied) await interaction.editReply(message);
+        if (interaction.deferred || interaction.replied)
+          await interaction.editReply(message);
         else await interaction.reply({ content: message, ephemeral: true });
         await logError(error);
       }
@@ -27,7 +28,8 @@ const interactionCreateEvent: Event<'interactionCreate'> = {
         await command.execute(interaction);
       } catch (error) {
         const message = `Failed to handle ${interaction.commandName}`;
-        if (interaction.deferred || interaction.replied) await interaction.editReply(message);
+        if (interaction.deferred || interaction.replied)
+          await interaction.editReply(message);
         else await interaction.reply({ content: message, ephemeral: true });
         await logError(error);
       }

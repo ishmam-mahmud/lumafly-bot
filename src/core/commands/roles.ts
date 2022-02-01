@@ -5,10 +5,10 @@ import Command from './commandTypes';
 const RolesCommand: Command = {
   name: 'roles',
   description: 'See a list of all self-assignable roles',
-  type: "CHAT_INPUT",
+  type: 'CHAT_INPUT',
   options: [],
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
     const categories = await dbClient.roleCategory.findMany({
       where: {
         Role: {
