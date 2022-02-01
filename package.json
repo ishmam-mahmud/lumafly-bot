@@ -1,6 +1,6 @@
 {
   "name": "lumafly",
-  "version": "2.0.0",
+  "version": "1.0.1",
   "description": "Lumafly - A bot for the Asexual and Aromantic Spectrum Discord",
   "scripts": {
     "----util----": "",
@@ -33,7 +33,7 @@
     "-----deploy-----": "",
     "prod:run": "node main.js"
   },
-  "author": "glowstick-lamp",
+  "author": "Ishmam Mahmud",
   "license": "MIT",
   "dependencies": {
     "@discordjs/builders": "^0.8.1",
