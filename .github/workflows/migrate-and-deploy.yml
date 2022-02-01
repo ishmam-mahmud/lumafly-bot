@@ -25,6 +25,8 @@ jobs:
     if: ${{ needs.skip-check.outputs.should_skip != 'true'}}
     name: Migrate DB and Deploy Commands
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}&sslcert=./ca-cert.crt
 
     steps:
       - uses: actions/checkout@v2
@@ -43,12 +45,8 @@ jobs:
         run: echo "${{ secrets.DATABASE_CA_CERT }}" > prisma/ca-cert.crt
 
       - name: Run migrations
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}&sslcert=./ca-cert.crt
         run: yarn prisma migrate deploy
 
-      - name: Delete CA Cert file
-        run: rm prisma/ca-cert.crt
 
       - name: Deploy Commands
         env:
@@ -56,3 +54,6 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           GUILD_ID: ${{ secrets.GUILD_ID }}
         run: yarn ts-node scripts/deployCommands.ts
+
+      - name: Delete CA Cert file
+        run: rm prisma/ca-cert.crt
