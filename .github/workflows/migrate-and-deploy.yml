@@ -22,7 +22,7 @@ jobs:
 
   migrate-and-deploy:
     needs: skip-check
-    if: ${{ needs.skip-check.outputs.should_skip == 'false'}}
+    if: ${{ needs.skip-check.outputs.should_skip != 'true'}}
     name: Migrate DB and Deploy Commands
     runs-on: ubuntu-latest
 
