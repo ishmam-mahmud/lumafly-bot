@@ -3,7 +3,7 @@ name: Run tests
 on: push
 
 env:
-  NODE_VERSION: 16.13.0
+  NODE_VERSION: 16.13.2
   CLIENT_OWNER: ${{ secrets.CLIENT_OWNER }}
 
 jobs:

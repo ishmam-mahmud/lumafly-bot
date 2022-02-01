@@ -31,9 +31,7 @@
     "----tests----": "",
     "test": "jest",
     "-----deploy-----": "",
-    "build:deploy:commands": "ts-node -T scripts/buildDeployCommands.ts",
-    "deploy:commands": "node -r dotenv/config dist/deploy.js",
-    "prod:run": "yarn db:migrate:run && node deploy.js && node main.js"
+    "prod:run": "node main.js"
   },
   "author": "glowstick-lamp",
   "license": "MIT",

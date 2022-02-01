@@ -1,0 +1,54 @@
+name: Migrate DB and Deploy commands
+
+on:
+  push:
+    branches: main
+
+jobs:
+  skip-check:
+    name: Skip Check
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip-check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'never'
+          skip_after_successful_duplicate: 'true'
+          paths: '["prisma/**", "yarn.lock", "src/core/commands/*.ts",".github/workflows/migrate-and-deploy.yml"]'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+          cancel_others: 'true'
+
+  migrate-and-deploy:
+    needs: skip-check
+    if: ${{ needs.skip-check.outputs.should_skip == 'false'}}
+    name: Migrate DB and Deploy Commands
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.13.2
+          cache: 'yarn'
+
+      - run: yarn install
+
+      - name: Setup CA Cert file
+        run: echo "${{ secrets.DATABASE_CA_CERT }}" > prisma/ca-cert.crt
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}&sslcert=./ca-cert.crt
+        run: yarn prisma migrate deploy
+
+      - name: Delete CA Cert file
+        run: rm prisma/ca-cert.crt
+
+      - name: Deploy Commands
+        run: yarn ts-node scripts/deployCommands.ts
