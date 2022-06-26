@@ -1,15 +1,16 @@
 FROM node:16-alpine AS deps
 WORKDIR /lumafly
-COPY package.json yarn.lock prisma ./
-RUN yarn install --frozen-lockfile && yarn prisma generate
+COPY package.json yarn.lock prisma .yarnrc .yarnrc.yml ./
+COPY .yarn ./.yarn/
+RUN yarn install --immutable && yarn prisma generate
 
 FROM node:16-alpine AS builder
 WORKDIR /lumafly
 COPY . .
 COPY --from=deps /lumafly/node_modules ./node_modules/
+COPY --from=deps /lumafly/.yarn ./.yarn/
 RUN yarn build --minify
-RUN rm -rf node_modules
-RUN yarn install --production --frozen-lockfile && yarn prisma generate
+RUN yarn prisma generate
 
 FROM node:16-alpine AS runner
 ENV NODE_ENV production
