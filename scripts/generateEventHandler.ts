@@ -8,9 +8,12 @@ for (const flag of process.argv) {
   if (flag === '--force') flags.add('force');
 }
 
-const eventTemplateString = fs.readFileSync(path.resolve(process.cwd(), 'scripts/event.ts.hbs'), {
-  encoding: 'utf-8',
-});
+const eventTemplateString = fs.readFileSync(
+  path.resolve(process.cwd(), 'scripts/event.ts.hbs'),
+  {
+    encoding: 'utf-8',
+  }
+);
 
 const template = Handlebars.compile(eventTemplateString);
 
@@ -27,7 +30,10 @@ const eventTemplateProps = {
 
 const output = template(eventTemplateProps);
 
-const eventPath = path.join(path.resolve(process.cwd(), `src/core/events`), `/${eventName}.ts`);
+const eventPath = path.join(
+  path.resolve(process.cwd(), `src/core/events`),
+  `/${eventName}.ts`
+);
 
 if (fs.existsSync(eventPath) && !flags.has('force')) {
   console.log(`Event Handler file already exists at ${eventPath}`);

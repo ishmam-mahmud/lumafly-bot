@@ -1,4 +1,7 @@
-import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders';
+import {
+  ContextMenuCommandBuilder,
+  SlashCommandBuilder,
+} from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import Command from '../src/core/commands/commandTypes';
@@ -56,8 +59,11 @@ for (const commandName in commands) {
 const rest = new REST({ version: '9' }).setToken(getEnv('CLIENT_TOKEN'));
 
 (async () => {
-  await rest.put(Routes.applicationGuildCommands(getEnv('CLIENT_ID'), getEnv('GUILD_ID')), {
-    body: commandsJson,
-  });
+  await rest.put(
+    Routes.applicationGuildCommands(getEnv('CLIENT_ID'), getEnv('GUILD_ID')),
+    {
+      body: commandsJson,
+    }
+  );
   console.log('Successfully registered application commands.');
 })();
