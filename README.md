@@ -11,13 +11,15 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 #### Onboarding
-Make sure you have access to the 
+
+Make sure you have access to the
 
 - [Node JS v16](https://nodejs.org/en/)
 - [Yarn Package Manager](https://yarnpkg.com/getting-started)
 - [Docker](https://www.docker.com/get-started/)
 
 You will also need a PostgreSQL client of your choice to manage your local database. I would recommend any of the following, depending on what you are comfortable with:
+
 - psql - This will be available within the Docker image for postgres itself.
 - [pgAdmin](https://www.pgadmin.org/download/) - A more-or-less terrible/good client available on all platforms
 - [Postico](https://eggerapps.at/postico/) - The same as the last one, but specific to MacOS
@@ -34,11 +36,13 @@ yarn setup:init
 ```
 
 Build the bot, with refreshing the builds enabled as you code
+
 ```
 yarn build:watch
 ```
 
 Start the bot, with hot-reloading enabled as you code
+
 ```
 yarn core:start:watch
 ```
@@ -50,11 +54,14 @@ Interact with the bot in the server and test your changes. You can modify the se
 Not yet implemented
 
 ### Built with
+
 - [discord.js](https://discord.js.org/#/)
 - [Prisma](https://www.prisma.io/)
 
 ### Contributing
+
 Please read [CONTRIBUTING.MD](./CONTRIBUTING.MD) for more information.
 
 ### Versioning
+
 Versioning is currently arbitrary af and used to differentiate between different Docker images for Lumafly. Do not worry about this right now.
