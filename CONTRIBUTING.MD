@@ -1,8 +1,8 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via GitHub issue or discussion in the testing server for the bot. Please ensure a GitHub issue before you start. A full description of the issue, and how to resolve it should be provided.
+When contributing to this repository, please first discuss the change you wish to make via GitHub issue or start a discussion in the testing server for the bot. Please ensure a GitHub issue is created before you start. A full description of the issue, and how to resolve it should be provided.
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+Note that we have a code of conduct, please follow it in all your interactions with the project.
 
 ## Pull Request Process
 
