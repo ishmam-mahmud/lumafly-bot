@@ -21,7 +21,7 @@
     "----tests----": "",
     "test": "jest",
     "-----deploy-----": "",
-    "deploy:commands": "yarn start --deploy"
+    "deploy:commands": "yarn ts-node -T scripts/deployCommands.ts"
   },
   "author": "Ishmam Mahmud",
   "license": "MIT",
