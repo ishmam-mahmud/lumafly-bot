@@ -1,6 +1,6 @@
 FROM node:16-alpine AS deps
 WORKDIR /lumafly
-COPY package.json yarn.lock prisma .yarnrc .yarnrc.yml ./
+COPY package.json yarn.lock prisma .yarnrc.yml ./
 COPY .yarn ./.yarn/
 RUN yarn install --immutable && yarn prisma generate
 
