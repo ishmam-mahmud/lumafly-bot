@@ -1,4 +1,8 @@
 import commands, { commandName } from '../commands';
+import {
+  ChatInputCommandInteractionHandler,
+  ContextMenuCommandInteractionHandler,
+} from '../commands/commandTypes';
 import logError from '../logError';
 import Event from './eventTypes';
 
@@ -7,10 +11,11 @@ const interactionCreateEvent: Event<'interactionCreate'> = {
   once: false,
   async execute(interaction) {
     if (!interaction.inCachedGuild()) return;
-    if (interaction.isCommand()) {
-      const command = commands[interaction.commandName as commandName];
+    if (interaction.isChatInputCommand()) {
+      const command = commands[
+        interaction.commandName as commandName
+      ] as ChatInputCommandInteractionHandler;
       if (!command) return;
-      if (command.type !== 'CHAT_INPUT') return;
       try {
         await command.execute(interaction);
       } catch (error) {
@@ -20,10 +25,11 @@ const interactionCreateEvent: Event<'interactionCreate'> = {
         else await interaction.reply({ content: message, ephemeral: true });
         await logError(error);
       }
-    } else if (interaction.isContextMenu()) {
-      const command = commands[interaction.commandName as commandName];
+    } else if (interaction.isContextMenuCommand()) {
+      const command = commands[
+        interaction.commandName as commandName
+      ] as ContextMenuCommandInteractionHandler;
       if (!command) return;
-      if (command.type !== 'MESSAGE' && command.type !== 'USER') return;
       try {
         await command.execute(interaction);
       } catch (error) {

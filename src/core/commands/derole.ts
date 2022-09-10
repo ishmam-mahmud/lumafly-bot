@@ -1,13 +1,17 @@
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+} from 'discord.js';
 import dbClient from '../../db/client';
-import Command from './commandTypes';
+import { ChatInputCommandInteractionHandler } from './commandTypes';
 
-const DeroleCommand: Command = {
+const DeroleCommand: ChatInputCommandInteractionHandler = {
   name: 'derole',
+  type: ApplicationCommandType.ChatInput,
   description: 'Remove a role you currently have',
-  type: 'CHAT_INPUT',
   options: [
     {
-      type: 'ROLE',
+      type: ApplicationCommandOptionType.Role,
       description: 'The role you want to remove',
       name: 'role-to-remove',
       required: true,
