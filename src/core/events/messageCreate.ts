@@ -1,4 +1,3 @@
-import { ChannelType } from 'discord.js';
 import dbClient from '../../db/client';
 import getEnv from '../getEnv';
 import Event from './eventTypes';
@@ -28,7 +27,7 @@ const MessageCreateEvent: Event<'messageCreate'> = {
 
     if (dbGuild.suggestionChannelId) {
       if (message.channelId === dbGuild.suggestionChannelId) {
-        if (message.channel.type === ChannelType.GuildText) {
+        if (message.channel.type === 'GUILD_TEXT') {
           const thread = await message.channel.threads.create({
             startMessage: message,
             name: `${message.member?.displayName} suggestion`,

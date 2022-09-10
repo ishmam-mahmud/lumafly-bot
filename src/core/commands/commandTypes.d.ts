@@ -1,33 +1,30 @@
 import {
-  ApplicationCommandOption,
   ApplicationCommandType,
-  ChatInputCommandInteraction,
+  BaseCommandInteraction,
   CommandInteraction,
-  ContextMenuCommandInteraction,
+  ContextMenuInteraction,
 } from 'discord.js';
 
-interface BaseCommandHandler {
-  type: ApplicationCommandType;
+type CommandOptionType = 'ROLE';
+export interface CommandOption {
+  type: CommandOptionType;
   name: string;
   description: string;
+  required: boolean;
 }
 
-export interface ChatInputCommandInteractionHandler extends BaseCommandHandler {
-  type: ApplicationCommandType.ChatInput;
-  execute: (interaction: ChatInputCommandInteraction<'cached'>) => Promise<any>;
-  options: ApplicationCommandOption[];
-}
-
-export interface ContextMenuCommandInteractionHandler
-  extends BaseCommandHandler {
-  type: ApplicationCommandType.User | ApplicationCommandType.Message;
-  execute: (
-    interaction: ContextMenuCommandInteraction<'cached'>
-  ) => Promise<any>;
-}
-
-export type Command =
-  | ChatInputCommandInteractionHandler
-  | ContextMenuCommandInteractionHandler;
+type Command =
+  | {
+      name: string;
+      description: string;
+      execute: (interaction: CommandInteraction<'cached'>) => Promise<any>;
+      options: CommandOption[];
+      type: 'CHAT_INPUT';
+    }
+  | {
+      name: string;
+      execute: (interaction: BaseCommandInteraction<'cached'>) => Promise<any>;
+      type: 'USER' | 'MESSAGE';
+    };
 
 export default Command;

@@ -1,17 +1,13 @@
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-} from 'discord.js';
 import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+import Command from './commandTypes';
 
-const RoleCommand: ChatInputCommandInteractionHandler = {
+const RoleCommand: Command = {
   name: 'role',
-  type: ApplicationCommandType.ChatInput,
   description: 'Add a self-assignable role',
+  type: 'CHAT_INPUT',
   options: [
     {
-      type: ApplicationCommandOptionType.Role,
+      type: 'ROLE',
       description: 'The role you want to add',
       name: 'role-to-add',
       required: true,
