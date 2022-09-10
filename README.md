@@ -8,15 +8,15 @@ Lumafly started out with a need for better managing roles in Discord. AASD heavi
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
-
-#### Onboarding
+### Onboarding
 
 Make sure you have access to the
 
 - [Node JS v16](https://nodejs.org/en/)
 - [Yarn Package Manager](https://yarnpkg.com/getting-started)
 - [Docker](https://www.docker.com/get-started/)
+- [direnv](https://direnv.net/)
+  - When setting up direnv, do follow their [guide](https://direnv.net/docs/hook.html) on hooking it into your shell so that it always starts automatically.
 
 You will also need a PostgreSQL client of your choice to manage your local database. I would recommend any of the following, depending on what you are comfortable with:
 
@@ -25,14 +25,38 @@ You will also need a PostgreSQL client of your choice to manage your local datab
 - [Postico](https://eggerapps.at/postico/) - The same as the last one, but specific to MacOS
 - Use whatever external third party postgres you want instead, be it Heroku or Supabase or whatnot, and comment out the db image in [docker-compose.yaml](./docker-compose.yaml) and set the correct envs in [.env.base](./.env.base)
 
+### Database setup
+
+Pick one of the following for setting up a local Postgres instance
+- [Docker](https://www.docker.com/products/docker-desktop/)
+- [Postgres.app](https://postgresapp.com/)
+
+If you pick Docker, follow the guide below
+#### Setting up a local Docker database
+
+Run the following command to start a local instance of Postgres
+```
+docker run -e POSTGRES_PASSWORD=<your wanted password> -e POSTGRES_DB=postgres -p 5432:5432 -d postgres
+```
+### Setting envs
+
+Setup the `.envrc` file first
+```
+cp .envrc.example .envrc
+```
+
+Edit the resulting `.envrc` and set your envs as you need
+
+Run the following command to load the file
+```
+direnv allow .
+```
 ### Installing
 
-Edit the [env.base](/.env.base) file and set the appropriate values according to your database setup. You can set up your own custom Discord bot and fill in the envs starting with `CLIENT_`, or ask for access to the one for DemonToast, a spare bot still used for development, along with access to the DemonToast server.
-
-Install node dependencies and setup your environment
+Install node dependencies.
 
 ```
-yarn setup:init
+yarn install
 ```
 
 Build the bot, with refreshing the builds enabled as you code
