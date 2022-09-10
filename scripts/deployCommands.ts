@@ -9,9 +9,9 @@ import { REST } from '@discordjs/rest';
 import {
   ChatInputCommandInteractionHandler,
   ContextMenuCommandInteractionHandler,
-} from './commands/commandTypes';
-import commands, { commandName } from './commands/index';
-import getEnv from './getEnv';
+} from '../src/core/commands/commandTypes';
+import commands, { commandName } from '../src/core/commands/index';
+import getEnv from '../src/core/getEnv';
 
 function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {
   const builder = new SlashCommandBuilder()
@@ -46,22 +46,21 @@ function getContextMenuCommandBuilder(
   return builder;
 }
 
-export async function deployCommands() {
-  const commandsJson = [];
+const commandsJson = [];
 
-  for (const commandName in commands) {
-    if (Object.prototype.hasOwnProperty.call(commands, commandName)) {
-      const command = commands[commandName as commandName];
-      if (command.type === ApplicationCommandType.ChatInput) {
-        commandsJson.push(getSlashCommandBuilder(command).toJSON());
-      } else {
-        commandsJson.push(getContextMenuCommandBuilder(command).toJSON());
-      }
+for (const commandName in commands) {
+  if (Object.prototype.hasOwnProperty.call(commands, commandName)) {
+    const command = commands[commandName as commandName];
+    if (command.type === ApplicationCommandType.ChatInput) {
+      commandsJson.push(getSlashCommandBuilder(command).toJSON());
+    } else {
+      commandsJson.push(getContextMenuCommandBuilder(command).toJSON());
     }
   }
+}
 
-  const rest = new REST({ version: '10' }).setToken(getEnv('CLIENT_TOKEN'));
-
+const rest = new REST({ version: '10' }).setToken(getEnv('CLIENT_TOKEN'));
+(async () => {
   await rest.put(
     Routes.applicationGuildCommands(getEnv('CLIENT_ID'), getEnv('GUILD_ID')),
     {
@@ -69,5 +68,4 @@ export async function deployCommands() {
     }
   );
   console.log('Successfully registered application commands.');
-  process.exit();
-}
+})();
