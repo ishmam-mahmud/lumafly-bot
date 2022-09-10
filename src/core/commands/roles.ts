@@ -1,11 +1,11 @@
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import dbClient from '../../db/client';
-import Command from './commandTypes';
+import { ChatInputCommandInteractionHandler } from './commandTypes';
 
-const RolesCommand: Command = {
+const RolesCommand: ChatInputCommandInteractionHandler = {
   name: 'roles',
   description: 'See a list of all self-assignable roles',
-  type: 'CHAT_INPUT',
+  type: ApplicationCommandType.ChatInput,
   options: [],
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: true });
@@ -35,7 +35,7 @@ const RolesCommand: Command = {
 
     return await interaction.editReply({
       embeds: categories.map((cat) => {
-        return new MessageEmbed().setTitle(cat.name).setDescription(
+        return new EmbedBuilder().setTitle(cat.name).setDescription(
           cat.Role.filter((role) => role.selfAssignable)
             .sort((roleA, roleB) => {
               if (roleA.name < roleB.name) return -1;
