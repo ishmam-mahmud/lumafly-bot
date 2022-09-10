@@ -28,19 +28,24 @@ You will also need a PostgreSQL client of your choice to manage your local datab
 ### Database setup
 
 Pick one of the following for setting up a local Postgres instance
+
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [Postgres.app](https://postgresapp.com/)
 
 If you pick Docker, follow the guide below
+
 #### Setting up a local Docker database
 
 Run the following command to start a local instance of Postgres
+
 ```
 docker run -e POSTGRES_PASSWORD=<your wanted password> -e POSTGRES_DB=postgres -p 5432:5432 -d postgres
 ```
+
 ### Setting envs
 
 Setup the `.envrc` file first
+
 ```
 cp .envrc.example .envrc
 ```
@@ -48,9 +53,11 @@ cp .envrc.example .envrc
 Edit the resulting `.envrc` and set your envs as you need
 
 Run the following command to load the file
+
 ```
 direnv allow .
 ```
+
 ### Installing
 
 Install node dependencies.
