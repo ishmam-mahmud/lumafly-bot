@@ -1,8 +1,11 @@
-import Command from './commandTypes';
+import { ApplicationCommandType } from 'discord.js';
+import { ContextMenuCommandInteractionHandler } from './commandTypes';
 
-const NvinfoCommand: Command = {
+const NvinfoCommand: ContextMenuCommandInteractionHandler = {
   name: 'nvinfo',
-  type: 'MESSAGE',
+  type: ApplicationCommandType.Message,
+  description:
+    'A command to print some explainer text on non-verbal/non-scribal users',
   async execute(interaction) {
     const message = `**Non-/semi-verbal or non-/semi-scribal**
 
