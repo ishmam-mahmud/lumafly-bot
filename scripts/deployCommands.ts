@@ -9,9 +9,9 @@ import { REST } from '@discordjs/rest';
 import {
   ChatInputCommandInteractionHandler,
   ContextMenuCommandInteractionHandler,
-} from './commands/commandTypes';
-import commands, { commandName } from './commands/index';
-import getEnv from './getEnv';
+} from '../src/core/commands/commandTypes';
+import commands, { commandName } from '../src/core/commands/index';
+import getEnv from '../src/core/getEnv';
 
 function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {
   const builder = new SlashCommandBuilder()
@@ -46,7 +46,7 @@ function getContextMenuCommandBuilder(
   return builder;
 }
 
-export async function deployCommands() {
+(async () => {
   const commandsJson = [];
 
   for (const commandName in commands) {
@@ -70,4 +70,4 @@ export async function deployCommands() {
   );
   console.log('Successfully registered application commands.');
   process.exit();
-}
+})();
