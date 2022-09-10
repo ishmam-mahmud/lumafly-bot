@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,20 +15,17 @@ model Server {
 }
 
 model RoleCategory {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  server   Server @relation(fields: [serverId], references: [id])
+  id       Int    @id @default(autoincrement())
+  name     String
   serverId String
-
-  Role Role[]
+  server   Server @relation(fields: [serverId], references: [id])
+  Role     Role[]
 }
 
 model Role {
-  id             String  @id
+  id             String       @id
   name           String
   selfAssignable Boolean
-
-  category       RoleCategory @relation(fields: [roleCategoryId], references: [id])
   roleCategoryId Int
+  category       RoleCategory @relation(fields: [roleCategoryId], references: [id])
 }
