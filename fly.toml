@@ -10,3 +10,6 @@ processes = []
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
+
+[deploy]
+  release_command = "node main.js --deploy"
