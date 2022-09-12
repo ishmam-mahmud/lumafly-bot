@@ -1,14 +1,20 @@
-import Command from './commandTypes';
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+} from 'discord.js';
+import dbClient from '../../db/client';
+import { ChatInputCommandInteractionHandler } from './commandTypes';
 
-const {{Name}}Command: Command = { 
+const {{name}}Command: ChatInputCommandInteractionHandler = {
   name: '{{name}}',
-  // TODO: Set Description
-  description: '{{description}}',
+  type: ApplicationCommandType.ChatInput,
+  // TODO: Set description
+  description: '',
+  // TODO: Set options
   options: [],
   async execute(interaction) {
-    // TODO: Implement command
     return await interaction.reply("Not implemented yet");
-  }
+  },
 };
 
-export default {{Name}}Command;
+export default {{name}}Command;

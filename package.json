@@ -13,7 +13,7 @@
     "start": "node dist/main.js",
     "start:watch": "nodemon -x \"yarn start\"",
     "-----commands-----": "",
-    "gen:command": "ts-node -T scripts/generateCommand.ts && yarn index:command",
+    "gen:command": "ts-node -T scripts/generateCommand.ts",
     "index:command": "ts-node -T scripts/indexCommands.ts && yarn format",
     "-----events-----": "",
     "gen:event": "ts-node -T scripts/generateEventHandler.ts && yarn index:event",
