@@ -9,6 +9,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
   // TODO: Set options
   options: [],
   async execute(interaction) {
+    await interaction.deferReply();
     const quoteIds = await dbClient.quote.findMany({
       where: {
         serverId: interaction.guildId,
@@ -39,7 +40,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
       .setTitle(`#${quote.id}`)
       .setDescription(embedDescription);
 
-    return await interaction.reply({
+    return await interaction.editReply({
       embeds: [embed],
     });
   },
