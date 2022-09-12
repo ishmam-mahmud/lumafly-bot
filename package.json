@@ -16,7 +16,7 @@
     "gen:command": "ts-node -T scripts/generateCommand.ts",
     "index:command": "ts-node -T scripts/indexCommands.ts && yarn format",
     "-----events-----": "",
-    "gen:event": "ts-node -T scripts/generateEventHandler.ts && yarn index:event",
+    "gen:event": "ts-node -T scripts/generateEventHandler.ts",
     "index:event": "ts-node -T scripts/indexEvents.ts && yarn format",
     "----tests----": "",
     "test": "jest",

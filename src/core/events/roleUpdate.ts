@@ -1,7 +1,7 @@
 import dbClient from '../../db/client';
 import Event from './eventTypes';
 
-const RoleUpdateEvent: Event<'roleUpdate'> = {
+const roleUpdateEvent: Event<'roleUpdate'> = {
   name: 'roleUpdate',
   once: false,
   async execute(oldRole, newRole) {
@@ -27,4 +27,4 @@ const RoleUpdateEvent: Event<'roleUpdate'> = {
   },
 };
 
-export default RoleUpdateEvent;
+export default roleUpdateEvent;

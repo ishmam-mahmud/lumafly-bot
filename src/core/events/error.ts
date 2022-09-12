@@ -1,7 +1,7 @@
 import logError from '../logError';
 import Event from './eventTypes';
 
-const ErrorEvent: Event<'error'> = {
+const errorEvent: Event<'error'> = {
   name: 'error',
   once: false,
   async execute(error) {
@@ -9,4 +9,4 @@ const ErrorEvent: Event<'error'> = {
   },
 };
 
-export default ErrorEvent;
+export default errorEvent;

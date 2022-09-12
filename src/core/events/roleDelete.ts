@@ -1,7 +1,7 @@
 import dbClient from '../../db/client';
 import Event from './eventTypes';
 
-const RoleDeleteEvent: Event<'roleDelete'> = {
+const roleDeleteEvent: Event<'roleDelete'> = {
   name: 'roleDelete',
   once: false,
   async execute(role) {
@@ -36,4 +36,4 @@ const RoleDeleteEvent: Event<'roleDelete'> = {
   },
 };
 
-export default RoleDeleteEvent;
+export default roleDeleteEvent;
