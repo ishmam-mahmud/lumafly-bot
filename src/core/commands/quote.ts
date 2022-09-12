@@ -23,7 +23,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
 
     const quote = await dbClient.quote.findFirst({
       where: {
-        id: 6217,
+        id: randomQuoteId.id,
       },
     });
 
