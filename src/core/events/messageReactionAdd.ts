@@ -6,7 +6,6 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
   name: 'messageReactionAdd',
   once: false,
   async execute(reaction, user) {
-    console.log(reaction.message.inGuild());
     if (reaction.me) return;
     if (reaction.message.author?.bot) return;
     if (!reaction.message.inGuild()) return;
@@ -32,9 +31,11 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
         throw new Error(`Failed to add quote, ${reaction}`);
       }
 
-      await reaction.message.channel.send(
+      const sendMessage = reaction.message.channel.send(
         `New quote added by ${user.tag} as #${newQuote.id} (${reaction.message.url})`
       );
+      const react = await reaction.react();
+      await Promise.all([sendMessage, react]);
     }
   },
 };
