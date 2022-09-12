@@ -25,8 +25,6 @@ if (!commandName || commandName === '') {
 
 const commandTemplateProps = {
   name: commandName,
-  Name: `${commandName[0].toUpperCase()}${commandName.slice(1)}`,
-  description: '',
 };
 
 const output = template(commandTemplateProps);

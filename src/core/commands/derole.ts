@@ -5,7 +5,7 @@ import {
 import dbClient from '../../db/client';
 import { ChatInputCommandInteractionHandler } from './commandTypes';
 
-const DeroleCommand: ChatInputCommandInteractionHandler = {
+const deroleCommand: ChatInputCommandInteractionHandler = {
   name: 'derole',
   type: ApplicationCommandType.ChatInput,
   description: 'Remove a role you currently have',
@@ -54,4 +54,4 @@ const DeroleCommand: ChatInputCommandInteractionHandler = {
   },
 };
 
-export default DeroleCommand;
+export default deroleCommand;
