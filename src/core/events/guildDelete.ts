@@ -1,7 +1,7 @@
 import dbClient from '../../db/client';
 import Event from './eventTypes';
 
-const GuildDeleteEvent: Event<'guildDelete'> = {
+const guildDeleteEvent: Event<'guildDelete'> = {
   name: 'guildDelete',
   once: false,
   async execute(server) {
@@ -58,4 +58,4 @@ const GuildDeleteEvent: Event<'guildDelete'> = {
   },
 };
 
-export default GuildDeleteEvent;
+export default guildDeleteEvent;

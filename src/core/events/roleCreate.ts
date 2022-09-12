@@ -1,7 +1,7 @@
 import dbClient from '../../db/client';
 import Event from './eventTypes';
 
-const RoleCreateEvent: Event<'roleCreate'> = {
+const roleCreateEvent: Event<'roleCreate'> = {
   name: 'roleCreate',
   once: false,
   async execute(role) {
@@ -51,4 +51,4 @@ const RoleCreateEvent: Event<'roleCreate'> = {
   },
 };
 
-export default RoleCreateEvent;
+export default roleCreateEvent;

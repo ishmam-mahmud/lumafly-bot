@@ -3,7 +3,7 @@ import dbClient from '../../db/client';
 import getEnv from '../getEnv';
 import Event from './eventTypes';
 
-const MessageCreateEvent: Event<'messageCreate'> = {
+const messageCreateEvent: Event<'messageCreate'> = {
   name: 'messageCreate',
   once: false,
   async execute(message) {
@@ -49,4 +49,4 @@ const MessageCreateEvent: Event<'messageCreate'> = {
   },
 };
 
-export default MessageCreateEvent;
+export default messageCreateEvent;

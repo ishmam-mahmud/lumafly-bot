@@ -1,7 +1,7 @@
 import dbClient from '../../db/client';
 import Event from './eventTypes';
 
-const GuildCreateEvent: Event<'guildCreate'> = {
+const guildCreateEvent: Event<'guildCreate'> = {
   name: 'guildCreate',
   once: false,
   async execute(server) {
@@ -47,4 +47,4 @@ const GuildCreateEvent: Event<'guildCreate'> = {
   },
 };
 
-export default GuildCreateEvent;
+export default guildCreateEvent;

@@ -25,7 +25,6 @@ if (!eventName || eventName === '') {
 
 const eventTemplateProps = {
   name: eventName,
-  Name: `${eventName[0].toUpperCase()}${eventName.slice(1)}`,
 };
 
 const output = template(eventTemplateProps);

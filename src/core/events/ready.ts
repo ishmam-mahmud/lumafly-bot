@@ -1,6 +1,6 @@
 import Event from './eventTypes';
 
-const ReadyEvent: Event<'ready'> = {
+const readyEvent: Event<'ready'> = {
   name: 'ready',
   once: true,
   async execute(client) {
@@ -8,4 +8,4 @@ const ReadyEvent: Event<'ready'> = {
   },
 };
 
-export default ReadyEvent;
+export default readyEvent;
