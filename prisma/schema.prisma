@@ -12,6 +12,7 @@ model Server {
   name                String
   suggestionChannelId String?
   RoleCategory        RoleCategory[]
+  Quote               Quote[]
 }
 
 model RoleCategory {
@@ -28,4 +29,15 @@ model Role {
   selfAssignable Boolean
   roleCategoryId Int
   category       RoleCategory @relation(fields: [roleCategoryId], references: [id])
+}
+
+model Quote {
+  id          Int      @id @default(autoincrement())
+  text        String
+  author      String
+  messageLink String?  @unique
+  quotedAt    DateTime @default(now())
+
+  server   Server @relation(fields: [serverId], references: [id])
+  serverId String
 }
