@@ -5,14 +5,16 @@
 import Command from './commandTypes';
 import deroleCommand from './derole';
 import nvinfoCommand from './nvinfo';
+import quoteCommand from './quote';
 import roleCommand from './role';
 import rolesCommand from './roles';
 
-export type commandName = 'derole' | 'nvinfo' | 'role' | 'roles';
+export type commandName = 'derole' | 'nvinfo' | 'quote' | 'role' | 'roles';
 
 const commands: Record<commandName, Command> = {
   derole: deroleCommand,
   nvinfo: nvinfoCommand,
+  quote: quoteCommand,
   role: roleCommand,
   roles: rolesCommand,
 };
