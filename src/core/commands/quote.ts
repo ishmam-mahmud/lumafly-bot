@@ -10,25 +10,22 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
   options: [],
   async execute(interaction) {
     await interaction.deferReply();
-    const quoteIds = await dbClient.quote.findMany({
-      where: {
-        serverId: interaction.guildId,
-      },
-      select: {
-        id: true,
-      },
-    });
+    const quoteIdArray =
+      await dbClient.$queryRaw`SELECT id FROM "Quote" ORDER BY RANDOM() LIMIT 1`;
+    if (!Array.isArray(quoteIdArray) || quoteIdArray.length === 0) {
+      throw new Error('No quotes found');
+    }
 
-    const randomQuoteId = quoteIds[Math.floor(Math.random() * quoteIds.length)];
+    const quoteId = quoteIdArray[0].id;
 
     const quote = await dbClient.quote.findFirst({
       where: {
-        id: randomQuoteId.id,
+        id: quoteId,
       },
     });
 
     if (!quote) {
-      throw new Error(`No quote found with id ${randomQuoteId.id}`);
+      throw new Error(`No quote found with id ${quoteId}`);
     }
 
     let embedDescription = `${quote.text}\n-${quote.author}`;
