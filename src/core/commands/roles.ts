@@ -2,7 +2,7 @@ import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import dbClient from '../../db/client';
 import { ChatInputCommandInteractionHandler } from './commandTypes';
 
-const RolesCommand: ChatInputCommandInteractionHandler = {
+const rolesCommand: ChatInputCommandInteractionHandler = {
   name: 'roles',
   description: 'See a list of all self-assignable roles',
   type: ApplicationCommandType.ChatInput,
@@ -49,4 +49,4 @@ const RolesCommand: ChatInputCommandInteractionHandler = {
   },
 };
 
-export default RolesCommand;
+export default rolesCommand;

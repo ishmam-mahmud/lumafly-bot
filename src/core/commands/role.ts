@@ -5,7 +5,7 @@ import {
 import dbClient from '../../db/client';
 import { ChatInputCommandInteractionHandler } from './commandTypes';
 
-const RoleCommand: ChatInputCommandInteractionHandler = {
+const roleCommand: ChatInputCommandInteractionHandler = {
   name: 'role',
   type: ApplicationCommandType.ChatInput,
   description: 'Add a self-assignable role',
@@ -53,4 +53,4 @@ const RoleCommand: ChatInputCommandInteractionHandler = {
   },
 };
 
-export default RoleCommand;
+export default roleCommand;

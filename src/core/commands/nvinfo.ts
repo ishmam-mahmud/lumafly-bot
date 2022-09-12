@@ -1,7 +1,7 @@
 import { ApplicationCommandType } from 'discord.js';
 import { ContextMenuCommandInteractionHandler } from './commandTypes';
 
-const NvinfoCommand: ContextMenuCommandInteractionHandler = {
+const nvinfoCommand: ContextMenuCommandInteractionHandler = {
   name: 'nvinfo',
   type: ApplicationCommandType.Message,
   description:
@@ -18,4 +18,4 @@ Some users may have more difficulty forming sentences than others, whether that 
   },
 };
 
-export default NvinfoCommand;
+export default nvinfoCommand;
