@@ -1,4 +1,4 @@
-# fly.toml file generated for lumafly on 2022-06-26T09:57:04+08:00
+# fly.toml file generated for lumafly on 2022-09-11T10:35:01+08:00
 
 app = "lumafly"
 kill_signal = "SIGINT"

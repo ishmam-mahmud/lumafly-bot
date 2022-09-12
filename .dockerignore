@@ -6,13 +6,15 @@ scripts
 src/**/*.test.ts
 src/singleton.ts
 .dockerignore
-.env
-.env.base
+.envrc
+.envrc.example
 .git
 .gitignore
+.nvmrc
 docker-compose-prod.yaml
 docker-compose.yaml
 Dockerfile
+fly.toml
 jest.config.ts
 *.md
 *.env
