@@ -6,9 +6,13 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
   name: 'messageReactionAdd',
   once: false,
   async execute(reaction, user) {
-    if (reaction.me) return;
-    if (reaction.message.author?.bot) return;
-    if (!reaction.message.inGuild()) return;
+    if (
+      reaction.me ||
+      user.bot ||
+      reaction.message.author?.bot ||
+      !reaction.message.inGuild()
+    )
+      return;
 
     if (reaction.emoji.name === '💬') {
       const usersCollection = await reaction.users.fetch();
