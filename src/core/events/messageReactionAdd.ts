@@ -11,7 +11,8 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
     if (!reaction.message.inGuild()) return;
 
     if (reaction.emoji.name === '💬') {
-      if (reaction.users.cache.some((user) => user.id == getEnv('CLIENT_ID')))
+      const usersCollection = await reaction.users.fetch();
+      if (usersCollection.some((user) => user.id === getEnv('CLIENT_ID')))
         return;
 
       const newQuote = await dbClient.quote.create({
