@@ -1,4 +1,8 @@
-import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+  EmbedBuilder,
+} from 'discord.js';
 import dbClient from '../../db/client';
 import { ChatInputCommandInteractionHandler } from './commandTypes';
 
@@ -7,11 +11,28 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
   type: ApplicationCommandType.ChatInput,
   description: 'Get an existing quote',
   // TODO: Set options
-  options: [],
+  options: [
+    {
+      type: ApplicationCommandOptionType.User,
+      name: 'user',
+      description: 'Get a quote by',
+      required: false,
+    },
+  ],
   async execute(interaction) {
     await interaction.deferReply();
-    const quoteIdArray =
-      await dbClient.$queryRaw`SELECT id FROM "Quote" ORDER BY RANDOM() LIMIT 1`;
+    const user = interaction.options.getUser('user', false);
+
+    let quoteIdArray;
+    if (user) {
+      const userIdSQLString = `%${user.id}%`;
+      quoteIdArray =
+        await dbClient.$queryRaw`SELECT id FROM "Quote" WHERE author LIKE ${userIdSQLString} ORDER BY RANDOM() LIMIT 1`;
+    } else {
+      quoteIdArray =
+        await dbClient.$queryRaw`SELECT id FROM "Quote" ORDER BY RANDOM() LIMIT 1`;
+    }
+
     if (!Array.isArray(quoteIdArray) || quoteIdArray.length === 0) {
       throw new Error('No quotes found');
     }
