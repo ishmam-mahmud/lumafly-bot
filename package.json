@@ -38,7 +38,7 @@
     "handlebars": "^4.7.7",
     "jest": "^28.1.1",
     "jest-mock-extended": "^2.0.6",
-    "nodemon": "^2.0.18",
+    "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
     "prisma": "^4.3.1",
     "ts-jest": "^28.0.5",
