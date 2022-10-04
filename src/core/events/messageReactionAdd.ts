@@ -21,7 +21,7 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
 
       const newQuote = await dbClient.quote.create({
         data: {
-          author: `<@${reaction.message.author}>`,
+          author: `${reaction.message.author}`,
           text: reaction.message.content,
           messageLink: reaction.message.url,
           quotedAt: reaction.message.createdAt,
