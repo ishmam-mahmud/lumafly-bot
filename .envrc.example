@@ -11,3 +11,5 @@ export GUILD_ID=
 # A string for the local db you get by running docker-compose up
 # Override this as needed if you do not use defaults
 export DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/postgres?schema=public
+
+export SENTRY_DSN=

@@ -3,6 +3,7 @@ interface EnvObj {
   CLIENT_OWNER: string;
   CLIENT_ID: string;
   GUILD_ID: string;
+  SENTRY_DSN: string;
 }
 
 type Env = keyof EnvObj;

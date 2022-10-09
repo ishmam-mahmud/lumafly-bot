@@ -1,12 +1,14 @@
-import discordClient from './client';
+import * as Sentry from '@sentry/node';
 import getEnv from './getEnv';
 
+Sentry.init({
+  dsn: getEnv('SENTRY_DSN'),
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
+
 export default async function logError(error: any) {
-  const logMessage = `Timestamp ${new Date().toISOString()}: ${JSON.stringify(
-    error
-  )}`;
-  console.error(logMessage);
-  console.error(error);
-  const owner = await discordClient.users.fetch(getEnv('CLIENT_OWNER'));
-  await owner?.send(logMessage);
+  return Sentry.captureException(error);
 }
