@@ -5,24 +5,6 @@ const roleCreateEvent: Event<'roleCreate'> = {
   name: 'roleCreate',
   once: false,
   async execute(role) {
-    const dbRole = await dbClient.role.findFirst({
-      where: {
-        name: role.name,
-        category: {
-          serverId: role.guild.id,
-        },
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    if (dbRole) {
-      await role.delete(
-        'A role with the same name already exists in the server'
-      );
-    }
-
     const uncategorized = await dbClient.roleCategory.findFirst({
       where: {
         name: 'Uncategorized',
