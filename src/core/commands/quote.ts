@@ -25,10 +25,12 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
 
     let quoteIdArray;
     if (user) {
+      console.log(`Fetching random quote by ${user.id}`);
       const userIdSQLString = `%${user.id}%`;
       quoteIdArray =
         await dbClient.$queryRaw`SELECT id FROM "Quote" WHERE author LIKE ${userIdSQLString} ORDER BY RANDOM() LIMIT 1`;
     } else {
+      console.log('Fetching random quote');
       quoteIdArray =
         await dbClient.$queryRaw`SELECT id FROM "Quote" ORDER BY RANDOM() LIMIT 1`;
     }
@@ -51,6 +53,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
 
     let embedDescription = `${quote.text}\n-${quote.author}`;
     if (quote.messageLink !== null) {
+      console.log(`Adding quote message link to description for ${quote.id}`);
       embedDescription = `${embedDescription} [(Jump)](${quote.messageLink})`;
     }
 
