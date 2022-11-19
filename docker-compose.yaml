@@ -16,5 +16,6 @@ services:
       - CLIENT_ID=${CLIENT_ID}
       - GUILD_ID=${GUILD_ID}
       - DATABASE_URL=${DATABASE_URL}
+      - SENTRY_DSN=${SENTRY_DSN}
     depends_on:
       - 'postgres'

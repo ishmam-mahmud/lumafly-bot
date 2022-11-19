@@ -14,6 +14,7 @@ import readyEventHandler from './ready';
 import roleCreateEventHandler from './roleCreate';
 import roleDeleteEventHandler from './roleDelete';
 import roleUpdateEventHandler from './roleUpdate';
+import threadUpdateEventHandler from './threadUpdate';
 
 const events: Partial<Record<keyof ClientEvents, Event<any>>> = {
   error: errorEventHandler,
@@ -26,6 +27,7 @@ const events: Partial<Record<keyof ClientEvents, Event<any>>> = {
   roleCreate: roleCreateEventHandler,
   roleDelete: roleDeleteEventHandler,
   roleUpdate: roleUpdateEventHandler,
+  threadUpdate: threadUpdateEventHandler,
 };
 
 export default events;
