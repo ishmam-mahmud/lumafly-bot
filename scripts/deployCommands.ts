@@ -33,6 +33,13 @@ function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {
           .setDescription(option.description)
           .setRequired(option.required ?? false)
       );
+    } else if (option.type === ApplicationCommandOptionType.Integer) {
+      builder.addIntegerOption((integerOption) =>
+        integerOption
+          .setDescription(option.description)
+          .setName(option.name)
+          .setRequired(option.required ?? false)
+      );
     }
   }
   return builder;
