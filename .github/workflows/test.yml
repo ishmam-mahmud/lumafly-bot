@@ -4,6 +4,7 @@ on: push
 
 env:
   CLIENT_OWNER: ${{ secrets.CLIENT_OWNER }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
   skip-check:
