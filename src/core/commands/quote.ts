@@ -13,18 +13,33 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
   // TODO: Set options
   options: [
     {
+      type: ApplicationCommandOptionType.Integer,
+      name: 'quote_id',
+      description: 'Get a quote by id',
+      required: false,
+    },
+    {
       type: ApplicationCommandOptionType.User,
       name: 'user',
-      description: 'Get a quote by',
+      description: 'Get a quote by user',
       required: false,
     },
   ],
   async execute(interaction) {
     await interaction.deferReply();
+    const id = interaction.options.getInteger('quote_id', false);
     const user = interaction.options.getUser('user', false);
 
     let quoteIdArray;
-    if (user) {
+    if (id) {
+      if (id <= 0) {
+        return await interaction.editReply(
+          `Invalid id ${id}. ID must be an integer greater than 0.`
+        );
+      }
+      console.log(`Fetching quote with id ${id}`);
+      quoteIdArray = [{ id: id }];
+    } else if (user) {
       console.log(`Fetching random quote by ${user.id}`);
       const userIdSQLString = `%${user.id}%`;
       quoteIdArray =
@@ -36,7 +51,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
     }
 
     if (!Array.isArray(quoteIdArray) || quoteIdArray.length === 0) {
-      throw new Error('No quotes found');
+      throw new Error('No quote ids found');
     }
 
     const quoteId = quoteIdArray[0].id;
@@ -48,7 +63,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
     });
 
     if (!quote) {
-      throw new Error(`No quote found with id ${quoteId}`);
+      return await interaction.editReply(`No quote found with id ${quoteId}`);
     }
 
     let embedDescription = `${quote.text}\n-${quote.author}`;
