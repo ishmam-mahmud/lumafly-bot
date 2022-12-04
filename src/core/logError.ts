@@ -10,5 +10,6 @@ Sentry.init({
 });
 
 export default async function logError(error: any) {
+  console.error(error)
   return Sentry.captureException(error);
 }
