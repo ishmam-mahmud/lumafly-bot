@@ -1,16 +1,16 @@
-FROM node:18-alpine AS deps
+FROM node:18.12.1-alpine3.15 AS deps
 WORKDIR /lumafly
 COPY package.json package-lock.json prisma ./
 RUN npm install && npx prisma generate
 
-FROM node:18-alpine AS builder
+FROM node:18.12.1-alpine3.15 AS builder
 WORKDIR /lumafly
 COPY . .
 COPY --from=deps /lumafly/node_modules ./node_modules/
-RUN npm run build --minify
+RUN npm run build
 RUN npx prisma generate
 
-FROM node:18-alpine AS runner
+FROM node:18.12.1-alpine3.15 AS runner
 ENV NODE_ENV production
 
 RUN addgroup -g 1001 -S nodejs
