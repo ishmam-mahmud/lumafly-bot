@@ -24,12 +24,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 16.13.2
-          cache: "yarn"
+          node-version: 18.12.1
+          cache: "npm"
       - name: Install packages and run format check
-        run: yarn install
+        run: npm install
 
       - name: Run formatting check
-        run: yarn format:check
+        run: npm run format:check
