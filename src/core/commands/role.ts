@@ -1,27 +1,27 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
-} from 'discord.js';
-import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+} from "discord.js";
+import dbClient from "../../db/client";
+import { ChatInputCommandInteractionHandler } from "./commandTypes";
 
 const roleCommand: ChatInputCommandInteractionHandler = {
-  name: 'role',
+  name: "role",
   type: ApplicationCommandType.ChatInput,
-  description: 'Add a self-assignable role',
+  description: "Add a self-assignable role",
   options: [
     {
       type: ApplicationCommandOptionType.Role,
-      description: 'The role you want to add',
-      name: 'role-to-add',
+      description: "The role you want to add",
+      name: "role-to-add",
       required: true,
     },
   ],
   async execute(interaction) {
     await interaction.deferReply();
-    const roleToAdd = interaction.options.getRole('role-to-add');
+    const roleToAdd = interaction.options.getRole("role-to-add");
     if (!roleToAdd) {
-      return await interaction.editReply('Role not provided in options');
+      return await interaction.editReply("Role not provided in options");
     }
     const dbRole = await dbClient.role.findFirst({
       where: {
@@ -39,7 +39,7 @@ const roleCommand: ChatInputCommandInteractionHandler = {
 
     if (!dbRole) {
       return await interaction.editReply(
-        'Could not determine if role is self-assignable'
+        "Could not determine if role is self-assignable"
       );
     }
     if (!dbRole.selfAssignable) {

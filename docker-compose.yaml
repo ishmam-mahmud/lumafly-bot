@@ -1,11 +1,11 @@
-version: '3'
+version: "3"
 services:
   postgres:
     image: postgres:14-alpine
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - '5432:5432'
+      - "5432:5432"
   bot:
     build:
       context: .
@@ -18,4 +18,4 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - SENTRY_DSN=${SENTRY_DSN}
     depends_on:
-      - 'postgres'
+      - "postgres"

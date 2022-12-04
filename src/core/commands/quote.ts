@@ -2,33 +2,33 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
   EmbedBuilder,
-} from 'discord.js';
-import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+} from "discord.js";
+import dbClient from "../../db/client";
+import { ChatInputCommandInteractionHandler } from "./commandTypes";
 
 const quoteCommand: ChatInputCommandInteractionHandler = {
-  name: 'quote',
+  name: "quote",
   type: ApplicationCommandType.ChatInput,
-  description: 'Get an existing quote',
+  description: "Get an existing quote",
   // TODO: Set options
   options: [
     {
       type: ApplicationCommandOptionType.Integer,
-      name: 'quote_id',
-      description: 'Get a quote by id',
+      name: "quote_id",
+      description: "Get a quote by id",
       required: false,
     },
     {
       type: ApplicationCommandOptionType.User,
-      name: 'user',
-      description: 'Get a quote by user',
+      name: "user",
+      description: "Get a quote by user",
       required: false,
     },
   ],
   async execute(interaction) {
     await interaction.deferReply();
-    const id = interaction.options.getInteger('quote_id', false);
-    const user = interaction.options.getUser('user', false);
+    const id = interaction.options.getInteger("quote_id", false);
+    const user = interaction.options.getUser("user", false);
 
     let quoteIdArray;
     if (id) {
@@ -45,13 +45,13 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
       quoteIdArray =
         await dbClient.$queryRaw`SELECT id FROM "Quote" WHERE author LIKE ${userIdSQLString} ORDER BY RANDOM() LIMIT 1`;
     } else {
-      console.log('Fetching random quote');
+      console.log("Fetching random quote");
       quoteIdArray =
         await dbClient.$queryRaw`SELECT id FROM "Quote" ORDER BY RANDOM() LIMIT 1`;
     }
 
     if (!Array.isArray(quoteIdArray) || quoteIdArray.length === 0) {
-      throw new Error('No quote ids found');
+      throw new Error("No quote ids found");
     }
 
     const quoteId = quoteIdArray[0].id;

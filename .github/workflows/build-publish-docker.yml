@@ -4,7 +4,7 @@ on:
       tag:
         description: Docker Image Tag
         required: true
-        default: 'latest'
+        default: "latest"
 
 name: Build & Publish Lumafly Docker Image
 

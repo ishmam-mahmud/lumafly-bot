@@ -14,11 +14,11 @@ jobs:
       - id: skip-check
         uses: fkirc/skip-duplicate-actions@master
         with:
-          concurrent_skipping: 'never'
-          skip_after_successful_duplicate: 'true'
+          concurrent_skipping: "never"
+          skip_after_successful_duplicate: "true"
           paths: '["prisma/**", "yarn.lock", "src/core/commands/*.ts",".github/workflows/migrate-and-deploy.yml"]'
           do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
-          cancel_others: 'true'
+          cancel_others: "true"
 
   migrate-and-deploy:
     needs: skip-check
@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.13.2
-          cache: 'yarn'
+          cache: "yarn"
 
       - run: yarn install
 

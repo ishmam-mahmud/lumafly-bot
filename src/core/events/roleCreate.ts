@@ -1,13 +1,13 @@
-import dbClient from '../../db/client';
-import Event from './eventTypes';
+import dbClient from "../../db/client";
+import Event from "./eventTypes";
 
-const roleCreateEvent: Event<'roleCreate'> = {
-  name: 'roleCreate',
+const roleCreateEvent: Event<"roleCreate"> = {
+  name: "roleCreate",
   once: false,
   async execute(role) {
     const uncategorized = await dbClient.roleCategory.findFirst({
       where: {
-        name: 'Uncategorized',
+        name: "Uncategorized",
         serverId: role.guild.id,
       },
       select: {

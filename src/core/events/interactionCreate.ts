@@ -1,13 +1,13 @@
-import commands, { commandName } from '../commands';
+import commands, { commandName } from "../commands";
 import {
   ChatInputCommandInteractionHandler,
   ContextMenuCommandInteractionHandler,
-} from '../commands/commandTypes';
-import logError from '../logError';
-import Event from './eventTypes';
+} from "../commands/commandTypes";
+import logError from "../logError";
+import Event from "./eventTypes";
 
-const interactionCreateEvent: Event<'interactionCreate'> = {
-  name: 'interactionCreate',
+const interactionCreateEvent: Event<"interactionCreate"> = {
+  name: "interactionCreate",
   once: false,
   async execute(interaction) {
     if (!interaction.inCachedGuild()) return;

@@ -1,8 +1,8 @@
-import dbClient from '../../db/client';
-import Event from './eventTypes';
+import dbClient from "../../db/client";
+import Event from "./eventTypes";
 
-const guildCreateEvent: Event<'guildCreate'> = {
-  name: 'guildCreate',
+const guildCreateEvent: Event<"guildCreate"> = {
+  name: "guildCreate",
   once: false,
   async execute(server) {
     const foundServer = await dbClient.server.findFirst({
@@ -25,7 +25,7 @@ const guildCreateEvent: Event<'guildCreate'> = {
         name: server.name,
         RoleCategory: {
           create: {
-            name: 'Uncategorized',
+            name: "Uncategorized",
             Role: {
               createMany: {
                 data: server.roles.cache.map((role) => ({

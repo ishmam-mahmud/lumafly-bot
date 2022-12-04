@@ -1,13 +1,14 @@
-import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
-import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+import { ApplicationCommandType, EmbedBuilder } from "discord.js";
+import dbClient from "../../db/client";
+import { ChatInputCommandInteractionHandler } from "./commandTypes";
 
 const rolesCommand: ChatInputCommandInteractionHandler = {
-  name: 'roles',
-  description: 'See a list of all self-assignable roles',
+  name: "roles",
+  description: "See a list of all self-assignable roles",
   type: ApplicationCommandType.ChatInput,
   options: [],
   async execute(interaction) {
+    console.log("test");
     await interaction.deferReply({ ephemeral: true });
     const categories = await dbClient.roleCategory.findMany({
       where: {
@@ -19,7 +20,7 @@ const rolesCommand: ChatInputCommandInteractionHandler = {
         serverId: interaction.guildId,
       },
       orderBy: {
-        name: 'asc',
+        name: "asc",
       },
       select: {
         name: true,
@@ -33,6 +34,8 @@ const rolesCommand: ChatInputCommandInteractionHandler = {
       },
     });
 
+    console.log("test");
+
     return await interaction.editReply({
       embeds: categories.map((cat) => {
         return new EmbedBuilder().setTitle(cat.name).setDescription(
@@ -42,7 +45,7 @@ const rolesCommand: ChatInputCommandInteractionHandler = {
               return 1;
             })
             .map((role) => `<@&${role.id}>`)
-            .join(',')
+            .join(",")
         );
       }),
     });

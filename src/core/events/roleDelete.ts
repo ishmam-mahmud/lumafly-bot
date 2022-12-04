@@ -1,8 +1,8 @@
-import dbClient from '../../db/client';
-import Event from './eventTypes';
+import dbClient from "../../db/client";
+import Event from "./eventTypes";
 
-const roleDeleteEvent: Event<'roleDelete'> = {
-  name: 'roleDelete',
+const roleDeleteEvent: Event<"roleDelete"> = {
+  name: "roleDelete",
   once: false,
   async execute(role) {
     const dbRole = await dbClient.role.findFirst({
@@ -21,7 +21,7 @@ const roleDeleteEvent: Event<'roleDelete'> = {
       console.log(
         `${role.name} with id ${role.id} for ${role.guild.name} with server id ${role.guild.id} not found.`
       );
-      console.log('Skipping roleDelete');
+      console.log("Skipping roleDelete");
       return;
     }
 

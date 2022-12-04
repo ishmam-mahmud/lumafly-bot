@@ -4,7 +4,7 @@ import {
   ChatInputCommandInteraction,
   CommandInteraction,
   ContextMenuCommandInteraction,
-} from 'discord.js';
+} from "discord.js";
 
 interface BaseCommandHandler {
   type: ApplicationCommandType;
@@ -14,7 +14,7 @@ interface BaseCommandHandler {
 
 export interface ChatInputCommandInteractionHandler extends BaseCommandHandler {
   type: ApplicationCommandType.ChatInput;
-  execute: (interaction: ChatInputCommandInteraction<'cached'>) => Promise<any>;
+  execute: (interaction: ChatInputCommandInteraction<"cached">) => Promise<any>;
   options: ApplicationCommandOption[];
 }
 
@@ -22,7 +22,7 @@ export interface ContextMenuCommandInteractionHandler
   extends BaseCommandHandler {
   type: ApplicationCommandType.User | ApplicationCommandType.Message;
   execute: (
-    interaction: ContextMenuCommandInteraction<'cached'>
+    interaction: ContextMenuCommandInteraction<"cached">
   ) => Promise<any>;
 }
 

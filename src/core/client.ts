@@ -1,5 +1,5 @@
-import { Client, GatewayIntentBits } from 'discord.js';
-import getEnv from './getEnv';
+import { Client, GatewayIntentBits } from "discord.js";
+import getEnv from "./getEnv";
 
 const discordClient = new Client({
   intents: [
@@ -10,6 +10,6 @@ const discordClient = new Client({
   ],
 });
 
-discordClient.login(getEnv('CLIENT_TOKEN'));
+discordClient.login(getEnv("CLIENT_TOKEN"));
 
 export default discordClient;

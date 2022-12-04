@@ -1,14 +1,14 @@
-import { ChannelType } from 'discord.js';
-import dbClient from '../../db/client';
-import getEnv from '../getEnv';
-import Event from './eventTypes';
+import { ChannelType } from "discord.js";
+import dbClient from "../../db/client";
+import getEnv from "../getEnv";
+import Event from "./eventTypes";
 
-const messageCreateEvent: Event<'messageCreate'> = {
-  name: 'messageCreate',
+const messageCreateEvent: Event<"messageCreate"> = {
+  name: "messageCreate",
   once: false,
   async execute(message) {
     if (!message.guildId || !message.inGuild()) return;
-    if (message.author.id === getEnv('CLIENT_ID')) return;
+    if (message.author.id === getEnv("CLIENT_ID")) return;
 
     const dbGuild = await dbClient.server.findFirst({
       where: {
@@ -32,15 +32,15 @@ const messageCreateEvent: Event<'messageCreate'> = {
           const thread = await message.channel.threads.create({
             startMessage: message,
             name: `${message.member?.displayName} suggestion`,
-            reason: 'new suggestion posted',
+            reason: "new suggestion posted",
           });
 
           await Promise.all([
-            message.react('👍'),
-            message.react('👎'),
+            message.react("👍"),
+            message.react("👎"),
             thread.setRateLimitPerUser(
               30,
-              'rate limit for suggestion discussions'
+              "rate limit for suggestion discussions"
             ),
           ]);
         }

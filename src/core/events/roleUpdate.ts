@@ -1,8 +1,8 @@
-import dbClient from '../../db/client';
-import Event from './eventTypes';
+import dbClient from "../../db/client";
+import Event from "./eventTypes";
 
-const roleUpdateEvent: Event<'roleUpdate'> = {
-  name: 'roleUpdate',
+const roleUpdateEvent: Event<"roleUpdate"> = {
+  name: "roleUpdate",
   once: false,
   async execute(oldRole, newRole) {
     if (oldRole.name === newRole.name) {

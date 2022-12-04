@@ -4,14 +4,14 @@ import {
   ContextMenuCommandBuilder,
   ApplicationCommandOptionType,
   ApplicationCommandType,
-} from 'discord.js';
-import { REST } from '@discordjs/rest';
+  REST,
+} from "discord.js";
 import {
   ChatInputCommandInteractionHandler,
   ContextMenuCommandInteractionHandler,
-} from '../src/core/commands/commandTypes';
-import commands, { commandName } from '../src/core/commands/index';
-import getEnv from '../src/core/getEnv';
+} from "../src/core/commands/commandTypes";
+import commands, { commandName } from "../src/core/commands/index";
+import getEnv from "../src/core/getEnv";
 
 function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {
   const builder = new SlashCommandBuilder()
@@ -74,15 +74,14 @@ function getContextMenuCommandBuilder(
     }
   }
 
-  const rest = new REST({ version: '10' }).setToken(getEnv('CLIENT_TOKEN'));
+  const rest = new REST({ version: "10" }).setToken(getEnv("CLIENT_TOKEN"));
 
-  console.log(commandsJson);
   await rest.put(
-    Routes.applicationGuildCommands(getEnv('CLIENT_ID'), getEnv('GUILD_ID')),
+    Routes.applicationGuildCommands(getEnv("CLIENT_ID"), getEnv("GUILD_ID")),
     {
       body: commandsJson,
     }
   );
-  console.log('Successfully registered application commands.');
+  console.log("Successfully registered application commands.");
   process.exit();
 })();

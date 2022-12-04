@@ -1,7 +1,7 @@
-import Event from './eventTypes';
+import Event from "./eventTypes";
 
-const threadUpdateEvent: Event<'threadUpdate'> = {
-  name: 'threadUpdate',
+const threadUpdateEvent: Event<"threadUpdate"> = {
+  name: "threadUpdate",
   once: false,
   async execute(oldThread, newThread) {
     console.log(

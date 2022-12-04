@@ -1,9 +1,9 @@
-import dbClient from '../../db/client';
-import getEnv from '../getEnv';
-import Event from './eventTypes';
+import dbClient from "../../db/client";
+import getEnv from "../getEnv";
+import Event from "./eventTypes";
 
-const messageReactionAddEvent: Event<'messageReactionAdd'> = {
-  name: 'messageReactionAdd',
+const messageReactionAddEvent: Event<"messageReactionAdd"> = {
+  name: "messageReactionAdd",
   once: false,
   async execute(reaction, user) {
     if (
@@ -14,9 +14,9 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
     )
       return;
 
-    if (reaction.emoji.name === '💬') {
+    if (reaction.emoji.name === "💬") {
       const usersCollection = await reaction.users.fetch();
-      if (usersCollection.some((user) => user.id === getEnv('CLIENT_ID')))
+      if (usersCollection.some((user) => user.id === getEnv("CLIENT_ID")))
         return;
 
       const newQuote = await dbClient.quote.create({

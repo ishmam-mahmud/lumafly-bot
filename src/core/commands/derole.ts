@@ -1,28 +1,28 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
-} from 'discord.js';
-import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+} from "discord.js";
+import dbClient from "../../db/client";
+import { ChatInputCommandInteractionHandler } from "./commandTypes";
 
 const deroleCommand: ChatInputCommandInteractionHandler = {
-  name: 'derole',
+  name: "derole",
   type: ApplicationCommandType.ChatInput,
-  description: 'Remove a role you currently have',
+  description: "Remove a role you currently have",
   options: [
     {
       type: ApplicationCommandOptionType.Role,
-      description: 'The role you want to remove',
-      name: 'role-to-remove',
+      description: "The role you want to remove",
+      name: "role-to-remove",
       required: true,
     },
   ],
   async execute(interaction) {
     await interaction.deferReply();
-    const roleToRemove = interaction.options.getRole('role-to-remove');
+    const roleToRemove = interaction.options.getRole("role-to-remove");
 
     if (!roleToRemove) {
-      return await interaction.editReply('Role not provided in options');
+      return await interaction.editReply("Role not provided in options");
     }
     const dbRole = await dbClient.role.findFirst({
       where: {
@@ -40,7 +40,7 @@ const deroleCommand: ChatInputCommandInteractionHandler = {
 
     if (!dbRole) {
       return await interaction.editReply(
-        'Could not determine if role is self-manageable'
+        "Could not determine if role is self-manageable"
       );
     }
     if (!dbRole.selfAssignable) {

@@ -1,8 +1,8 @@
-import dbClient from '../../db/client';
-import Event from './eventTypes';
+import dbClient from "../../db/client";
+import Event from "./eventTypes";
 
-const guildDeleteEvent: Event<'guildDelete'> = {
-  name: 'guildDelete',
+const guildDeleteEvent: Event<"guildDelete"> = {
+  name: "guildDelete",
   once: false,
   async execute(server) {
     const dbServer = await dbClient.server.findFirst({

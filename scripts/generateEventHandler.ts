@@ -1,25 +1,25 @@
-import Handlebars from 'handlebars';
-import fs from 'fs';
-import path from 'path';
+import Handlebars from "handlebars";
+import fs from "fs";
+import path from "path";
 
 const flags = new Set<string>();
 
 for (const flag of process.argv) {
-  if (flag === '--force') flags.add('force');
+  if (flag === "--force") flags.add("force");
 }
 
 const eventTemplateString = fs.readFileSync(
-  path.resolve(process.cwd(), 'scripts/event.ts.hbs'),
+  path.resolve(process.cwd(), "scripts/event.ts.hbs"),
   {
-    encoding: 'utf-8',
+    encoding: "utf-8",
   }
 );
 
 const template = Handlebars.compile(eventTemplateString);
 
 const eventName = process.argv[2];
-if (!eventName || eventName === '') {
-  console.error('Invalid event name');
+if (!eventName || eventName === "") {
+  console.error("Invalid event name");
   process.exit();
 }
 
@@ -34,7 +34,7 @@ const eventPath = path.join(
   `/${eventName}.ts`
 );
 
-if (fs.existsSync(eventPath) && !flags.has('force')) {
+if (fs.existsSync(eventPath) && !flags.has("force")) {
   console.log(`Event Handler file already exists at ${eventPath}`);
   process.exit();
 }
