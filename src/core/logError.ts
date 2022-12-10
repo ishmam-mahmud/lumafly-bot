@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/node";
+import { inspect } from "util";
 import getEnv from "./getEnv";
 
 Sentry.init({
@@ -11,5 +12,7 @@ Sentry.init({
 
 export default function logError(error: any) {
   console.error(error);
+  console.error(JSON.stringify(error))
+  console.error(inspect(error, true, Infinity))
   return Sentry.captureException(error);
 }
