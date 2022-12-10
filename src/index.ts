@@ -12,7 +12,7 @@ for (const eventHandlerName in events) {
         try {
           await eventHandler.execute(...args);
         } catch (error) {
-          await logError(error);
+          logError(error);
         }
       });
     } else {
@@ -20,7 +20,7 @@ for (const eventHandlerName in events) {
         try {
           await eventHandler.execute(...args);
         } catch (error) {
-          await logError(error);
+          logError(error);
         }
       });
     }

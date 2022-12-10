@@ -8,7 +8,6 @@ const rolesCommand: ChatInputCommandInteractionHandler = {
   type: ApplicationCommandType.ChatInput,
   options: [],
   async execute(interaction) {
-    console.log("test");
     await interaction.deferReply({ ephemeral: true });
     const categories = await dbClient.roleCategory.findMany({
       where: {
@@ -33,8 +32,6 @@ const rolesCommand: ChatInputCommandInteractionHandler = {
         },
       },
     });
-
-    console.log("test");
 
     return await interaction.editReply({
       embeds: categories.map((cat) => {

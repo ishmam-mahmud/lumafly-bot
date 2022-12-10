@@ -7,7 +7,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "----build/run----": "",
-    "build": "esbuild --bundle --outfile=dist/main.js --platform=node --minify --external:discord.js src/index.ts",
+    "build": "esbuild --bundle --outfile=dist/main.js --platform=node --minify --external:discord.js --external:discord-api-types src/index.ts",
     "build:watch": "npm run build --watch",
     "start": "node dist/main.js",
     "start:watch": "nodemon -x \"npm run start\"",

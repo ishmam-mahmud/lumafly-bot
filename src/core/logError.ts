@@ -9,7 +9,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-export default async function logError(error: any) {
-  console.error(error)
+export default function logError(error: any) {
+  console.error(error);
   return Sentry.captureException(error);
 }

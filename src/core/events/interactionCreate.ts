@@ -3,13 +3,13 @@ import {
   ChatInputCommandInteractionHandler,
   ContextMenuCommandInteractionHandler,
 } from "../commands/commandTypes";
-import logError from "../logError";
 import Event from "./eventTypes";
 
 const interactionCreateEvent: Event<"interactionCreate"> = {
   name: "interactionCreate",
   once: false,
   async execute(interaction) {
+    console.log(interaction);
     if (!interaction.inCachedGuild()) return;
     if (interaction.isChatInputCommand()) {
       const command = commands[
@@ -23,7 +23,7 @@ const interactionCreateEvent: Event<"interactionCreate"> = {
         if (interaction.deferred || interaction.replied)
           await interaction.editReply(message);
         else await interaction.reply({ content: message, ephemeral: true });
-        await logError(error);
+        throw error;
       }
     } else if (interaction.isContextMenuCommand()) {
       const command = commands[
@@ -37,7 +37,7 @@ const interactionCreateEvent: Event<"interactionCreate"> = {
         if (interaction.deferred || interaction.replied)
           await interaction.editReply(message);
         else await interaction.reply({ content: message, ephemeral: true });
-        await logError(error);
+        throw error;
       }
     }
   },
