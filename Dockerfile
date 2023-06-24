@@ -15,8 +15,11 @@ RUN yarn prisma generate
 FROM node:16 AS runner
 ENV NODE_ENV production
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S lumafly -u 1001
+RUN groupadd -g 1001 nodejs
+# RUN addgroup -g 1001 -S nodejs
+RUN useradd -Gnodejs lumafly
+# RUN adduser -S lumafly -u 1001
+
 
 WORKDIR /lumafly
 COPY --from=builder --chown=lumafly:nodejs /lumafly/package.json ./package.json
