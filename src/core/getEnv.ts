@@ -8,8 +8,16 @@ interface EnvObj {
 
 type Env = keyof EnvObj;
 
-export default function getEnv(envVar: Env): string {
+export function getEnv(envVar: Env): string | null {
   const value = process.env[envVar];
+  if (!value) {
+    return null;
+  }
+  return value;
+}
+
+export function getEnvRequired(envVar: Env): string {
+  const value = getEnv(envVar);
   if (!value) throw new Error(`${envVar} not found in environment`);
   return value;
 }

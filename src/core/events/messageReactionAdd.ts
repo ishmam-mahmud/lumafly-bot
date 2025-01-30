@@ -1,5 +1,5 @@
 import dbClient from '../../db/client';
-import getEnv from '../getEnv';
+import { getEnvRequired } from '../getEnv';
 import Event from './eventTypes';
 
 const messageReactionAddEvent: Event<'messageReactionAdd'> = {
@@ -16,7 +16,9 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
 
     if (reaction.emoji.name === '💬') {
       const usersCollection = await reaction.users.fetch();
-      if (usersCollection.some((user) => user.id === getEnv('CLIENT_ID')))
+      if (
+        usersCollection.some((user) => user.id === getEnvRequired('CLIENT_ID'))
+      )
         return;
 
       const newQuote = await dbClient.quote.create({
@@ -37,7 +39,7 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
       }
 
       const sendMessage = reaction.message.channel.send(
-        `New quote added by ${user.tag} as #${newQuote.id} (${reaction.message.url})`
+        `New quote added by ${user.tag} as #${newQuote.id} (${reaction.message.url})`,
       );
       const react = await reaction.react();
       await Promise.all([sendMessage, react]);

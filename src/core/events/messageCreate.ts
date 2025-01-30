@@ -1,6 +1,6 @@
 import { ChannelType } from 'discord.js';
 import dbClient from '../../db/client';
-import getEnv from '../getEnv';
+import { getEnvRequired } from '../getEnv';
 import Event from './eventTypes';
 
 const messageCreateEvent: Event<'messageCreate'> = {
@@ -8,7 +8,7 @@ const messageCreateEvent: Event<'messageCreate'> = {
   once: false,
   async execute(message) {
     if (!message.guildId || !message.inGuild()) return;
-    if (message.author.id === getEnv('CLIENT_ID')) return;
+    if (message.author.id === getEnvRequired('CLIENT_ID')) return;
 
     const dbGuild = await dbClient.server.findFirst({
       where: {
@@ -22,7 +22,7 @@ const messageCreateEvent: Event<'messageCreate'> = {
 
     if (!dbGuild) {
       throw new Error(
-        `Message Event: Server with ${message.guildId} not found in db`
+        `Message Event: Server with ${message.guildId} not found in db`,
       );
     }
 
@@ -40,7 +40,7 @@ const messageCreateEvent: Event<'messageCreate'> = {
             message.react('👎'),
             thread.setRateLimitPerUser(
               30,
-              'rate limit for suggestion discussions'
+              'rate limit for suggestion discussions',
             ),
           ]);
         }
