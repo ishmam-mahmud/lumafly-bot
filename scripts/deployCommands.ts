@@ -11,7 +11,7 @@ import {
   ContextMenuCommandInteractionHandler,
 } from '../src/core/commands/commandTypes';
 import commands, { commandName } from '../src/core/commands/index';
-import getEnv from '../src/core/getEnv';
+import { getEnvRequired } from '../src/core/getEnv';
 
 function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {
   const builder = new SlashCommandBuilder()
@@ -24,21 +24,21 @@ function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {
         roleOption
           .setName(option.name)
           .setDescription(option.description)
-          .setRequired(option.required ?? false)
+          .setRequired(option.required ?? false),
       );
     } else if (option.type === ApplicationCommandOptionType.User) {
       builder.addUserOption((userOption) =>
         userOption
           .setName(option.name)
           .setDescription(option.description)
-          .setRequired(option.required ?? false)
+          .setRequired(option.required ?? false),
       );
     } else if (option.type === ApplicationCommandOptionType.Integer) {
       builder.addIntegerOption((integerOption) =>
         integerOption
           .setDescription(option.description)
           .setName(option.name)
-          .setRequired(option.required ?? false)
+          .setRequired(option.required ?? false),
       );
     }
   }
@@ -46,7 +46,7 @@ function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {
 }
 
 function getContextMenuCommandBuilder(
-  command: ContextMenuCommandInteractionHandler
+  command: ContextMenuCommandInteractionHandler,
 ) {
   if (
     command.type !== ApplicationCommandType.Message &&
@@ -74,14 +74,19 @@ function getContextMenuCommandBuilder(
     }
   }
 
-  const rest = new REST({ version: '10' }).setToken(getEnv('CLIENT_TOKEN'));
+  const rest = new REST({ version: '10' }).setToken(
+    getEnvRequired('CLIENT_TOKEN'),
+  );
 
   console.log(commandsJson);
   await rest.put(
-    Routes.applicationGuildCommands(getEnv('CLIENT_ID'), getEnv('GUILD_ID')),
+    Routes.applicationGuildCommands(
+      getEnvRequired('CLIENT_ID'),
+      getEnvRequired('GUILD_ID'),
+    ),
     {
       body: commandsJson,
-    }
+    },
   );
   console.log('Successfully registered application commands.');
   process.exit();

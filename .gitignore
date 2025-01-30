@@ -1,6 +1,7 @@
 node_modules
 .pgdata
 .envrc
+.env
 *.log
 dist
 *.crt
