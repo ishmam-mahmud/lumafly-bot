@@ -22,7 +22,7 @@ export interface ContextMenuCommandInteractionHandler
   extends BaseCommandHandler {
   type: ApplicationCommandType.User | ApplicationCommandType.Message;
   execute: (
-    interaction: ContextMenuCommandInteraction<'cached'>
+    interaction: ContextMenuCommandInteraction<'cached'>,
   ) => Promise<any>;
 }
 

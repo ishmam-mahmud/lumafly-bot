@@ -22,7 +22,7 @@ const roleUpdateEvent: Event<'roleUpdate'> = {
     });
 
     console.log(
-      `Role with id ${updatedRole.id} updated name from ${oldRole.name} to ${newRole.name}`
+      `Role with id ${updatedRole.id} updated name from ${oldRole.name} to ${newRole.name}`,
     );
   },
 };

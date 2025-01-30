@@ -17,7 +17,7 @@ const roleCreateEvent: Event<'roleCreate'> = {
 
     if (!uncategorized) {
       console.error(
-        `${role.guild.name} does not have an Uncategorized role category`
+        `${role.guild.name} does not have an Uncategorized role category`,
       );
       return;
     }

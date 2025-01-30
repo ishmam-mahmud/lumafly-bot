@@ -26,7 +26,7 @@ const guildDeleteEvent: Event<'guildDelete'> = {
 
     if (!dbServer) {
       console.log(
-        `${server.name} not found in db in deletion. Skipping guildDelete`
+        `${server.name} not found in db in deletion. Skipping guildDelete`,
       );
       return;
     }
@@ -35,7 +35,7 @@ const guildDeleteEvent: Event<'guildDelete'> = {
       where: {
         id: {
           in: dbServer.RoleCategory.flatMap((cat) =>
-            cat.Role.map((role) => role.id)
+            cat.Role.map((role) => role.id),
           ),
         },
       },

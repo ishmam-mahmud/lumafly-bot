@@ -39,12 +39,12 @@ const roleCommand: ChatInputCommandInteractionHandler = {
 
     if (!dbRole) {
       return await interaction.editReply(
-        'Could not determine if role is self-assignable'
+        'Could not determine if role is self-assignable',
       );
     }
     if (!dbRole.selfAssignable) {
       return await interaction.editReply(
-        `Role ${roleToAdd.name} is not self-assignable`
+        `Role ${roleToAdd.name} is not self-assignable`,
       );
     }
 
