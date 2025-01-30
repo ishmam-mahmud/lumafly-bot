@@ -19,7 +19,7 @@ const roleDeleteEvent: Event<'roleDelete'> = {
 
     if (!dbRole) {
       console.log(
-        `${role.name} with id ${role.id} for ${role.guild.name} with server id ${role.guild.id} not found.`
+        `${role.name} with id ${role.id} for ${role.guild.name} with server id ${role.guild.id} not found.`,
       );
       console.log('Skipping roleDelete');
       return;
@@ -31,7 +31,7 @@ const roleDeleteEvent: Event<'roleDelete'> = {
       },
     });
     console.log(
-      `${role.name} with id ${role.id} for ${role.guild.name} with server id ${role.guild.id} deleted.`
+      `${role.name} with id ${role.id} for ${role.guild.name} with server id ${role.guild.id} deleted.`,
     );
   },
 };

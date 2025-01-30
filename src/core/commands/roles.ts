@@ -42,7 +42,7 @@ const rolesCommand: ChatInputCommandInteractionHandler = {
               return 1;
             })
             .map((role) => `<@&${role.id}>`)
-            .join(',')
+            .join(','),
         );
       }),
     });

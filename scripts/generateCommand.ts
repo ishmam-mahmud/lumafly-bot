@@ -12,7 +12,7 @@ const commandTemplateString = fs.readFileSync(
   path.resolve(process.cwd(), 'scripts/command.ts.hbs'),
   {
     encoding: 'utf-8',
-  }
+  },
 );
 
 const template = Handlebars.compile(commandTemplateString);
@@ -31,7 +31,7 @@ const output = template(commandTemplateProps);
 
 const commandPath = path.join(
   path.resolve(process.cwd(), `src/core/commands`),
-  `/${commandName}.ts`
+  `/${commandName}.ts`,
 );
 
 if (fs.existsSync(commandPath) && !flags.has('force')) {

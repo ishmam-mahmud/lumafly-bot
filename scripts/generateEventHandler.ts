@@ -12,7 +12,7 @@ const eventTemplateString = fs.readFileSync(
   path.resolve(process.cwd(), 'scripts/event.ts.hbs'),
   {
     encoding: 'utf-8',
-  }
+  },
 );
 
 const template = Handlebars.compile(eventTemplateString);
@@ -31,7 +31,7 @@ const output = template(eventTemplateProps);
 
 const eventPath = path.join(
   path.resolve(process.cwd(), `src/core/events`),
-  `/${eventName}.ts`
+  `/${eventName}.ts`,
 );
 
 if (fs.existsSync(eventPath) && !flags.has('force')) {

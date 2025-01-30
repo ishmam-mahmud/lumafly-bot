@@ -34,7 +34,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
     if (id) {
       if (id <= 0) {
         return await interaction.editReply(
-          `Invalid id ${id}. ID must be an integer greater than 0.`
+          `Invalid id ${id}. ID must be an integer greater than 0.`,
         );
       }
       console.log(`Fetching quote with id ${id}`);

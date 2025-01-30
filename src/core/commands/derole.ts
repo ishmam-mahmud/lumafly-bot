@@ -40,12 +40,12 @@ const deroleCommand: ChatInputCommandInteractionHandler = {
 
     if (!dbRole) {
       return await interaction.editReply(
-        'Could not determine if role is self-manageable'
+        'Could not determine if role is self-manageable',
       );
     }
     if (!dbRole.selfAssignable) {
       return await interaction.editReply(
-        `Role ${roleToRemove.name} is not self-manageable`
+        `Role ${roleToRemove.name} is not self-manageable`,
       );
     }
 

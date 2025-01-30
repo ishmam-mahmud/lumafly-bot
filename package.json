@@ -15,7 +15,10 @@
     "-----deploy-----": "",
     "deploy:commands": "bun run scripts/deployCommands.ts",
     "---run---": "",
-    "start": "bun run src/core/index.ts"
+    "start": "bun run src/core/index.ts",
+    "---migrations---": "",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy"
   },
   "author": "Ishmam Mahmud",
   "license": "MIT",
