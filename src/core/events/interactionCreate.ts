@@ -1,10 +1,10 @@
-import commands, { commandName } from '../commands';
+import commands, { type commandName } from '../commands';
 import {
-  ChatInputCommandInteractionHandler,
-  ContextMenuCommandInteractionHandler,
+  type ChatInputCommandInteractionHandler,
+  type ContextMenuCommandInteractionHandler,
 } from '../commands/commandTypes';
 import logError from '../logError';
-import Event from './eventTypes';
+import type Event from './eventTypes';
 
 const interactionCreateEvent: Event<'interactionCreate'> = {
   name: 'interactionCreate',

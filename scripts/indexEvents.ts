@@ -13,7 +13,7 @@ const indexOutput = `// @generated
 // Try running \`npm run gen:event\` instead.
 
 import { ClientEvents } from 'discord.js';
-import Event from './eventTypes';
+import type Event from './eventTypes';
 ${eventNames.map((it) => `import ${it}EventHandler from './${it}';`).join('\n')}
 
 const events: Partial<Record<keyof ClientEvents, Event<any>>> = {

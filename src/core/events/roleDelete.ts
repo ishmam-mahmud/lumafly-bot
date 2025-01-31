@@ -1,5 +1,5 @@
 import dbClient from '../../db/client';
-import Event from './eventTypes';
+import type Event from './eventTypes';
 
 const roleDeleteEvent: Event<'roleDelete'> = {
   name: 'roleDelete',

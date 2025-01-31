@@ -4,7 +4,7 @@ import {
   EmbedBuilder,
 } from 'discord.js';
 import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+import { type ChatInputCommandInteractionHandler } from './commandTypes';
 
 const quoteCommand: ChatInputCommandInteractionHandler = {
   name: 'quote',
@@ -26,6 +26,7 @@ const quoteCommand: ChatInputCommandInteractionHandler = {
     },
   ],
   async execute(interaction) {
+    console.log('here');
     await interaction.deferReply();
     const id = interaction.options.getInteger('quote_id', false);
     const user = interaction.options.getUser('user', false);

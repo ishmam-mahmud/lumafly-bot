@@ -1,6 +1,6 @@
 import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+import { type ChatInputCommandInteractionHandler } from './commandTypes';
 
 const rolesCommand: ChatInputCommandInteractionHandler = {
   name: 'roles',

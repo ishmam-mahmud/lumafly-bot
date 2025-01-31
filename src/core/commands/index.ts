@@ -2,7 +2,7 @@
 // This file was automatically generated and should not be edited.
 // Try running `npm run gen:command` instead.
 
-import Command from './commandTypes';
+import type Command from './commandTypes';
 import deroleCommand from './derole';
 import nvinfoCommand from './nvinfo';
 import quoteCommand from './quote';

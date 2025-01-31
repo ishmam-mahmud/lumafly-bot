@@ -1,6 +1,6 @@
 import dbClient from '../../db/client';
 import { getEnvRequired } from '../getEnv';
-import Event from './eventTypes';
+import type Event from './eventTypes';
 
 const messageReactionAddEvent: Event<'messageReactionAdd'> = {
   name: 'messageReactionAdd',
