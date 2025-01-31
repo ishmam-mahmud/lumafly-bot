@@ -1,7 +1,7 @@
 import { ChannelType } from 'discord.js';
 import dbClient from '../../db/client';
 import { getEnvRequired } from '../getEnv';
-import Event from './eventTypes';
+import type Event from './eventTypes';
 
 const messageCreateEvent: Event<'messageCreate'> = {
   name: 'messageCreate',

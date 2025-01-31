@@ -2,8 +2,8 @@
 // This file was automatically generated and should not be edited.
 // Try running `npm run gen:event` instead.
 
-import { ClientEvents } from 'discord.js';
-import Event from './eventTypes';
+import { type ClientEvents } from 'discord.js';
+import type Event from './eventTypes';
 import errorEventHandler from './error';
 import guildCreateEventHandler from './guildCreate';
 import guildDeleteEventHandler from './guildDelete';

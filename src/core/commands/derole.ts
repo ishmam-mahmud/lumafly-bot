@@ -3,7 +3,7 @@ import {
   ApplicationCommandType,
 } from 'discord.js';
 import dbClient from '../../db/client';
-import { ChatInputCommandInteractionHandler } from './commandTypes';
+import { type ChatInputCommandInteractionHandler } from './commandTypes';
 
 const deroleCommand: ChatInputCommandInteractionHandler = {
   name: 'derole',

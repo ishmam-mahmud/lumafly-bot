@@ -1,14 +1,23 @@
-import { ClientEvents } from 'discord.js';
-import discordClient from './client';
+import { type ClientEvents, Client, GatewayIntentBits } from 'discord.js';
 import events from './events';
 import logError from './logError';
+import { getEnvRequired } from './getEnv';
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.MessageContent,
+  ],
+});
 
 for (const eventHandlerName in events) {
   if (Object.prototype.hasOwnProperty.call(events, eventHandlerName)) {
     const eventHandler = events[eventHandlerName as keyof ClientEvents];
     if (!eventHandler) continue;
     if (eventHandler.once) {
-      discordClient.once(eventHandlerName, async (...args) => {
+      client.once(eventHandlerName, async (...args) => {
         try {
           await eventHandler.execute(...args);
         } catch (error) {
@@ -16,7 +25,7 @@ for (const eventHandlerName in events) {
         }
       });
     } else {
-      discordClient.on(eventHandlerName, async (...args) => {
+      client.on(eventHandlerName, async (...args) => {
         try {
           await eventHandler.execute(...args);
         } catch (error) {
@@ -27,4 +36,7 @@ for (const eventHandlerName in events) {
   }
 }
 
-console.log('Started client');
+if (import.meta.main) {
+  await client.login(getEnvRequired('CLIENT_TOKEN'));
+  console.log('Started client');
+}

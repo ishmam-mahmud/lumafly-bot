@@ -1,5 +1,5 @@
 import logError from '../logError';
-import Event from './eventTypes';
+import type Event from './eventTypes';
 
 const errorEvent: Event<'error'> = {
   name: 'error',

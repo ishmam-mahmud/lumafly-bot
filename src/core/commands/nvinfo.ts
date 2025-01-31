@@ -1,5 +1,5 @@
 import { ApplicationCommandType } from 'discord.js';
-import { ContextMenuCommandInteractionHandler } from './commandTypes';
+import { type ContextMenuCommandInteractionHandler } from './commandTypes';
 
 const nvinfoCommand: ContextMenuCommandInteractionHandler = {
   name: 'nvinfo',

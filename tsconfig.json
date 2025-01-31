@@ -1,26 +1,35 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
-
+    // Enable latest features
+    "lib": ["ESNext", "DOM"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    // Bundler mode
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    // Best practices
     "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    // Some stricter flags (disabled by default)
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "alwaysStrict": true,
-
     "noImplicitAny": true,
-    "noUnusedLocals": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "module": "ES2022",
-    "target": "ES2022",
-    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-
     // prisma specific options
     "esModuleInterop": true,
     "sourceMap": true,

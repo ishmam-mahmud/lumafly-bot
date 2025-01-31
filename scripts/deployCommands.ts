@@ -1,16 +1,16 @@
 import {
-  SlashCommandBuilder,
-  Routes,
-  ContextMenuCommandBuilder,
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
+  type SlashCommandBuilder,
+  type Routes,
+  type ContextMenuCommandBuilder,
+  type ApplicationCommandOptionType,
+  type ApplicationCommandType,
 } from 'discord.js';
-import { REST } from '@discordjs/rest';
+import { type REST } from '@discordjs/rest';
 import {
   ChatInputCommandInteractionHandler,
-  ContextMenuCommandInteractionHandler,
+  type ContextMenuCommandInteractionHandler,
 } from '../src/core/commands/commandTypes';
-import commands, { commandName } from '../src/core/commands/index';
+import commands, { type commandName } from '../src/core/commands/index';
 import { getEnvRequired } from '../src/core/getEnv';
 
 function getSlashCommandBuilder(command: ChatInputCommandInteractionHandler) {

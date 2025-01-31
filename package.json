@@ -6,6 +6,7 @@
     "----util----": "",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "type:check": "tsc",
     "-----commands-----": "",
     "gen:command": "bun run scripts/generateCommand.ts",
     "index:command": "bun run scripts/indexCommands.ts && yarn format",
@@ -30,6 +31,7 @@
     "discord.js": "^14.17.3"
   },
   "devDependencies": {
+    "@types/bun": "^1.2.1",
     "handlebars": "^4.7.8",
     "prettier": "^3.4.2",
     "prisma": "^6.2.0",
