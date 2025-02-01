@@ -22,14 +22,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 16.13.2
-          cache: 'yarn'
-      - name: Install packages and run format check
-        run: yarn install
+          version: 1.2.1
+      - name: Install packages
+        run: bun install --frozen-lockfile
 
       - name: Run formatting check
-        run: yarn format:check
+        run: bun format:check
