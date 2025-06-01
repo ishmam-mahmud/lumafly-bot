@@ -6,7 +6,6 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
   name: 'messageReactionAdd',
   once: false,
   async execute(reaction, user) {
-    console.log(reaction.me);
     if (
       reaction.me ||
       user.bot ||
@@ -14,7 +13,6 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
       !reaction.message.inGuild()
     )
       return;
-    console.log(reaction.emoji.name);
 
     if (reaction.emoji.name === '💬') {
       const usersCollection = await reaction.users.fetch();
@@ -44,7 +42,6 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
       const react = await reaction.react();
       await Promise.all([sendMessage, react]);
     } else if (reaction.emoji.name === '🚫') {
-      console.log('found prohibited');
       const server = await dbClient.server.findFirst({
         where: { id: reaction.message.guildId },
         select: { id: true, anonymousReportsChannelId: true },
