@@ -52,30 +52,18 @@ cp .envrc.example .envrc
 
 Edit the resulting `.envrc` and set your envs as you need
 
-Run the following command to load the file
-
-```
-direnv allow .
-```
-
 ### Installing
 
 Install node dependencies.
 
 ```
-yarn install
-```
-
-Build the bot, with refreshing the builds enabled as you code
-
-```
-yarn build:watch
+bun install
 ```
 
 Start the bot, with hot-reloading enabled as you code
 
 ```
-yarn core:start:watch
+bun dev
 ```
 
 Interact with the bot in the server and test your changes. You can modify the seed data in the database using one of the postgres clients mentioned earlier.

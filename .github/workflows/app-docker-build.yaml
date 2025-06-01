@@ -35,9 +35,7 @@ jobs:
         run: docker pull ${{ secrets.DOCKERHUB_USER }}/lumafly:latest
 
       - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v4
 
       - name: Build container
         run: docker build --rm=false --cache-from ${{ secrets.DOCKERHUB_USER }}/lumafly:latest -t ${{ secrets.DOCKERHUB_USER }}/lumafly:latest .

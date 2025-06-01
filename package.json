@@ -18,7 +18,7 @@
     "---build---": "",
     "build": "bun run scripts/build.ts",
     "---run---": "",
-    "dev": "bun run src/core/index.ts",
+    "dev": "bun run --watch src/core/index.ts",
     "---prisma---": "",
     "prisma:generate": "prisma generate",
     "migrate:dev": "prisma migrate dev",
@@ -27,18 +27,18 @@
   "author": "Ishmam Mahmud",
   "license": "MIT",
   "dependencies": {
-    "@discordjs/rest": "^2.4.2",
-    "@prisma/client": "^6.2.0",
-    "@sentry/node": "^8.48.0",
-    "discord-api-types": "^0.37.115",
-    "discord.js": "^14.17.3",
-    "prisma": "^6.2.0"
+    "@discordjs/rest": "^2.5.0",
+    "@prisma/client": "^6.8.2",
+    "@sentry/node": "^8.55.0",
+    "discord-api-types": "^0.37.120",
+    "discord.js": "^14.19.3",
+    "prisma": "^6.8.2"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.1",
+    "@types/bun": "^1.2.15",
     "handlebars": "^4.7.8",
-    "prettier": "^3.4.2",
-    "typescript": "^5.7.2"
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
   },
   "prettier": {
     "singleQuote": true,

@@ -29,30 +29,27 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}&sslcert=./ca-cert.crt
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 16.13.2
-          cache: 'yarn'
+          bun-version-file: '.bun-version'
 
-      - run: yarn install
+      - run: bun install --frozen-lockfile
 
       - name: Setup CA Cert file
         run: echo "${{ secrets.DATABASE_CA_CERT }}" > prisma/ca-cert.crt
 
       - name: Run migrations
-        run: yarn prisma migrate deploy
+        run: bun migrate:deploy
 
       - name: Deploy Commands
         env:
           CLIENT_TOKEN: ${{ secrets.CLIENT_TOKEN }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           GUILD_ID: ${{ secrets.GUILD_ID }}
-        run: yarn deploy:commands
+        run: bun deploy:commands
 
       - name: Delete CA Cert file
         run: rm prisma/ca-cert.crt

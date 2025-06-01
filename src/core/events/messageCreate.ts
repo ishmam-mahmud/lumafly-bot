@@ -11,19 +11,13 @@ const messageCreateEvent: Event<'messageCreate'> = {
     if (message.author.id === getEnvRequired('CLIENT_ID')) return;
 
     const dbGuild = await dbClient.server.findFirst({
-      where: {
-        id: message.guildId,
-      },
-      select: {
-        id: true,
-        suggestionChannelId: true,
-      },
+      where: { id: message.guildId },
+      select: { id: true, suggestionChannelId: true },
     });
 
     if (!dbGuild) {
-      throw new Error(
-        `Message Event: Server with ${message.guildId} not found in db`,
-      );
+      console.warn(`Message Event: Server ${message.guildId} not found in db`);
+      return;
     }
 
     if (dbGuild.suggestionChannelId) {
