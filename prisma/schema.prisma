@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Server {
-  id                  String         @id
-  name                String
-  suggestionChannelId String?
-  RoleCategory        RoleCategory[]
-  Quote               Quote[]
+  id                        String         @id
+  name                      String
+  suggestionChannelId       String?
+  anonymousReportsChannelId String?
+  RoleCategory              RoleCategory[]
+  Quote                     Quote[]
 }
 
 model RoleCategory {

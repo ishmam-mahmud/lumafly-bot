@@ -8,30 +8,22 @@ const rolesCommand: ChatInputCommandInteractionHandler = {
   type: ApplicationCommandType.ChatInput,
   options: [],
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 'Ephemeral' });
     const categories = await dbClient.roleCategory.findMany({
       where: {
-        Role: {
-          some: {
-            selfAssignable: true,
-          },
-        },
+        Role: { some: { selfAssignable: true } },
         serverId: interaction.guildId,
       },
-      orderBy: {
-        name: 'asc',
-      },
+      orderBy: { name: 'asc' },
       select: {
         name: true,
-        Role: {
-          select: {
-            id: true,
-            selfAssignable: true,
-            name: true,
-          },
-        },
+        Role: { select: { id: true, selfAssignable: true, name: true } },
       },
     });
+
+    if (categories.length === 0) {
+      return await interaction.editReply('No categories setup.');
+    }
 
     return await interaction.editReply({
       embeds: categories.map((cat) => {

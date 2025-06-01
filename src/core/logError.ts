@@ -13,6 +13,7 @@ if (dsn) {
 }
 
 export default async function logError(error: any) {
+  console.error(error);
   console.log(JSON.stringify(error));
   return;
   // return Sentry.captureException(error);
