@@ -28,11 +28,11 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/rest": "^2.5.0",
-    "@prisma/client": "^6.8.2",
+    "@prisma/client": "^6.9.0",
     "@sentry/node": "^8.55.0",
     "discord-api-types": "^0.37.120",
     "discord.js": "^14.19.3",
-    "prisma": "^6.8.2"
+    "prisma": "^6.9.0"
   },
   "devDependencies": {
     "@types/bun": "^1.2.15",
