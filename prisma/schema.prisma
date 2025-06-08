@@ -12,6 +12,7 @@ model Server {
   name                      String
   suggestionChannelId       String?
   anonymousReportsChannelId String?
+  moderatorRoleId           String?
   RoleCategory              RoleCategory[]
   Quote                     Quote[]
 }
