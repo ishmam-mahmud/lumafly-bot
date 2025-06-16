@@ -42,26 +42,26 @@ const messageReactionAddEvent: Event<'messageReactionAdd'> = {
       const react = await reaction.react();
       await Promise.all([sendMessage, react]);
     } else if (reaction.emoji.name === '🏥') {
-      const server = await dbClient.server.findFirst({
-        where: { id: reaction.message.guildId },
-        select: {
-          id: true,
-          anonymousReportsChannelId: true,
-          moderatorRoleId: true,
-        },
-      });
-      if (server?.anonymousReportsChannelId) {
-        const channel = reaction.client.channels.cache.get(
-          server?.anonymousReportsChannelId,
-        );
-        const messagePrefix = server.moderatorRoleId
-          ? `<@&${server.moderatorRoleId}>`
-          : 'Report';
-        if (channel?.isSendable()) {
-          await channel.send(`${messagePrefix} ${reaction.message.url}`);
-        }
-        await reaction.remove();
-      }
+      // const server = await dbClient.server.findFirst({
+      //   where: { id: reaction.message.guildId },
+      //   select: {
+      //     id: true,
+      //     anonymousReportsChannelId: true,
+      //     moderatorRoleId: true,
+      //   },
+      // });
+      // if (server?.anonymousReportsChannelId) {
+      //   await reaction.remove();
+      //   const channel = reaction.client.channels.cache.get(
+      //     server?.anonymousReportsChannelId,
+      //   );
+      //   const messagePrefix = server.moderatorRoleId
+      //     ? `<@&${server.moderatorRoleId}>`
+      //     : 'Report';
+      //   if (channel?.isSendable()) {
+      //     await channel.send(`${messagePrefix} ${reaction.message.url}`);
+      //   }
+      // }
     }
   },
 };
